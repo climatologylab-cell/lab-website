@@ -1,0 +1,192 @@
+<!-- Reusable Search & Filter Bar Component -->
+<!-- Reads search_query and sort_by from parent context with safe defaults -->
+<section class="filter-section">
+    <div class="container">
+        <div class="filter-container">
+            <!-- Page Title (Left 30%) -->
+            {% if page_title %}
+            <h1 class="filter-title">{{ page_title }}</h1>
+            {% endif %}
+
+            <!-- Search Form (Right 70%) -->
+            <form method="get" class="filter-bar">
+                <!-- Search Box -->
+                <div class="search-box">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8" />
+                        <path d="m21 21-4.35-4.35" />
+                    </svg>
+                    <input type="text" name="search" id="searchInput"
+                        placeholder="{{ search_placeholder|default:'Search...' }}" value="{{ search_query|default:'' }}"
+                        autocomplete="off">
+                </div>
+
+                <!-- Sort Dropdown -->
+                <select name="sort" id="sortFilter" class="filter-dropdown" onchange="this.form.submit()">
+                    <option value="latest" {% if sort_by == 'latest' or not sort_by %}selected{% endif %}>Latest
+                    </option>
+                    <option value="oldest" {% if sort_by == 'oldest' %}selected{% endif %}>Oldest</option>
+                    <option value="az" {% if sort_by == 'az' %}selected{% endif %}>A-Z</option>
+                    <option value="za" {% if sort_by == 'za' %}selected{% endif %}>Z-A</option>
+                </select>
+
+                <!-- Hidden Submit Button (for search) -->
+                <button type="submit" style="display: none;"></button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<style>
+    .filter-section {
+        background: white;
+        padding: 20px 0 30px;
+        border-bottom: 1px solid #e8e8e8;
+    }
+
+    .filter-container {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        gap: 20px;
+    }
+
+    /* Page Title (30%) */
+    .filter-title {
+        flex: 0 0 30%;
+        /* Fixed 30% width */
+        margin: 0;
+        font-size: 28px;
+        font-weight: 800;
+        color: #1E3A5F;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 1.2;
+    }
+
+    /* Search Bar Form (70%) */
+    .filter-bar {
+        flex: 1;
+        /* Takes remaining space */
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    .search-box {
+        flex: 1;
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .search-box svg {
+        position: absolute;
+        left: 16px;
+        color: #999;
+        pointer-events: none;
+    }
+
+    .search-box input {
+        width: 100%;
+        padding: 0 16px 0 45px;
+        height: 42px;
+        border: 2px solid #e0e0e0;
+        border-radius: 30px;
+        font-size: 15px;
+        transition: all 0.3s ease;
+    }
+
+    .search-box input:focus {
+        outline: none;
+        border-color: #4A90E2;
+        box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+    }
+
+    .filter-dropdown {
+        height: 42px;
+        padding: 0 35px 0 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 30px;
+        font-size: 14px;
+        font-weight: 600;
+        background: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        min-width: 120px;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 16px;
+    }
+
+    .filter-dropdown:focus {
+        outline: none;
+        border-color: #4A90E2;
+    }
+
+    .filter-dropdown:hover {
+        border-color: #4A90E2;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+        .filter-container {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 15px;
+        }
+
+        .filter-title {
+            flex: auto;
+            width: 100%;
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .filter-bar {
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .filter-bar {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 10px;
+        }
+
+        .search-box {
+            width: 100%;
+        }
+
+        .filter-dropdown {
+            width: 100%;
+        }
+    }
+</style>
+
+<script>
+    // Auto-submit search on Enter key
+    document.getElementById("searchInput").addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            this.form.submit();
+        }
+    });
+
+    // Optional: Auto-submit after typing (debounced)
+    let searchTimeout;
+    document.getElementById("searchInput").addEventListener("input", function () {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            this.form.submit();
+        }, 800); // Wait 800ms after user stops typing
+    });
+</script>

@@ -1,0 +1,73 @@
+{% extends 'dashboard/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block header_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="dashboard-card shadow-sm">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="fw-700 mb-0">{% if form.instance.pk %}Edit Image: {{ form.instance.title }}{% else %}Carousel
+                    Image Details{% endif %}</h5>
+                <a href="{% url 'dashboard:carousel_list' %}" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-arrow-left"></i> Back to List
+                </a>
+            </div>
+
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-12 mb-4">
+                        {{ form.title|as_crispy_field }}
+                    </div>
+                    <div class="col-md-7">
+                        {{ form.image|as_crispy_field }}
+                        {% if form.instance.image %}
+                        <div class="mt-2">
+                            <p class="small text-muted mb-1">Current Image:</p>
+                            <img src="{{ form.instance.image.url }}" class="img-thumbnail"
+                                style="max-height: 200px; width: 100%; object-fit: cover;">
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-5">
+                        <div class="card bg-light border-0 mb-3 h-100">
+                            <div class="card-body">
+                                <h6 class="fw-bold mb-3">Display Settings</h6>
+                                {{ form.order|as_crispy_field }}
+                                <div class="form-check form-switch mt-4">
+                                    {{ form.is_active }}
+                                    <label class="form-check-label ms-2" for="{{ form.is_active.id_for_label }}">Show on
+                                        Website</label>
+                                </div>
+                                <div class="mt-4">
+                                    {{ form.alt_text|as_crispy_field }}
+                                    <small class="text-muted d-block mt-1">Provide a brief description of the image for
+                                        visually impaired users.</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-5 pt-3 border-top">
+                    <a href="{% url 'dashboard:carousel_list' %}" class="btn btn-light px-4 me-md-2">Cancel</a>
+                    <button type="submit" class="btn btn-primary px-5 fw-600">
+                        {% if form.instance.pk %}Update Image{% else %}Save Image{% endif %}
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="alert alert-info mt-4 border-0 shadow-sm d-flex align-items-center gap-3">
+            <i class="bi bi-info-circle-fill fs-4"></i>
+            <div>
+                <strong>Recommended Dimensions:</strong> For best results, use images with a <strong>600x400</strong>
+                resolution or an equivalent <strong>3:2</strong> aspect ratio.
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

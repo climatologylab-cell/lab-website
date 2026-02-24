@@ -1,0 +1,328 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Climatology Lab{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/design-system.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/nav-dropdowns.css' %}">
+    <style>
+        /* Pill-Shaped Navigation */
+        .nav-pill-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .nav-pill {
+            display: flex;
+            gap: 0;
+            background: white;
+            padding: 8px 12px;
+            border-radius: 50px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+        }
+
+        .nav-pill a {
+            color: #000 !important;
+            /* Pure black */
+            font-size: 15px;
+            font-weight: 600;
+            /* Normal weight */
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            padding: 14px 22px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-block;
+            text-decoration: none;
+            border-radius: 30px;
+        }
+
+        .nav-pill a:hover {
+            color: #4A90E2 !important;
+            transform: translateY(-1px);
+            background: #f4f8ff;
+            /* Ghost pill hover */
+        }
+
+        .nav-pill a.active,
+        .nav-pill .dropdown-trigger.active {
+            color: #FFFFFF !important;
+            background: linear-gradient(135deg, #4A90E2 0%, #0D3B66 100%) !important;
+            /* Match All Members button gradient */
+            box-shadow: 0 4px 12px rgba(13, 59, 102, 0.3);
+            border: 2px solid #0D3B66 !important;
+            padding: 12px 20px !important;
+            /* Adjust for 2px border */
+        }
+
+        /* === Shared Page Title Section (used on all content pages) === */
+        .page-title-section {
+            background: #fafafa;
+            padding: 20px 0 15px;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .page-heading {
+            font-size: 36px;
+            font-weight: 800;
+            color: #0D3B66;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        .page-subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-top: 8px;
+            margin-bottom: 0;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .page-title-section {
+                padding: 15px 0 10px;
+            }
+
+            .page-heading {
+                font-size: 28px;
+            }
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <!-- Left Logo -->
+            <div class="logo">
+                <a href="{% url 'core:home' %}" style="text-decoration: none; display: flex; align-items: center;">
+                    <img src="{% static 'images/Picture1.png' %}" alt="Lab Logo" style="height: 65px; width: auto;">
+                </a>
+            </div>
+
+            <!-- Center Pill Navigation -->
+            <div class="nav-pill-container">
+                <nav class="nav-pill">
+                    <div class="nav-item-dropdown" id="projectsDropdownWrapper">
+                        <a href="#"
+                            class="dropdown-trigger {% if '/projects' in request.path or '/research_projects/' in request.path or '/consultancy_projects/' in request.path %}active{% endif %}"
+                            id="projectsDropdownTrigger" aria-haspopup="true" aria-expanded="false">PROJECTS</a>
+                        <div class="dropdown-menu" id="projectsDropdownMenu">
+                            <a href="{% url 'core:research_projects' %}" class="dropdown-item">RESEARCH PROJECTS</a>
+                            <a href="{% url 'core:consultancy_projects' %}" class="dropdown-item">CONSULTANCY
+                                PROJECTS</a>
+                        </div>
+                    </div>
+                    <a href="{% url 'core:team' %}"
+                        class="{% if request.resolver_match.view_name == 'core:team' %}active{% endif %}">TEAM</a>
+
+                    <div class="nav-item-dropdown" id="pubDropdownWrapper">
+                        <a href="#" class="dropdown-trigger {% if '/publications/' in request.path %}active{% endif %}"
+                            id="pubDropdownTrigger" aria-haspopup="true" aria-expanded="false">PUBLICATIONS</a>
+                        <div class="dropdown-menu" id="pubDropdownMenu">
+                            <a href="{% url 'publications:journals' %}" class="dropdown-item">JOURNALS</a>
+
+                            <!-- Nested Conference Submenu -->
+                            <div class="dropdown-submenu-wrapper" id="confSubmenuWrapper">
+                                <a href="#" class="dropdown-item submenu-trigger" id="confSubmenuTrigger">
+                                    CONFERENCE
+                                    <span class="submenu-arrow">▶</span>
+                                </a>
+                                <div class="dropdown-submenu" id="confSubmenu">
+                                    <a href="{% url 'publications:conference_national' %}"
+                                        class="dropdown-item">NATIONAL</a>
+                                    <a href="{% url 'publications:conference_international' %}"
+                                        class="dropdown-item">INTERNATIONAL</a>
+                                </div>
+                            </div>
+
+                            <a href="{% url 'publications:books' %}" class="dropdown-item">BOOKS</a>
+                            <a href="{% url 'publications:guidelines' %}" class="dropdown-item">GUIDELINES</a>
+                            <a href="{% url 'publications:others' %}" class="dropdown-item">OTHER DOCUMENTS</a>
+                        </div>
+                    </div>
+                    <div class="nav-item-dropdown" id="learnDropdownWrapper">
+                        <a href="#"
+                            class="dropdown-trigger {% if '/tutorials/' in request.path or '/workshops/' in request.path or '/learn' in request.path %}active{% endif %}"
+                            id="learnDropdownTrigger" aria-haspopup="true" aria-expanded="false">LEARN</a>
+                        <div class="dropdown-menu" id="learnDropdownMenu">
+                            <a href="{% url 'core:tutorials' %}" class="dropdown-item">TUTORIALS</a>
+                            <a href="{% url 'core:workshops' %}" class="dropdown-item">WORKSHOPS</a>
+                        </div>
+                    </div>
+                    <a href="{% url 'core:impact' %}"
+                        class="{% if request.resolver_match.view_name == 'core:impact' %}active{% endif %}">IMPACT</a>
+                    <a href="{% if request.resolver_match.view_name != 'core:home' %}{% url 'core:home' %}{% endif %}#footer"
+                        class="scroll-to-footer" id="nav-connect-link">CONNECT</a>
+
+                </nav>
+            </div>
+
+            <!-- Right Logos -->
+            <div class="header-logos">
+                <a href="https://www.iitr.ac.in/" target="_blank">
+                    <img src="{% static 'images/iitr_logo.png' %}" alt="IIT Roork ee"
+                        style="height: 50px; width: auto;">
+                </a>
+                <a href="https://iitr.ac.in/Departments/Architecture%20and%20Planning%20Department/index.html"
+                    target="_blank">
+                    <img src="{% static 'images/dap_logo.png' %}" alt="DAP"
+                        style="height: 50px; width: auto; margin-left: 15px;">
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    {% include 'includes/footer.html' %}
+
+    <script src="{% static 'js/main.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // --- DESKTOP HOVER LOGIC ---
+            const dropdownWrappers = document.querySelectorAll('.nav-item-dropdown');
+
+            dropdownWrappers.forEach(wrapper => {
+                const trigger = wrapper.querySelector('.dropdown-trigger');
+                const menu = wrapper.querySelector('.dropdown-menu');
+
+                if (window.innerWidth > 768) {
+                    let closeTimer;
+
+                    wrapper.addEventListener('mouseenter', () => {
+                        clearTimeout(closeTimer);
+                        // Close other menus immediately
+                        document.querySelectorAll('.dropdown-menu').forEach(m => {
+                            if (m !== menu) m.classList.remove('show');
+                        });
+                        menu.classList.add('show');
+                        trigger.setAttribute('aria-expanded', 'true');
+                    });
+
+                    wrapper.addEventListener('mouseleave', () => {
+                        closeTimer = setTimeout(() => {
+                            menu.classList.remove('show');
+                            trigger.setAttribute('aria-expanded', 'false');
+                        }, 250); // Increased delay for stability
+                    });
+                } else {
+                    // Mobile Click Logic
+                    trigger.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const isOpen = menu.classList.contains('show');
+                        document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('show'));
+                        if (!isOpen) menu.classList.add('show');
+                    });
+                }
+            });
+
+            // --- SUBMENU LOGIC ---
+            const confWrapper = document.getElementById('confSubmenuWrapper');
+            const confTrigger = document.getElementById('confSubmenuTrigger');
+            const confSubmenu = document.getElementById('confSubmenu');
+
+            if (confWrapper && confTrigger && confSubmenu) {
+                if (window.innerWidth > 768) {
+                    let subTimer;
+                    confWrapper.addEventListener('mouseenter', () => {
+                        clearTimeout(subTimer);
+                        confSubmenu.classList.add('show-submenu');
+                    });
+                    confWrapper.addEventListener('mouseleave', () => {
+                        subTimer = setTimeout(() => {
+                            confSubmenu.classList.remove('show-submenu');
+                        }, 200);
+                    });
+                } else {
+                    confTrigger.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        confSubmenu.classList.toggle('show-submenu');
+                    });
+                }
+            }
+
+            // --- GLOBAL CLOSE LOGIC ---
+            document.addEventListener('click', (e) => {
+                if (window.innerWidth <= 768 && !e.target.closest('.nav-item-dropdown')) {
+                    document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('show'));
+                }
+            });
+
+            // Close on Escape
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('show'));
+                }
+            });
+        });
+
+        // Smooth scroll to footer for CONNECT link
+        const connectLinks = document.querySelectorAll('.scroll-to-footer');
+        connectLinks.forEach(link => {
+            link.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href.startsWith('#')) {
+                    e.preventDefault();
+                    const footer = document.querySelector('#footer');
+                    if (footer) {
+                        footer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+            });
+        });
+
+        // Highlight CONNECT in navbar when footer is in view
+        const footerObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const connectLink = document.getElementById('nav-connect-link');
+                const allNavLinks = document.querySelectorAll('.nav-pill a, .nav-pill .dropdown-trigger');
+
+                if (connectLink) {
+                    if (entry.isIntersecting) {
+                        // Suppress other active links
+                        allNavLinks.forEach(link => {
+                            if (link !== connectLink && link.classList.contains('active')) {
+                                link.classList.remove('active');
+                                link.classList.add('suppressed-active');
+                            }
+                        });
+                        connectLink.classList.add('active');
+                    } else {
+                        // Restore suppressed active links
+                        connectLink.classList.remove('active');
+                        allNavLinks.forEach(link => {
+                            if (link.classList.contains('suppressed-active')) {
+                                link.classList.remove('suppressed-active');
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                }
+            });
+        }, {
+            threshold: 0.3 // Trigger when 30% of footer is visible
+        });
+
+        const footerElement = document.getElementById('footer');
+        if (footerElement) {
+            footerObserver.observe(footerElement);
+        }
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

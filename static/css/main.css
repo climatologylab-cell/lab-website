@@ -1,0 +1,579 @@
+/* ========================================
+   CLIMATOLOGY LAB - MAIN STYLESHEET
+   Preserving original design and color scheme
+   ======================================== */
+
+/* CSS Variables - Original Color Scheme */
+:root {
+    --primary-blue: #4A90E2;
+    --dark-blue: #1E3A5F;
+    --light-blue: #B8D4F1;
+    --red: #E74C3C;
+    --yellow: #F1C40F;
+    --green: #2ECC71;
+    --black: #000000;
+    --white: #FFFFFF;
+    --light-gray: #F5F5F5;
+    --gray: #CCCCCC;
+    --text-dark: #333333;
+    --text-light: #666666;
+}
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    color: var(--text-dark);
+    line-height: 1.6;
+    background-color: var(--white);
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+}
+
+/* Container */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header & Navigation */
+.header {
+    background-color: var(--white);
+    padding: 15px 0;
+    border-bottom: 1px solid #e0e0e0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 30px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.logo img {
+    height: 40px;
+    margin-right: 10px;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 40px;
+}
+
+.nav-menu a {
+    color: var(--text-dark);
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.nav-menu a:hover {
+    color: var(--primary-blue);
+}
+
+.header-logos {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.header-logos img {
+    height: 45px;
+}
+
+/* Top Banner - "Built on WIX STUDIO" */
+.top-banner {
+    background-color: var(--white);
+    text-align: center;
+    padding: 8px;
+    font-size: 11px;
+    color: var(--text-light);
+    border-bottom: 1px solid #f0f0f0;
+}
+
+/* Hero Section */
+.hero {
+    background-color: var(--light-gray);
+    padding: 60px 0;
+}
+
+.welcome-text {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+    color: var(--text-dark);
+    font-size: 15px;
+    line-height: 1.8;
+}
+
+.welcome-text strong {
+    font-weight: 600;
+}
+
+/* Stats Section */
+.stats-section {
+    display: flex;
+    justify-content: center;
+    gap: 80px;
+    padding: 60px 0;
+    margin: 0 auto;
+    max-width: 1000px;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 56px;
+    font-weight: 300;
+    color: var(--primary-blue);
+    margin-bottom: 10px;
+}
+
+.stat-label {
+    display: inline-block;
+    padding: 8px 24px;
+    border: 2px solid var(--primary-blue);
+    border-radius: 25px;
+    color: var(--primary-blue);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Notice Board */
+.notice-board {
+    padding: 80px 0;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.notice-board h2 {
+    font-size: 48px;
+    font-weight: 300;
+    margin-bottom: 50px;
+    color: var(--text-dark);
+}
+
+.workshops-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.workshop-card {
+    background-color: var(--white);
+    border: 1px solid #e0e0e0;
+    padding: 25px 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.workshop-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+}
+
+.workshop-date {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-bottom: 15px;
+}
+
+.workshop-badge {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.workshop-title {
+    font-size: 13px;
+    color: var(--text-dark);
+    margin-top: 10px;
+    line-height: 1.4;
+}
+
+/* Contact Section */
+.contact-header {
+    background-color: var(--black);
+    padding: 80px 0;
+    text-align: center;
+}
+
+.contact-header h1 {
+    font-size: 72px;
+    font-weight: 300;
+    color: var(--white);
+    margin-bottom: 5px;
+}
+
+.contact-header .subtitle {
+    font-size: 72px;
+    font-weight: 300;
+    color: var(--primary-blue);
+}
+
+/* Footer */
+.footer {
+    background-color: #0d3b66;
+    color: var(--white);
+    width: 100%;
+}
+
+.footer-main {
+    padding: 50px 0 40px;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 60px;
+}
+
+.footer-left {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.footer-heading {
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.footer-logos {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.footer-logos img {
+    height: 70px;
+    object-fit: contain;
+}
+
+.footer-links {
+    display: flex;
+    gap: 40px;
+}
+
+.link-column {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.link-column a {
+    color: var(--white);
+    font-size: 13px;
+    transition: color 0.3s ease;
+    white-space: nowrap;
+}
+
+.link-column a:hover {
+    color: #64b5f6;
+}
+
+.footer-right {
+    padding-left: 10px;
+}
+
+/* Contact Form */
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.form-group {
+    position: relative;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 10px;
+    color: var(--white);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 14px 16px;
+    background-color: var(--white);
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: inherit;
+}
+
+.form-group textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: 2px solid #64b5f6;
+}
+
+.required {
+    color: #ff5252;
+}
+
+.submit-btn {
+    background-color: #2ecc71;
+    color: var(--white);
+    border: none;
+    padding: 16px 60px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    align-self: center;
+    width: 100%;
+    letter-spacing: 1.5px;
+}
+
+.submit-btn:hover {
+    background-color: #27AE60;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(46, 204, 113, 0.4);
+}
+
+/* Footer Info */
+.footer-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.footer-info p {
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* Footer Bottom Bar */
+.footer-bottom {
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 20px 0;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-bottom p {
+    margin: 0;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.7);
+    letter-spacing: 0.5px;
+}
+
+/* Content Sections */
+.content-section {
+    padding: 80px 0;
+}
+
+.section-title {
+    font-size: 48px;
+    font-weight: 300;
+    margin-bottom: 20px;
+    color: var(--text-dark);
+}
+
+.section-subtitle {
+    font-size: 36px;
+    font-weight: 300;
+    color: var(--light-blue);
+    line-height: 1.4;
+    margin-bottom: 40px;
+}
+
+/* Research Section */
+.research-hero {
+    padding: 80px 0;
+}
+
+.research-hero h1 {
+    font-size: 64px;
+    font-weight: 700;
+    color: var(--red);
+    margin-bottom: 0;
+    text-transform: uppercase;
+}
+
+.research-hero h2 {
+    font-size: 64px;
+    font-weight: 700;
+    color: var(--yellow);
+    margin-bottom: 0;
+    text-transform: uppercase;
+}
+
+.research-hero h3 {
+    font-size: 64px;
+    font-weight: 700;
+    color: var(--primary-blue);
+    margin-bottom: 40px;
+    text-transform: uppercase;
+}
+
+.research-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.research-images {
+    display: flex;
+    gap: 20px;
+}
+
+.research-images img {
+    border-radius: 8px;
+}
+
+/* Project Cards */
+.project-item {
+    background-color: var(--light-gray);
+    padding: 40px;
+    margin-bottom: 40px;
+    border-left: 4px solid var(--primary-blue);
+}
+
+.project-item h3 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: var(--text-dark);
+}
+
+.project-meta {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-bottom: 15px;
+}
+
+.project-item p {
+    color: var(--text-light);
+    line-height: 1.6;
+}
+
+/* Responsive Design */
+@media (max-width: 968px) {
+    .stats-section {
+        flex-direction: column;
+        gap: 40px;
+    }
+
+    .workshops-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .footer-content {
+        grid-template-columns: 1fr;
+    }
+
+    .research-content {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .nav-menu {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .header-content {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .workshops-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .research-hero h1,
+    .research-hero h2,
+    .research-hero h3 {
+        font-size: 42px;
+    }
+}
+
+/* Utility Classes */
+.text-center {
+    text-align: center;
+}
+
+.mb-20 {
+    margin-bottom: 20px;
+}
+
+.mb-40 {
+    margin-bottom: 40px;
+}
+
+.mt-40 {
+    margin-top: 40px;
+}
+
+/* Shared Card Hover Effect */
+.card-hover-effect {
+    transition: all 0.2s ease;
+}
+
+.card-hover-effect:hover {
+    transform: translateX(5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    border-left-color: #E74C3C !important;
+    border-color: #e0e0e0;
+}

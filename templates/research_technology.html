@@ -1,0 +1,263 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Research & Technology - Climatology Lab{% endblock %}
+
+{% block content %}
+
+<!-- Search & Filter Bar -->
+{% include 'includes/search_filter_bar.html' %}
+
+<!-- Grid Section -->
+<section class="projects-grid-section">
+    <div class="container">
+        <div class="projects-grid" id="rtGrid">
+            {% for notice in notices %}
+            <div class="project-card">
+                <div class="project-image">
+                    <div class="placeholder-image"
+                        style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);">
+                        {% if notice.notice_type == "Research" %}
+                        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#1976D2" stroke-width="1.5">
+                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z">
+                            </path>
+                        </svg>
+                        {% else %}
+                        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#1976D2" stroke-width="1.5">
+                            <polyline points="16 18 22 12 16 6"></polyline>
+                            <polyline points="8 6 2 12 8 18"></polyline>
+                        </svg>
+                        {% endif %}
+                    </div>
+                    <span class="status-badge status-active">{{ notice.event_date|date:"M Y" }}</span>
+                </div>
+
+                <div class="project-content">
+                    <h3 class="project-title"
+                        style="display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                        {{ notice.title }}
+                    </h3>
+
+                    <p class="project-description">
+                        {{ notice.description|truncatewords:20 }}
+                    </p>
+
+                    <div class="project-tags">
+                        <span class="tag" style="background: #E8F4FD; color: #4A90E2;">
+                            {% if notice.notice_type == "Research" %}RESEARCH FOCUS{% else %}TECH USED{% endif %}
+                        </span>
+                    </div>
+
+                    <div class="pub-actions" style="margin-top: 15px; display: flex; flex-direction: column; gap: 8px;">
+                        <span style="font-size: 13px; color: #999; padding: 4px 0;">
+                            {% if notice.notice_type == "Research" %}Last Updated:{% else %}Adopted Since:{% endif %}
+                            {{ notice.event_date|date:"F j, Y" }}
+                        </span>
+
+                        {% if notice.link %}
+                        <a href="{{ notice.link }}" target="_blank" class="view-details-btn action-btn-primary">
+                            {% if notice.notice_type == "Research" %}View Project{% else %}Documentation{% endif %}
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                <polyline points="15 3 21 3 21 9"></polyline>
+                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                            </svg>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="no-projects">
+                <p>No research or technology notices found matching your criteria.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<style>
+    /* Section Styles */
+    .projects-grid-section {
+        padding: 70px 0 100px;
+        background: white;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    /* Grid */
+    .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 40px;
+        animation: fadeIn 0.6s ease;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Card */
+    .project-card {
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid #e8e8e8;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .project-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+        border-color: transparent;
+    }
+
+    /* Image Section */
+    .project-image {
+        position: relative;
+        width: 100%;
+        height: 180px;
+        overflow: hidden;
+        background: #f5f5f5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .placeholder-image {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.5s ease;
+    }
+
+    .project-card:hover .placeholder-image {
+        transform: scale(1.05);
+    }
+
+    .status-badge {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 700;
+        background: white;
+        color: #333;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        z-index: 2;
+    }
+
+    /* Content Section */
+    .project-content {
+        padding: 24px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .project-title {
+        font-size: 19px;
+        font-weight: 700;
+        color: #1E3A5F;
+        margin-bottom: 12px;
+        line-height: 1.4;
+    }
+
+    .project-description {
+        font-size: 14px;
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 18px;
+        flex: 1;
+    }
+
+    .project-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 15px;
+    }
+
+    .tag {
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Actions */
+    .view-details-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 10px 20px;
+        border-radius: 25px;
+        font-size: 13px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .action-btn-primary {
+        background: #4A90E2;
+        color: white;
+    }
+
+    .action-btn-primary:hover {
+        background: #357ABD;
+        transform: translateY(-2px);
+    }
+
+    .no-projects {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 80px;
+        color: #999;
+        font-size: 18px;
+        background: #f8fafc;
+        border-radius: 16px;
+        border: 2px dashed #e2e8f0;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+        .projects-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .projects-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .projects-grid-section {
+            padding: 40px 0;
+        }
+    }
+</style>
+
+{% endblock %}

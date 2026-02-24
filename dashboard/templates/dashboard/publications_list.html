@@ -1,0 +1,104 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Manage Publications{% endblock %}
+{% block header_title %}Publications{% endblock %}
+
+{% block content %}
+<div class="dashboard-card border-0 shadow-sm">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h5 class="fw-700 mb-0">Existing Publications</h5>
+        <div class="d-flex gap-2">
+            <form class="d-flex me-2" method="get">
+                <input class="form-control form-control-sm me-2" type="search" name="q"
+                    placeholder="Search publications..." value="{{ query|default:'' }}">
+                <button class="btn btn-sm btn-outline-primary" type="submit">Search</button>
+            </form>
+            <a href="{% url 'dashboard:import_data' 'publications' %}"
+                class="btn btn-outline-primary btn-sm d-flex align-items-center gap-2">
+                <i class="bi bi-cloud-arrow-up"></i> Import
+            </a>
+            <div class="dropdown">
+                <button class="btn btn-outline-primary btn-sm dropdown-toggle d-flex align-items-center gap-2"
+                    type="button" data-bs-toggle="dropdown">
+                    <i class="bi bi-cloud-arrow-down"></i> Export
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                    <li><a class="dropdown-item" href="{% url 'dashboard:export_data' 'publications' %}?format=csv"><i
+                                class="bi bi-filetype-csv me-2"></i>CSV</a></li>
+                    <li><a class="dropdown-item" href="{% url 'dashboard:export_data' 'publications' %}?format=xlsx"><i
+                                class="bi bi-file-earmark-excel me-2"></i>Excel</a></li>
+                </ul>
+            </div>
+            <a href="{% url 'dashboard:publication_create' %}"
+                class="btn btn-primary btn-sm d-flex align-items-center gap-2">
+                <i class="bi bi-plus-lg"></i> Add New Publication
+            </a>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle border-top">
+            <thead class="table-light">
+                <tr>
+                    <th>Title / Authors</th>
+                    <th>Category</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pub in publications %}
+                <tr>
+                    <td>
+                        <div class="fw-600 text-dark">{{ pub.title|truncatechars:100 }}</div>
+                        <small class="text-muted">{{ pub.authors|truncatechars:80 }}</small>
+                    </td>
+                    <td>
+                        <span class="badge bg-info-subtle text-info border border-info-subtle rounded-pill">
+                            {{ pub.get_category_display }}
+                        </span>
+                    </td>
+                    <td>{{ pub.publication_date|date:"b d, Y" }}</td>
+                    <td>
+                        {% if pub.is_active %}
+                        <span
+                            class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">Active</span>
+                        {% else %}
+                        <span
+                            class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill">Hidden</span>
+                        {% endif %}
+                        {% if pub.is_featured %}
+                        <span
+                            class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill">Featured</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">
+                        <div class="btn-group">
+                            <a href="{% url 'dashboard:publication_edit' pub.pk %}"
+                                class="btn btn-sm btn-outline-secondary" title="Edit">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <form action="{% url 'dashboard:publication_delete' pub.pk %}" method="post"
+                                class="d-inline" onsubmit="return confirm('Delete this publication?');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center py-5">
+                        <i class="bi bi-files fs-1 text-muted d-block mb-3"></i>
+                        <p class="text-muted">No publications found.</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

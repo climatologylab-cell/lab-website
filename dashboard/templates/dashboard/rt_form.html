@@ -1,0 +1,78 @@
+﻿{% extends 'dashboard/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block header_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="dashboard-card shadow-sm">
+            <h5 class="fw-700 mb-0">
+                {% if form.instance.pk %}
+                Edit {% if type == 'Research' %}Research Focus{% elif type == 'Technology' %}Technology Used{% else
+                %}Homepage Statistics{% endif %}
+                {% else %}
+                New {% if type == 'Research' %}Research Focus{% elif type == 'Technology' %}Technology Used{% else
+                %}Statistics{% endif %}
+                {% endif %}
+            </h5>
+            <a href="{% if type == 'Stats' %}{% url 'dashboard:home' %}{% elif type == 'Impact' %}{% url 'dashboard:impact_list' %}{% else %}{% url 'dashboard:rt_list' %}{% endif %}"
+                class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-arrow-left"></i> Back
+            </a>
+        </div>
+
+        <form method="post" enctype="multipart/form-data" class="mt-4">
+            {% csrf_token %}
+
+            {% if type == 'Stats' %}
+            {{ form|crispy }}
+            {% elif type == 'Impact' %}
+            {{ form.title|as_crispy_field }}
+            <div class="row">
+                <div class="col-md-6">{{ form.category|as_crispy_field }}</div>
+                <div class="col-md-6">{{ form.impact_metrics|as_crispy_field }}</div>
+            </div>
+            {{ form.description|as_crispy_field }}
+            {{ form.image|as_crispy_field }}
+
+            <div class="row align-items-center mt-3">
+                <div class="col-md-6">
+                    {{ form.order|as_crispy_field }}
+                </div>
+                <div class="col-md-6">
+                    <div class="form-check form-switch">
+                        {{ form.is_active }}
+                        <label class="form-check-label" for="{{ form.is_active.id_for_label }}">Show on Website</label>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            {{ form.title|as_crispy_field }}
+            {{ form.description|as_crispy_field }}
+
+            <div class="row">
+                <div class="col-md-6">{{ form.event_date|as_crispy_field }}</div>
+                <div class="col-md-6">{{ form.link|as_crispy_field }}</div>
+            </div>
+
+            <div class="form-check form-switch mt-3">
+                {{ form.is_active }}
+                <label class="form-check-label" for="{{ form.is_active.id_for_label }}">Show on Website</label>
+            </div>
+            {% endif %}
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-5 pt-3 border-top">
+                <a href="{% if type == 'Stats' %}{% url 'dashboard:home' %}{% elif type == 'Impact' %}{% url 'dashboard:impact_list' %}{% else %}{% url 'dashboard:rt_list' %}{% endif %}"
+                    class="btn btn-light px-4 me-md-2">Cancel</a>
+                <button type="submit" class="btn btn-primary px-5 fw-600">
+                    {% if form.instance.pk %}Update{% else %}Create{% endif %}
+                    {% if type == 'Impact' %}Impact Story{% elif type == 'Stats' %}Stats{% else %}Entry{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Initializing Secure Session...</title>
+</head>
+
+<body>
+    <script>
+        // Set a tab-isolated flag that prevents auto-logout on first entry
+        sessionStorage.setItem('dashboard_auth_active', '1');
+        // Redirect to requested page or dashboard home
+        window.location.href = "{{ next_url }}";
+    </script>
+</body>
+
+</html>

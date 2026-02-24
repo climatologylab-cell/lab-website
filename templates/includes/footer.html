@@ -1,0 +1,407 @@
+{% load static %}
+<footer class="footer" id="footer">
+    <div class="footer-main">
+        <div class="footer-content-grid-new">
+            <!-- Left Column: Identity & Contact Details -->
+            <div class="footer-left-col">
+                <h2 class="footer-heading">LET'S MAKE THE WORLD A <br> BETTER PLACE TOGETHER</h2>
+
+
+
+
+                <div class="contact-details">
+                    <p class="contact-item">
+                        <span class="icon">📍</span>
+                        <span>315, Department of Architecture and Planning, <br>IITR Roorkee,<br> Uttarakhand
+                            (247667)</span>
+                    </p>
+                    <p class="contact-item">
+                        <span class="icon">📞</span>
+                        <span>+91 - 1332-286141</span>
+                    </p>
+                    <p class="contact-item">
+                        <span class="icon">📩</span>
+                        <a href="mailto:climatologylab@ar.iitr.ac.in">climatologylab@ar.iitr.ac.in</a>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Right Column: Contact Form -->
+            <div class="footer-right-col">
+                <!-- Success Message (initially hidden) -->
+                <div id="contact-success-message"
+                    style="display: none; background: #d4edda; color: #155724; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #c3e6cb;">
+                    <strong>✓ Success!</strong> Thank you for contacting us!
+                </div>
+
+                <form id="footer-contact-form" class="contact-form" method="post" action="{% url 'contact:submit' %}">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label for="footer-name">NAME</label>
+                        <input type="text" id="footer-name" name="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="footer-email">EMAIL <span class="required">*</span></label>
+                        <input type="email" id="footer-email" name="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="footer-phone">PHONE</label>
+                        <input type="tel" id="footer-phone" name="phone">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="footer-query">YOUR QUERY</label>
+                        <textarea id="footer-query" name="query" required></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="contact-submit-btn">SUBMIT</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="footer-bottom">
+        <div class="footer-credits">
+            <p>© Climatology Lab @IITR. All Rights Reserved | <a href="{% url 'login' %}" class="admin-login-link"
+                    title="Admin Portal">🔑 Admin Login</a></p>
+            <div class="developer-row">
+                <p>Developed by Chanchal Suthar</p>
+                <!-- LinkedIn Icon -->
+                <a href="https://www.linkedin.com/in/chanchal-suthar-69269a26b/" target="_blank" class="dev-icon"
+                    title="LinkedIn">
+                    <svg viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+                        <path
+                            d="M19,0H5C2.239,0,0,2.239,0,5v14c0,2.761,2.239,5,5,5h14c2.762,0,5-2.239,5-5V5C24,2.239,21.762,0,19,0z M8,19H5V8h3V19z M6.5,6.732c-0.966,0-1.75-0.79-1.75-1.764s0.784-1.764,1.75-1.764S8.25,3.996,8.25,4.968S7.466,6.732,6.5,6.732z M20,19h-3v-5.604c0-3.368-4-3.113-4,0V19h-3V8h3v1.765c1.396-2.586,7-2.777,7,2.476V19z" />
+                    </svg>
+                </a>
+                <!-- Mail Icon -->
+                <a href="mailto:chanchalsuthar07@gmail.com" class="dev-icon" title="Contact Developer">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M20,4H4C2.897,4,2,4.897,2,6v12c0,1.103,0.897,2,2,2h16c1.103,0,2-0.897,2-2V6C22,4.897,21.103,4,20,4z M20,6v0.511l-8,6.223L4,6.512V6H20z M4,18V9.044l7.386,5.745C11.566,14.93,11.783,15,12,15s0.434-0.07,0.614-0.211L20,9.044L20.002,18H4z" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<style>
+    .footer {
+        height: calc(100vh - 100px);
+        /* accounting for navbar height */
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background-color: #0d3b66;
+        color: #ffffff;
+        overflow: hidden;
+    }
+
+    .footer-main {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        padding: 5px 0;
+    }
+
+    .footer-content-grid-new {
+        display: grid;
+        grid-template-columns: 1.1fr 1fr;
+        gap: 60px;
+        max-width: 100%;
+        margin: 0 auto;
+        padding: 0 5%;
+        width: 100%;
+        align-items: center;
+    }
+
+    .footer-left-col {
+        display: flex;
+        flex-direction: column;
+        gap: 35px;
+        color: #ffffff;
+    }
+
+    .footer-heading {
+        font-size: 48px;
+        font-weight: 700;
+        line-height: 1.2;
+        margin: 0 0 8px 0;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #ffffff;
+    }
+
+    .footer-info-section {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+
+    .footer-links-row {
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+    }
+
+    .footer-links-row a {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 18px;
+        text-decoration: none;
+        transition: color 0.3s;
+        white-space: nowrap;
+    }
+
+    .footer-links-row a:hover {
+        color: #ffffff;
+    }
+
+    .contact-details {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        font-size: 26px;
+    }
+
+    .contact-item {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        font-size: 26px;
+        color: rgba(255, 255, 255, 0.9);
+        margin: 0;
+        line-height: 1.3;
+    }
+
+    .contact-item .icon {
+        font-size: 24px;
+        flex-shrink: 0;
+    }
+
+    .contact-item a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .contact-item a:hover {
+        text-decoration: underline;
+    }
+
+    .footer-right-col {
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Contact Form Styles */
+    .contact-form {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .form-group {
+        position: relative;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 14px;
+        color: #ffffff;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 10px 14px;
+        background-color: #ffffff;
+        border: none;
+        border-radius: 4px;
+        font-size: 14px;
+        font-family: inherit;
+    }
+
+    .form-group textarea {
+        min-height: 80px;
+        resize: vertical;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+        outline: 2px solid #64b5f6;
+    }
+
+    .required {
+        color: #ff5252;
+    }
+
+    .submit-btn {
+        background-color: #2ecc71;
+        color: #ffffff;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 30px;
+        font-size: 16px;
+        font-weight: 700;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        align-self: center;
+        width: 100%;
+        letter-spacing: 1.5px;
+    }
+
+    .submit-btn:hover {
+        background-color: #27AE60;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(46, 204, 113, 0.4);
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+        .footer-content-grid-new {
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
+
+        .footer-heading {
+            font-size: 28px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .footer-content-grid-new {
+            padding: 0 30px;
+        }
+
+        .footer-heading {
+            font-size: 24px;
+        }
+
+        .footer-links-row {
+            gap: 15px;
+        }
+    }
+
+    /* Override for footer bottom padding and credits margin */
+    .footer-bottom {
+        padding: 25px 0 !important;
+        background-color: rgba(0, 0, 0, 0.2);
+    }
+
+    .footer-bottom .footer-credits {
+        margin-top: 0 !important;
+        margin-bottom: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        font-size: 15px;
+    }
+
+    .developer-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        justify-content: center;
+        font-size: 15px;
+    }
+
+    .dev-icon {
+        display: flex;
+        align-items: center;
+        color: rgba(255, 255, 255, 0.7);
+        transition: color 0.3s;
+    }
+
+    .dev-icon:hover {
+        color: #fff;
+    }
+
+    .dev-icon svg {
+        width: 14px;
+        height: 14px;
+        fill: currentColor;
+    }
+
+    .admin-login-link {
+        color: rgba(255, 255, 255, 0.6);
+        text-decoration: none;
+        font-size: 13px;
+        transition: all 0.3s ease;
+        margin-left: 5px;
+    }
+
+    .admin-login-link:hover {
+        color: #fff;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+    }
+</style>
+
+<script>
+    // Contact Form AJAX Submission
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('footer-contact-form');
+        const submitBtn = document.getElementById('contact-submit-btn');
+        const successMessage = document.getElementById('contact-success-message');
+
+        if (form) {
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();  // Prevent default form submission
+
+                // Disable submit button to prevent double submission
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'SENDING...';
+
+                // Get form data
+                const formData = new FormData(form);
+
+                // Send AJAX request
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            // Show success message
+                            successMessage.style.display = 'block';
+
+                            // Reset form
+                            form.reset();
+
+                            // Scroll to show success message
+                            successMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+                            // Hide success message after 10 seconds
+                            setTimeout(function () {
+                                successMessage.style.display = 'none';
+                            }, 10000);
+                        } else {
+                            alert('There was an error submitting the form. Please try again.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('There was an error submitting the form. Please try again.');
+                    })
+                    .finally(() => {
+                        // Re-enable submit button
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'SUBMIT';
+                    });
+            });
+        }
+    });
+</script>

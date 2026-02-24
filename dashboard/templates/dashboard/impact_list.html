@@ -1,0 +1,84 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Manage Impact Content{% endblock %}
+{% block header_title %}Impact & Success Stories{% endblock %}
+
+{% block content %}
+<!-- Impact Stories Section -->
+<div class="dashboard-card border-0 shadow-sm mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h5 class="fw-700 mb-0">Our Impact</h5>
+        <div class="d-flex gap-2">
+            <a href="{% url 'dashboard:import_data' 'impact' %}" class="btn btn-outline-primary btn-sm">
+                <i class="bi bi-cloud-arrow-up me-1"></i> Import
+            </a>
+            <div class="dropdown">
+                <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    <i class="bi bi-cloud-arrow-down me-1"></i> Export
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                    <li><a class="dropdown-item" href="{% url 'dashboard:export_data' 'impact' %}?format=csv"><i
+                                class="bi bi-filetype-csv me-2"></i>CSV</a></li>
+                    <li><a class="dropdown-item" href="{% url 'dashboard:export_data' 'impact' %}?format=xlsx"><i
+                                class="bi bi-file-earmark-excel me-2"></i>Excel</a></li>
+                </ul>
+            </div>
+            <a href="{% url 'dashboard:impact_story_create' %}" class="btn btn-primary btn-sm">
+                <i class="bi bi-plus-lg"></i> Add Story
+            </a>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle border-top">
+            <thead class="table-light">
+                <tr>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Metrics</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for story in stories %}
+                <tr>
+                    <td>
+                        <div class="fw-600">{{ story.title }}</div>
+                        <div class="small text-muted">{{ story.description|truncatechars:60 }}</div>
+                    </td>
+                    <td><span class="badge bg-info-subtle text-info border border-info-subtle rounded-pill">{{
+                            story.category }}</span></td>
+                    <td>{{ story.impact_metrics }}</td>
+                    <td>
+                        {% if story.is_active %}
+                        <span
+                            class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">Active</span>
+                        {% else %}
+                        <span
+                            class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill">Hidden</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">
+                        <div class="btn-group">
+                            <a href="{% url 'dashboard:impact_story_edit' story.pk %}"
+                                class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></a>
+                            <form action="{% url 'dashboard:impact_story_delete' story.pk %}" method="post"
+                                class="d-inline" onsubmit="return confirm('Delete this story?');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-danger"><i
+                                        class="bi bi-trash"></i></button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center py-4 text-muted">No impact stories found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,299 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ page_title }} - Climatology Lab{% endblock %}
+
+{% block content %}
+
+
+
+<!-- Search & Filter Bar -->
+{% include 'includes/search_filter_bar.html' with search_placeholder="Search publications..." page_title=page_title %}
+
+
+<!-- Publications Grid -->
+<section class="projects-grid-section">
+    <div class="container">
+
+        <div class="projects-grid" id="publicationsGrid">
+            {% for pub in publications %}
+            <div class="publication-strip card-hover-effect" data-title="{{ pub.title|lower }}"
+                data-date="{{ pub.publication_date|date:'Y-m-d' }}">
+
+                <div class="strip-content">
+                    <div class="strip-header">
+                        <span class="strip-category">{{ pub.get_category_display }}</span>
+                        <span class="strip-divider">•</span>
+                        <span class="strip-year">{{ pub.publication_date|date:"Y" }}</span>
+                    </div>
+
+                    <h3 class="strip-title">
+                        {% if pub.external_link %}
+                        <a href="{{ pub.external_link }}" target="_blank">{{ pub.title }}</a>
+                        {% elif pub.pdf_file %}
+                        <a href="{{ pub.pdf_file.url }}" target="_blank">{{ pub.title }}</a>
+                        {% else %}
+                        {{ pub.title }}
+                        {% endif %}
+                    </h3>
+
+                    {% with authors=pub.authors|default:""|lower %}
+                    {% if pub.authors and "unknown" not in authors %}
+                    <div class="strip-authors">
+                        {{ pub.authors }}
+                    </div>
+                    {% endif %}
+                    {% endwith %}
+
+                    {% if pub.journal %}
+                    <div class="strip-journal">{{ pub.journal }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="strip-actions">
+                    {% if pub.pdf_file %}
+                    <a href="{{ pub.pdf_file.url }}" target="_blank" class="action-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                        </svg>
+                        PDF
+                    </a>
+                    {% elif pub.external_link %}
+                    <a href="{{ pub.external_link }}" target="_blank" class="action-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                        </svg>
+                        Link
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <div class="no-projects">
+                <p>No publications found in this category.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<style>
+    /* Publication List Layout */
+    .projects-grid-section {
+        padding: 40px 0 100px;
+        background: #f9f9f9;
+        /* Slight gray background for better contrast with white strips */
+    }
+
+    .projects-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        max-width: 1000px;
+        /* Limit width for better readability */
+        margin: 0 auto;
+    }
+
+    .publication-strip {
+        display: flex;
+        align-items: center;
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-left: 5px solid #4A90E2;
+        border-radius: 8px;
+        padding: 0 25px;
+        transition: all 0.2s ease;
+        height: 160px;
+        /* Fixed height for consistency: 4 items ~ 640px + gaps */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+        position: relative;
+        overflow: hidden;
+    }
+
+
+
+    .strip-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 6px;
+        height: 100%;
+        padding-right: 20px;
+        min-width: 0;
+        /* Prevent flex overflow */
+    }
+
+    .strip-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 13px;
+        color: #666;
+        margin-bottom: 2px;
+    }
+
+    .strip-category {
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #4A90E2;
+        font-size: 11px;
+        letter-spacing: 0.5px;
+    }
+
+    .strip-divider {
+        color: #ccc;
+    }
+
+    .strip-year {
+        font-weight: 600;
+        color: #333;
+        background: #f0f0f0;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 11px;
+    }
+
+    .strip-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #1E3A5F;
+        margin: 0;
+        line-height: 1.35;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .strip-title a {
+        color: inherit;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+
+    .strip-title a:hover {
+        color: #4A90E2;
+    }
+
+    .strip-authors {
+        font-size: 14px;
+        color: #555;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+    }
+
+    .strip-journal {
+        font-size: 13px;
+        color: #888;
+        font-style: italic;
+        margin-top: 2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .strip-actions {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        padding-left: 20px;
+        border-left: 1px solid #f0f0f0;
+        height: 60%;
+    }
+
+    .action-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 10px 24px;
+        background: white;
+        color: #4A90E2;
+        border: 1px solid #4A90E2;
+        border-radius: 25px;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+
+    .action-btn:hover {
+        background: #4A90E2;
+        color: white;
+    }
+
+    .no-projects {
+        text-align: center;
+        padding: 80px 20px;
+        color: #999;
+        font-size: 18px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .publication-strip {
+            flex-direction: column;
+            align-items: flex-start;
+            height: auto;
+            padding: 20px;
+            gap: 15px;
+        }
+
+        .strip-content {
+            width: 100%;
+            padding-right: 0;
+        }
+
+        .strip-title {
+            font-size: 16px;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+        }
+
+        .strip-authors {
+            white-space: normal;
+            /* Allow wrapping on mobile */
+        }
+
+        .strip-journal {
+            white-space: normal;
+        }
+
+        .strip-actions {
+            width: 100%;
+            border-left: none;
+            padding-left: 0;
+            padding-top: 15px;
+            border-top: 1px solid #f0f0f0;
+            height: auto;
+            justify-content: flex-start;
+        }
+
+        .action-btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    /* Force Inlined Hover Effect */
+    .card-hover-effect {
+        transition: all 0.2s ease !important;
+    }
+
+    .card-hover-effect:hover {
+        transform: translateX(5px) !important;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12) !important;
+        border-left-color: #E74C3C !important;
+        border-color: #e0e0e0;
+    }
+</style>
+
+{% endblock %}

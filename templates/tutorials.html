@@ -1,0 +1,840 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Tutorials - Climatology Lab{% endblock %}
+
+{% block content %}
+
+
+
+<!-- Search & Filter Bar -->
+{% include 'includes/search_filter_bar.html' with search_placeholder="Search tutorials..." page_title=page_title|default:"Tutorials" %}
+
+
+<!-- Playlists and Tutorials Section -->
+<section class="projects-grid-section">
+    <div class="container">
+
+        <!-- Playlist Cards Grid -->
+        <div class="playlists-grid">
+            {% for item in playlist_data %}
+            <div class="playlist-wrapper">
+                <!-- Playlist Card (Main Video) -->
+                <div class="playlist-card" data-playlist-id="{{ item.playlist.playlist_id }}"
+                    onclick="openPlaylistModal('{{ item.playlist.playlist_id }}')">
+                    <div class="project-card">
+                        <div class="project-image">
+                            {% if item.playlist.get_thumbnail %}
+                            <img src="{{ item.playlist.get_thumbnail }}" alt="{{ item.playlist.title }}"
+                                class="tutorial-thumbnail">
+                            {% else %}
+                            <div class="placeholder-image"
+                                style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);">
+                                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#388E3C"
+                                    stroke-width="1.5">
+                                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                                </svg>
+                            </div>
+                            {% endif %}
+
+                            <!-- Playlist Badge -->
+                            <span class="playlist-badge">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+                                    <path
+                                        d="M15 6H3v2h12V6zm0 4H3v2h12v-2zM3 16h8v-2H3v2zM17 6v8.18c-.31-.11-.65-.18-1-.18-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3V8h3V6h-5z" />
+                                </svg>
+                                PLAYLIST · {{ item.lecture_count }} videos
+                            </span>
+
+                            <!-- Play Overlay -->
+                            <div class="play-overlay">
+                                <svg width="60" height="60" viewBox="0 0 24 24" fill="white" opacity="0.9">
+                                    <circle cx="12" cy="12" r="10" fill="rgba(0,0,0,0.7)"></circle>
+                                    <polygon points="10,8 16,12 10,16" fill="white"></polygon>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="project-content">
+                            <h3 class="project-title">{{ item.playlist.title }}</h3>
+                            <div class="pub-actions" style="margin-top: 20px;">
+                                <span class="view-details-btn action-btn-primary">
+                                    View Playlist
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path d="M9 18l6-6-6-6" />
+                                    </svg>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Full-Screen Playlist Modal -->
+                <div id="modal-{{ item.playlist.playlist_id }}" class="playlist-modal" style="display: none;">
+                    <!-- Modal Backdrop -->
+                    <div class="modal-backdrop" onclick="closePlaylistModal()"></div>
+
+                    <!-- Modal Content -->
+                    <div class="modal-content">
+                        <!-- Close Button -->
+                        <button class="modal-close" onclick="closePlaylistModal()" aria-label="Close">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+
+                        <!-- Left: Large Video Player -->
+                        <div class="modal-player-section">
+                            <iframe id="player-{{ item.playlist.playlist_id }}" src="" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                allowfullscreen referrerpolicy="strict-origin-when-cross-origin"
+                                class="modal-video-player">
+                            </iframe>
+                            <div id="embed-error-{{ item.playlist.playlist_id }}" class="embed-error"
+                                style="display: none;">
+                                <p>This video cannot be embedded. <a href=""
+                                        id="youtube-link-{{ item.playlist.playlist_id }}" target="_blank"
+                                        class="youtube-direct-link">Watch on YouTube</a></p>
+                            </div>
+                            <div class="modal-video-info">
+                                <h3 id="current-title-{{ item.playlist.playlist_id }}">{{ item.lectures.0.title }}</h3>
+                            </div>
+                        </div>
+
+                        <!-- Right: Playlist Sidebar -->
+                        <div class="modal-playlist-sidebar">
+                            <div class="modal-playlist-header">
+                                <h4>{{ item.playlist.title }}</h4>
+                                <p class="playlist-count">{{ item.lecture_count }} videos</p>
+                            </div>
+                            <div class="modal-lecture-list">
+                                {% for lecture in item.lectures %}
+                                <div class="lecture-item {% if forloop.first %}active{% endif %}"
+                                    data-video-id="{{ lecture.get_youtube_id }}"
+                                    data-lecture-number="{{ lecture.lecture_number }}" data-title="{{ lecture.title }}"
+                                    data-playlist-id="{{ item.playlist.playlist_id }}" onclick="loadLecture(this)">
+                                    <div class="lecture-thumbnail">
+                                        <img src="{{ lecture.get_thumbnail }}" alt="{{ lecture.title }}">
+                                        <div class="lecture-number">{{ lecture.lecture_number|default:forloop.counter }}
+                                        </div>
+                                    </div>
+                                    <div class="lecture-info">
+                                        <h5 class="lecture-title">{{ lecture.title }}</h5>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Standalone Tutorials (not part of playlists) -->
+        {% if standalone_tutorials %}
+        <div class="projects-grid">
+            {% for tutorial in standalone_tutorials %}
+            <a href="{{ tutorial.external_link }}" target="_blank" class="tutorial-card-link" rel="noopener noreferrer">
+                <div class="project-card" data-title="{{ tutorial.title|lower }}">
+                    <div class="project-image">
+                        {% if tutorial.get_thumbnail %}
+                        <img src="{{ tutorial.get_thumbnail }}" alt="{{ tutorial.title }}" class="tutorial-thumbnail">
+                        {% else %}
+                        <div class="placeholder-image"
+                            style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);">
+                            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#388E3C"
+                                stroke-width="1.5">
+                                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                            </svg>
+                        </div>
+                        {% endif %}
+
+                        <div class="play-overlay">
+                            <svg width="60" height="60" viewBox="0 0 24 24" fill="white" opacity="0.9">
+                                <circle cx="12" cy="12" r="10" fill="rgba(0,0,0,0.7)"></circle>
+                                <polygon points="10,8 16,12 10,16" fill="white"></polygon>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="project-content">
+                        <h3 class="project-title">{{ tutorial.title }}</h3>
+                        <div class="pub-actions" style="margin-top: 20px;">
+                            <span class="view-details-btn action-btn-primary">
+                                Watch on YouTube
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+    </div>
+</section>
+
+<style>
+    /* Reuse existing styles from original template */
+    .filter-section {
+        background: white;
+        padding: 20px 0 30px;
+        border-bottom: 1px solid #e8e8e8;
+    }
+
+    .filter-bar {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .search-box {
+        flex: 1;
+        min-width: 280px;
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .search-box svg {
+        position: absolute;
+        left: 16px;
+        color: #999;
+        pointer-events: none;
+    }
+
+    .search-box input {
+        width: 100%;
+        padding: 14px 16px 14px 50px;
+        border: 2px solid #e0e0e0;
+        border-radius: 30px;
+        font-size: 15px;
+        transition: all 0.3s ease;
+    }
+
+    .search-box input:focus {
+        outline: none;
+        border-color: #4A90E2;
+        box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+    }
+
+    .projects-grid-section {
+        padding: 70px 0 100px;
+        background: white;
+    }
+
+    .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 40px;
+        animation: fadeIn 0.6s ease;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Playlists Grid */
+    .playlists-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 40px;
+        margin-bottom: 50px;
+    }
+
+    /* Playlist Wrapper */
+    .playlist-wrapper {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .playlist-card {
+        cursor: pointer;
+        width: 100%;
+    }
+
+    .tutorial-card-link {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+
+    .project-card {
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid #e8e8e8;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .playlist-card:hover .project-card,
+    .tutorial-card-link:hover .project-card {
+        transform: translateY(-10px);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+        border-color: transparent;
+    }
+
+    .project-image {
+        position: relative;
+        width: 100%;
+        height: 200px;
+        overflow: hidden;
+        background: #f5f5f5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .tutorial-thumbnail {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .playlist-card:hover .tutorial-thumbnail,
+    .tutorial-card-link:hover .tutorial-thumbnail {
+        transform: scale(1.05);
+    }
+
+    .placeholder-image {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.5s ease;
+    }
+
+    /* Playlist Badge */
+    .playlist-badge {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        background: rgba(0, 0, 0, 0.85);
+        color: white;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        z-index: 2;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Play Overlay */
+    .play-overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        transition: transform 0.3s ease;
+        z-index: 1;
+    }
+
+    .playlist-card:hover .play-overlay,
+    .tutorial-card-link:hover .play-overlay {
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+
+    .project-content {
+        padding: 28px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .project-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1E3A5F;
+        margin-bottom: 14px;
+        line-height: 1.4;
+    }
+
+    .view-details-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 10px 20px;
+        border-radius: 25px;
+        font-size: 13px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .action-btn-primary {
+        background: #4A90E2;
+        color: white;
+    }
+
+    .playlist-card:hover .action-btn-primary,
+    .tutorial-card-link:hover .action-btn-primary {
+        background: #357ABD;
+        transform: translateY(-2px);
+    }
+
+    /* === FULL-SCREEN PLAYLIST MODAL === */
+    .playlist-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 9999;
+        animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    .modal-backdrop {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.9);
+        cursor: pointer;
+    }
+
+    .modal-content {
+        position: relative;
+        width: 95vw;
+        height: 90vh;
+        margin: 5vh auto;
+        background: #ffffff;
+        border-radius: 12px;
+        display: grid;
+        grid-template-columns: 70% 30%;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-close {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 44px;
+        height: 44px;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        transition: all 0.2s;
+    }
+
+    .modal-close:hover {
+        background: rgba(0, 0, 0, 0.9);
+        transform: scale(1.1);
+    }
+
+    /* Modal Player Section (Left 70%) */
+    .modal-player-section {
+        background: #000;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+
+    .modal-video-player {
+        width: 100%;
+        height: calc(100% - 80px);
+        border: none;
+    }
+
+    .modal-video-info {
+        background: #1a1a1a;
+        padding: 20px 30px;
+        height: 80px;
+    }
+
+    .modal-video-info h3 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+        color: #ffffff;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* Modal Playlist Sidebar (Right 30%) */
+    .modal-playlist-sidebar {
+        background: #f9f9f9;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .modal-playlist-header {
+        padding: 20px;
+        background: #ffffff;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .modal-playlist-header h4 {
+        margin: 0 0 8px 0;
+        font-size: 18px;
+        font-weight: 700;
+        color: #1E3A5F;
+    }
+
+    .playlist-count {
+        margin: 0;
+        font-size: 13px;
+        color: #666;
+        font-weight: 500;
+    }
+
+    .modal-lecture-list {
+        flex: 1;
+        overflow-y: auto;
+        padding: 10px;
+    }
+
+    /* Embed Error Fallback */
+    .embed-error {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: #2d2d2d;
+        color: white;
+        height: calc(100% - 80px);
+        text-align: center;
+        padding: 40px;
+    }
+
+    .embed-error p {
+        font-size: 16px;
+        margin: 0;
+    }
+
+    .youtube-direct-link {
+        color: #4A90E2;
+        text-decoration: underline;
+        font-weight: 600;
+        margin-left: 5px;
+    }
+
+    .youtube-direct-link:hover {
+        color: #357ABD;
+    }
+
+    /* Lecture List Items - Scrollable if too many lectures */
+
+    .lecture-item {
+        display: flex;
+        gap: 12px;
+        padding: 12px;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: all 0.2s;
+        align-items: flex-start;
+    }
+
+    .lecture-item:hover {
+        background: #f5f5f5;
+    }
+
+    .lecture-item.active {
+        background: #e3f2fd;
+        border-left: 4px solid #4A90E2;
+        padding-left: 10px;
+    }
+
+    /* Target the info container for the badge to ensure it flows with content */
+    .lecture-item.active .lecture-info::before {
+        content: "▶ NOW PLAYING";
+        display: inline-block;
+        background: #4A90E2;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        margin-bottom: 6px;
+        /* Push title down */
+        width: fit-content;
+    }
+
+    .lecture-thumbnail {
+        position: relative;
+        flex-shrink: 0;
+        width: 120px;
+        height: 68px;
+        border-radius: 6px;
+        overflow: hidden;
+    }
+
+    .lecture-thumbnail img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .lecture-number {
+        position: absolute;
+        bottom: 6px;
+        right: 6px;
+        background: rgba(0, 0, 0, 0.9);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 700;
+        min-width: 24px;
+        text-align: center;
+        z-index: 10;
+        line-height: 1;
+    }
+
+    .lecture-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .lecture-title {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 600;
+        color: #333;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .lecture-item.active .lecture-title {
+        color: #4A90E2;
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+        .playlists-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .projects-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .modal-content {
+            grid-template-columns: 65% 35%;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .playlists-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .projects-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .modal-content {
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            border-radius: 0;
+            grid-template-columns: 1fr;
+            grid-template-rows: 60% 40%;
+        }
+
+        .modal-close {
+            top: 10px;
+            right: 10px;
+            width: 40px;
+            height: 40px;
+        }
+
+        .lecture-item.active::before {
+            font-size: 9px;
+            padding: 3px 8px;
+            top: 6px;
+            right: 8px;
+        }
+    }
+</style>
+
+<script>
+    // Open playlist in full-screen modal
+    function openPlaylistModal(playlistId) {
+        // Stop all other videos first to ensure only one plays at a time
+        document.querySelectorAll('iframe.modal-video-player').forEach(iframe => {
+            iframe.src = '';
+        });
+
+        // Close all other modals
+        document.querySelectorAll('.playlist-modal').forEach(modal => {
+            modal.style.display = 'none';
+        });
+
+        // Open this modal
+        const modal = document.getElementById(`modal-${playlistId}`);
+        if (modal) {
+            modal.style.display = 'block';
+
+            // Prevent body scrolling when modal is open
+            document.body.style.overflow = 'hidden';
+
+            // Load first lecture if source is empty (initial load)
+            const iframe = document.getElementById(`player-${playlistId}`);
+            if (iframe && !iframe.src) {
+                const firstLecture = modal.querySelector('.lecture-item');
+                if (firstLecture) {
+                    loadLecture(firstLecture);
+                }
+            }
+        }
+    }
+
+    // Close playlist modal
+    function closePlaylistModal() {
+        // Stop all videos when closing
+        document.querySelectorAll('iframe.modal-video-player').forEach(iframe => {
+            iframe.src = '';
+        });
+
+        document.querySelectorAll('.playlist-modal').forEach(modal => {
+            modal.style.display = 'none';
+        });
+
+        // Restore body scrolling
+        document.body.style.overflow = '';
+    }
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closePlaylistModal();
+        }
+    });
+
+    // Load lecture in player
+    function loadLecture(lectureElement) {
+        const playlistId = lectureElement.dataset.playlistId;
+        const videoId = lectureElement.dataset.videoId;
+        const title = lectureElement.dataset.title;
+        const iframe = document.getElementById(`player-${playlistId}`);
+        const titleElement = document.getElementById(`current-title-${playlistId}`);
+        const embedError = document.getElementById(`embed-error-${playlistId}`);
+        const youtubeLink = document.getElementById(`youtube-link-${playlistId}`);
+
+        // Hide error, show iframe
+        if (embedError) embedError.style.display = 'none';
+        if (iframe) iframe.style.display = 'block';
+
+        // Update iframe source with enhanced parameters to avoid embed errors
+        const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&enablejsapi=1`;
+        iframe.src = embedUrl;
+
+        // Update YouTube direct link for fallback
+        if (youtubeLink) {
+            youtubeLink.href = `https://www.youtube.com/watch?v=${videoId}`;
+        }
+
+        // Detect if embed fails and show fallback
+        iframe.onerror = function () {
+            iframe.style.display = 'none';
+            if (embedError) embedError.style.display = 'flex';
+        };
+
+        // Update title
+        if (titleElement) {
+            titleElement.textContent = title;
+        }
+
+        // Update active state - remove from lectures ONLY IN THIS PLAYLIST
+        const modalContent = lectureElement.closest('.modal-content');
+        if (modalContent) {
+            modalContent.querySelectorAll('.lecture-item').forEach(item => {
+                item.classList.remove('active');
+            });
+        }
+
+        // Add active class to clicked lecture
+        lectureElement.classList.add('active');
+
+        // Scroll to active lecture smoothly
+        setTimeout(() => {
+            lectureElement.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+        }, 100);
+    }
+
+    // Search/filter functionality
+    function filterTutorials() {
+        const searchValue = document.getElementById('searchInput').value.toLowerCase();
+
+        // Filter playlist cards
+        document.querySelectorAll('.playlist-card').forEach(card => {
+            const title = card.querySelector('.project-title').textContent.toLowerCase();
+            const wrapper = card.closest('.playlist-wrapper');
+
+            if (title.includes(searchValue)) {
+                wrapper.style.display = 'block';
+            } else {
+                wrapper.style.display = 'none';
+            }
+        });
+
+        // Filter standalone tutorials
+        document.querySelectorAll('.tutorial-card-link').forEach(link => {
+            const title = link.querySelector('.project-title').textContent.toLowerCase();
+
+            if (title.includes(searchValue)) {
+                link.style.display = 'block';
+            } else {
+                link.style.display = 'none';
+            }
+        });
+    }
+</script>
+
+{% endblock %}
