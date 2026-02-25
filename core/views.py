@@ -55,8 +55,6 @@ def home(request):
     context = {
         'stats': stats,
         'workshops': workshops,
-        'research_notices': research_notices[:3],
-        'technology_notices': technology_notices[:3],
         'rt_notices': rt_notices,
         'pub_count': pub_count,
         'proj_count': proj_count,
