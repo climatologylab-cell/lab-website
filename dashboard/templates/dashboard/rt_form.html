@@ -10,11 +10,11 @@
         <div class="dashboard-card shadow-sm">
             <h5 class="fw-700 mb-0">
                 {% if form.instance.pk %}
-                Edit {% if type == 'Research' %}Research Focus{% elif type == 'Technology' %}Technology Used{% else
-                %}Homepage Statistics{% endif %}
+                Edit {% if type == 'RT' %}Research / Tech Notice{% elif type == 'Impact' %}Impact Story{% elif type ==
+                'Stats' %}Homepage Statistics{% endif %}
                 {% else %}
-                New {% if type == 'Research' %}Research Focus{% elif type == 'Technology' %}Technology Used{% else
-                %}Statistics{% endif %}
+                New {% if type == 'RT' %}Research / Tech Notice{% elif type == 'Impact' %}Impact Story{% elif type ==
+                'Stats' %}Statistics{% endif %}
                 {% endif %}
             </h5>
             <a href="{% if type == 'Stats' %}{% url 'dashboard:home' %}{% elif type == 'Impact' %}{% url 'dashboard:impact_list' %}{% else %}{% url 'dashboard:rt_list' %}{% endif %}"
@@ -49,8 +49,16 @@
                 </div>
             </div>
             {% else %}
+            {% if type == 'RT' %}
+            <div class="row">
+                <div class="col-md-4">{{ form.notice_type|as_crispy_field }}</div>
+                <div class="col-md-8">{{ form.title|as_crispy_field }}</div>
+            </div>
+            {{ form.description|as_crispy_field }}
+            {% else %}
             {{ form.title|as_crispy_field }}
             {{ form.description|as_crispy_field }}
+            {% endif %}
 
             <div class="row">
                 <div class="col-md-6">{{ form.event_date|as_crispy_field }}</div>

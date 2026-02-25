@@ -10,12 +10,12 @@ from publications.models import Publication
 from team.models import TeamMember
 from workshops.models import Workshop
 from core.models import (
-    Tutorial, ResearchNotice, TechnologyNotice, HomePageStats, CarouselImage,
+    Tutorial, RTNotice, HomePageStats, CarouselImage,
     ImpactStory, ResearchHighlight, PolicyImpact
 )
 from .forms import (
     ProjectForm, PublicationForm, TeamMemberForm, WorkshopForm, 
-    ResearchNoticeForm, TechnologyNoticeForm, HomePageStatsForm, 
+    RTNoticeForm, HomePageStatsForm, 
     CarouselImageForm, TutorialForm, ImpactStoryForm, 
     ResearchHighlightForm, PolicyImpactForm,
     OTPRequestForm, OTPVerifyForm, OTPSetPasswordForm
@@ -23,7 +23,7 @@ from .forms import (
 from .resources import (
     ResearchProjectResource, PublicationResource, TeamMemberResource,
     WorkshopResource, TutorialResource, ImpactStoryResource,
-    ResearchNoticeResource, TechnologyNoticeResource
+    RTNoticeResource
 )
 from django.http import HttpResponse
 from tablib import Dataset
@@ -75,7 +75,7 @@ def impact_story_delete(request, pk):
 
 @staff_member_required(login_url='/accounts/login/')
 def dashboard_home(request):
-    rt_count = ResearchNotice.objects.count() + TechnologyNotice.objects.count()
+    rt_count = RTNotice.objects.count()
     context = {
         'project_count': ResearchProject.objects.count(),
         'pub_count': Publication.objects.count(),
@@ -89,33 +89,14 @@ def dashboard_home(request):
 
 @staff_member_required(login_url='/accounts/login/')
 def rt_list(request):
-    from itertools import chain
-    from operator import attrgetter
-    
     query = request.GET.get('q', '').strip()
-    
-    research = ResearchNotice.objects.all()
-    tech = TechnologyNotice.objects.all()
+    notices = RTNotice.objects.all().order_by('-event_date')
     
     if query:
-        research = research.filter(Q(title__icontains=query) | Q(description__icontains=query))
-        tech = tech.filter(Q(title__icontains=query) | Q(description__icontains=query))
-    
-    # Tag and combine
-    research_list = list(research)
-    for n in research_list: n.notice_type = 'Research'
-    
-    tech_list = list(tech)
-    for n in tech_list: n.notice_type = 'Technology'
-    
-    all_notices = sorted(
-        chain(research_list, tech_list),
-        key=attrgetter('event_date'),
-        reverse=True
-    )
+        notices = notices.filter(Q(title__icontains=query) | Q(description__icontains=query))
     
     return render(request, 'dashboard/rt_list.html', {
-        'notices': all_notices,
+        'notices': notices,
         'query': query
     })
 
@@ -389,105 +370,55 @@ def tutorial_delete(request, pk):
         return redirect('dashboard:tutorials_list')
     return render(request, 'dashboard/confirm_delete.html', {'object': tutorial, 'type': 'Tutorial'})
 
-# --- RESEARCH NOTICES CRUD ---
+# --- RT NOTICES CRUD ---
 
 @staff_member_required(login_url='/accounts/login/')
-@permission_required('core.view_researchnotice', raise_exception=True)
-def research_notices_list(request):
+@permission_required('core.view_rtnotice', raise_exception=True)
+def rt_list(request):
     query = request.GET.get('q')
-    notices = ResearchNotice.objects.all().order_by('-event_date')
+    notices = RTNotice.objects.all().order_by('-event_date')
     if query:
         notices = notices.filter(
-            Q(title__icontains=query) | Q(description__icontains=query)
+            Q(title__icontains=query) | Q(description__icontains=query) | Q(notice_type__icontains=query)
         )
-    return render(request, 'dashboard/research_notices_list.html', {'notices': notices, 'query': query})
+    return render(request, 'dashboard/rt_list.html', {'notices': notices, 'query': query})
 
 @staff_member_required(login_url='/accounts/login/')
-@permission_required('core.add_researchnotice', raise_exception=True)
-def research_notice_create(request):
+@permission_required('core.add_rtnotice', raise_exception=True)
+def rt_notice_create(request):
     if request.method == 'POST':
-        form = ResearchNoticeForm(request.POST, request.FILES)
+        form = RTNoticeForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Research Focus added successfully!')
+            messages.success(request, 'Notice added successfully!')
             return redirect('dashboard:rt_list')
     else:
-        form = ResearchNoticeForm()
-    return render(request, 'dashboard/rt_form.html', {'form': form, 'title': 'Add Research Focus', 'type': 'Research'})
+        form = RTNoticeForm()
+    return render(request, 'dashboard/rt_form.html', {'form': form, 'title': 'Add Research / Tech Notice', 'type': 'RT'})
 
 @staff_member_required(login_url='/accounts/login/')
-@permission_required('core.change_researchnotice', raise_exception=True)
-def research_notice_edit(request, pk):
-    notice = get_object_or_404(ResearchNotice, pk=pk)
+@permission_required('core.change_rtnotice', raise_exception=True)
+def rt_notice_edit(request, pk):
+    notice = get_object_or_404(RTNotice, pk=pk)
     if request.method == 'POST':
-        form = ResearchNoticeForm(request.POST, request.FILES, instance=notice)
+        form = RTNoticeForm(request.POST, request.FILES, instance=notice)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Research Focus updated successfully!')
+            messages.success(request, 'Notice updated successfully!')
             return redirect('dashboard:rt_list')
     else:
-        form = ResearchNoticeForm(instance=notice)
-    return render(request, 'dashboard/rt_form.html', {'form': form, 'title': 'Edit Research Focus', 'type': 'Research'})
+        form = RTNoticeForm(instance=notice)
+    return render(request, 'dashboard/rt_form.html', {'form': form, 'title': 'Edit Notice', 'type': 'RT'})
 
 @staff_member_required(login_url='/accounts/login/')
-@permission_required('core.delete_researchnotice', raise_exception=True)
-def research_notice_delete(request, pk):
-    notice = get_object_or_404(ResearchNotice, pk=pk)
+@permission_required('core.delete_rtnotice', raise_exception=True)
+def rt_notice_delete(request, pk):
+    notice = get_object_or_404(RTNotice, pk=pk)
     if request.method == 'POST':
         notice.delete()
-        messages.success(request, 'Research notice deleted successfully!')
+        messages.success(request, 'Notice deleted successfully!')
         return redirect('dashboard:rt_list')
-    return render(request, 'dashboard/confirm_delete.html', {'object': notice, 'type': 'Research Notice'})
-
-# --- TECHNOLOGY NOTICES CRUD ---
-
-@staff_member_required(login_url='/accounts/login/')
-@permission_required('core.view_technologynotice', raise_exception=True)
-def technology_notices_list(request):
-    query = request.GET.get('q')
-    notices = TechnologyNotice.objects.all().order_by('-event_date')
-    if query:
-        notices = notices.filter(
-            Q(title__icontains=query) | Q(description__icontains=query)
-        )
-    return render(request, 'dashboard/technology_notices_list.html', {'notices': notices, 'query': query})
-
-@staff_member_required(login_url='/accounts/login/')
-@permission_required('core.add_technologynotice', raise_exception=True)
-def technology_notice_create(request):
-    if request.method == 'POST':
-        form = TechnologyNoticeForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Technology usage added successfully!')
-            return redirect('dashboard:rt_list')
-    else:
-        form = TechnologyNoticeForm()
-    return render(request, 'dashboard/rt_form.html', {'form': form, 'title': 'Add Technology Used', 'type': 'Technology'})
-
-@staff_member_required(login_url='/accounts/login/')
-@permission_required('core.change_technologynotice', raise_exception=True)
-def technology_notice_edit(request, pk):
-    notice = get_object_or_404(TechnologyNotice, pk=pk)
-    if request.method == 'POST':
-        form = TechnologyNoticeForm(request.POST, request.FILES, instance=notice)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Technology usage updated successfully!')
-            return redirect('dashboard:rt_list')
-    else:
-        form = TechnologyNoticeForm(instance=notice)
-    return render(request, 'dashboard/rt_form.html', {'form': form, 'title': 'Edit Technology Used', 'type': 'Technology'})
-
-@staff_member_required(login_url='/accounts/login/')
-@permission_required('core.delete_technologynotice', raise_exception=True)
-def technology_notice_delete(request, pk):
-    notice = get_object_or_404(TechnologyNotice, pk=pk)
-    if request.method == 'POST':
-        notice.delete()
-        messages.success(request, 'Technology notice deleted successfully!')
-        return redirect('dashboard:rt_list')
-    return render(request, 'dashboard/confirm_delete.html', {'object': notice, 'type': 'Technology Notice'})
+    return render(request, 'dashboard/confirm_delete.html', {'object': notice, 'type': 'Research/Tech Notice'})
 
 # --- HOMEPAGE STATS ---
 
@@ -614,17 +545,11 @@ MODEL_RESOURCE_MAP = {
         'redirect': 'dashboard:impact_list',
         'title': 'Impact Stories'
     },
-    'research_focus': {
-        'model': ResearchNotice,
-        'resource': ResearchNoticeResource,
+    'research_tech': {
+        'model': RTNotice,
+        'resource': RTNoticeResource,
         'redirect': 'dashboard:rt_list',
-        'title': 'Research Focus'
-    },
-    'tech_used': {
-        'model': TechnologyNotice,
-        'resource': TechnologyNoticeResource,
-        'redirect': 'dashboard:rt_list',
-        'title': 'Technology Used'
+        'title': 'Research & Technology'
     },
 }
 

@@ -4,7 +4,7 @@ from publications.models import Publication
 from team.models import TeamMember
 from workshops.models import Workshop
 from core.models import (
-    Tutorial, ResearchNotice, TechnologyNotice, HomePageStats, CarouselImage, 
+    Tutorial, RTNotice, HomePageStats, CarouselImage, 
     ImpactStory, ResearchHighlight, PolicyImpact
 )
 
@@ -104,30 +104,16 @@ class TutorialForm(forms.ModelForm):
             'is_playlist': 'Check this if this entry is the main playlist container',
         }
 
-class ResearchNoticeForm(forms.ModelForm):
+class RTNoticeForm(forms.ModelForm):
     class Meta:
-        model = ResearchNotice
-        fields = ['title', 'description', 'event_date', 'link', 'image', 'is_active']
+        model = RTNotice
+        fields = ['notice_type', 'title', 'description', 'event_date', 'link', 'image', 'is_active']
         labels = {
-            'title': 'Research Focus/Area',
-            'description': 'Brief about this Research',
-            'event_date': 'Initiated/Last Updated Date',
-            'link': 'Project Link (Optional)',
-        }
-        widgets = {
-            'event_date': forms.DateInput(attrs={'type': 'date'}),
-            'description': forms.Textarea(attrs={'rows': 4}),
-        }
-
-class TechnologyNoticeForm(forms.ModelForm):
-    class Meta:
-        model = TechnologyNotice
-        fields = ['title', 'description', 'event_date', 'link', 'image', 'is_active']
-        labels = {
-            'title': 'Technology Used',
-            'description': 'Description of Technology usage',
-            'event_date': 'Adoption Date',
-            'link': 'Tech Documentation Link (Optional)',
+            'notice_type': 'Category',
+            'title': 'Research Focus / Technology Name',
+            'description': 'Description/Brief',
+            'event_date': 'Initiated / Adoption Date',
+            'link': 'Project/Doc Link (Optional)',
         }
         widgets = {
             'event_date': forms.DateInput(attrs={'type': 'date'}),

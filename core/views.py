@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from core.models import (
-    HomePageStats, HomePageContent, ResearchNotice, TechnologyNotice, 
+    HomePageStats, HomePageContent, RTNotice, 
     CarouselImage, ImpactStory, ResearchHighlight, PolicyImpact
 )
 
@@ -45,17 +45,7 @@ def home(request):
     workshops = Workshop.objects.filter(is_active=True).order_by('-event_date')[:6]
     
     # Get recent Research & Technology notices
-    research_notices = list(ResearchNotice.objects.filter(is_active=True))
-    for n in research_notices: n.notice_type = 'Research'
-    
-    technology_notices = list(TechnologyNotice.objects.filter(is_active=True))
-    for n in technology_notices: n.notice_type = 'Technology'
-    
-    rt_notices = sorted(
-        chain(research_notices, technology_notices),
-        key=attrgetter('event_date'),
-        reverse=True
-    )[:3]
+    rt_notices = RTNotice.objects.filter(is_active=True).order_by('-event_date')[:3]
     
     # Calculate Dynamic Counts
     pub_count = Publication.objects.filter(is_active=True).count()
@@ -371,50 +361,32 @@ def tutorials_view(request):
 
 def research_technology_view(request):
     """Research and Technology notices view with search and sort"""
-    from core.models import ResearchNotice, TechnologyNotice
-    from itertools import chain
-    from operator import attrgetter
+    from core.models import RTNotice
     from django.db.models import Q
-
+    
     # Search functionality
     search_query = request.GET.get('search', '').strip()
     
-    research_notices = ResearchNotice.objects.filter(is_active=True)
-    technology_notices = TechnologyNotice.objects.filter(is_active=True)
-
+    notices = RTNotice.objects.filter(is_active=True)
+    
     if search_query:
-        research_notices = research_notices.filter(
+        notices = notices.filter(
             Q(title__icontains=search_query) | Q(description__icontains=search_query)
         )
-        technology_notices = technology_notices.filter(
-            Q(title__icontains=search_query) | Q(description__icontains=search_query)
-        )
-
-    # Tag and convert to list
-    research_notices_list = list(research_notices)
-    for n in research_notices_list: n.notice_type = 'Research'
-    
-    technology_notices_list = list(technology_notices)
-    for n in technology_notices_list: n.notice_type = 'Technology'
-    
-    # Combine
-    all_notices = list(chain(research_notices_list, technology_notices_list))
-    
+        
     # Sort functionality
     sort_by = request.GET.get('sort', 'latest')
-    if sort_by == 'latest':
-        all_notices.sort(key=attrgetter('event_date'), reverse=True)
-    elif sort_by == 'oldest':
-        all_notices.sort(key=attrgetter('event_date'))
+    if sort_by == 'oldest':
+        notices = notices.order_by('event_date')
     elif sort_by == 'az':
-        all_notices.sort(key=attrgetter('title'))
+        notices = notices.order_by('title')
     elif sort_by == 'za':
-        all_notices.sort(key=attrgetter('title'), reverse=True)
-    else:
-        all_notices.sort(key=attrgetter('event_date'), reverse=True) # Default
+        notices = notices.order_by('-title')
+    else: # latest
+        notices = notices.order_by('-event_date')
     
     context = {
-        'notices': all_notices,
+        'notices': notices,
         'search_query': search_query,
         'sort_by': sort_by,
         'page_title': 'Research & Technology',

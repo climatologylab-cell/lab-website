@@ -50,42 +50,29 @@ class HomePageContent(models.Model):
         return self.welcome_title
 
 
-class ResearchNotice(models.Model):
-    """Research notices/workshops"""
+class RTNotice(models.Model):
+    """Unified Research and Technology notices"""
+    NOTICE_TYPES = [
+        ('Research', 'Research Focus'),
+        ('Technology', 'Technology Used'),
+    ]
+    
+    notice_type = models.CharField(max_length=20, choices=NOTICE_TYPES, default='Research')
     title = models.CharField(max_length=300)
     description = models.TextField()
-    event_date = models.DateField()
+    event_date = models.DateField(help_text="Date for the notice (Initiated/Adoption date)")
     posted_date = models.DateTimeField(auto_now_add=True)
     link = models.URLField(blank=True)
     image = models.ImageField(upload_to='research_tech/', blank=True, null=True, help_text="Image for the notice card")
     is_active = models.BooleanField(default=True)
     
     class Meta:
-        verbose_name = "Research Notice"
-        verbose_name_plural = "Research Notices"
+        verbose_name = "Research & Tech Notice"
+        verbose_name_plural = "Research & Tech Notices"
         ordering = ['-event_date']
     
     def __str__(self):
-        return f"{self.title} - {self.event_date}"
-
-
-class TechnologyNotice(models.Model):
-    """Technology notices/workshops"""
-    title = models.CharField(max_length=300)
-    description = models.TextField()
-    event_date = models.DateField()
-    posted_date = models.DateTimeField(auto_now_add=True)
-    link = models.URLField(blank=True)
-    image = models.ImageField(upload_to='research_tech/', blank=True, null=True, help_text="Image for the notice card")
-    is_active = models.BooleanField(default=True)
-    
-    class Meta:
-        verbose_name = "Technology Notice"
-        verbose_name_plural = "Technology Notices"
-        ordering = ['-event_date']
-    
-    def __str__(self):
-        return f"{self.title} - {self.event_date}"
+        return f"[{self.notice_type}] {self.title} - {self.event_date}"
 
 
 class Tutorial(models.Model):

@@ -13,50 +13,24 @@
                     value="{{ query|default:'' }}">
                 <button class="btn btn-sm btn-outline-primary" type="submit">Search</button>
             </form>
-            <div class="dropdown">
-                <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                    <i class="bi bi-cloud-arrow-up me-1"></i> Import
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end shadow border-0">
-                    <li><a class="dropdown-item" href="{% url 'dashboard:import_data' 'research_focus' %}"><i
-                                class="bi bi-search me-2"></i>Research Focus</a></li>
-                    <li><a class="dropdown-item" href="{% url 'dashboard:import_data' 'tech_used' %}"><i
-                                class="bi bi-cpu me-2"></i>Technology Used</a></li>
-                </ul>
-            </div>
+            <a href="{% url 'dashboard:import_data' 'research_tech' %}" class="btn btn-outline-primary btn-sm">
+                <i class="bi bi-cloud-arrow-up me-1"></i> Import
+            </a>
             <div class="dropdown">
                 <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
                     <i class="bi bi-cloud-arrow-down me-1"></i> Export
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end shadow border-0">
-                    <li class="dropdown-header small text-muted">Research Focus</li>
-                    <li><a class="dropdown-item" href="{% url 'dashboard:export_data' 'research_focus' %}?format=csv"><i
+                    <li><a class="dropdown-item" href="{% url 'dashboard:export_data' 'research_tech' %}?format=csv"><i
                                 class="bi bi-filetype-csv me-2"></i>CSV</a></li>
-                    <li><a class="dropdown-item"
-                            href="{% url 'dashboard:export_data' 'research_focus' %}?format=xlsx"><i
-                                class="bi bi-file-earmark-excel me-2"></i>Excel</a></li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li class="dropdown-header small text-muted">Technology Used</li>
-                    <li><a class="dropdown-item" href="{% url 'dashboard:export_data' 'tech_used' %}?format=csv"><i
-                                class="bi bi-filetype-csv me-2"></i>CSV</a></li>
-                    <li><a class="dropdown-item" href="{% url 'dashboard:export_data' 'tech_used' %}?format=xlsx"><i
+                    <li><a class="dropdown-item" href="{% url 'dashboard:export_data' 'research_tech' %}?format=xlsx"><i
                                 class="bi bi-file-earmark-excel me-2"></i>Excel</a></li>
                 </ul>
             </div>
-            <div class="dropdown">
-                <button class="btn btn-primary btn-sm dropdown-toggle d-flex align-items-center gap-1" type="button"
-                    data-bs-toggle="dropdown">
-                    <i class="bi bi-plus-circle"></i> Add New
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="{% url 'dashboard:research_notice_create' %}">Research Focus</a>
-                    </li>
-                    <li><a class="dropdown-item" href="{% url 'dashboard:technology_notice_create' %}">Technology
-                            Used</a></li>
-                </ul>
-            </div>
+            <a href="{% url 'dashboard:rt_notice_create' %}"
+                class="btn btn-primary btn-sm d-flex align-items-center gap-1">
+                <i class="bi bi-plus-circle"></i> Add New Notice
+            </a>
         </div>
     </div>
 
@@ -99,31 +73,17 @@
                     </td>
                     <td class="text-end">
                         <div class="btn-group">
-                            {% if notice.notice_type == "Research" %}
-                            <a href="{% url 'dashboard:research_notice_edit' notice.pk %}"
+                            <a href="{% url 'dashboard:rt_notice_edit' notice.pk %}"
                                 class="btn btn-sm btn-outline-secondary" title="Edit">
                                 <i class="bi bi-pencil"></i>
                             </a>
-                            <form action="{% url 'dashboard:research_notice_delete' notice.pk %}" method="post"
-                                class="d-inline" onsubmit="return confirm('Delete this research notice?');">
+                            <form action="{% url 'dashboard:rt_notice_delete' notice.pk %}" method="post"
+                                class="d-inline" onsubmit="return confirm('Delete this notice?');">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
                                     <i class="bi bi-trash"></i>
                                 </button>
                             </form>
-                            {% else %}
-                            <a href="{% url 'dashboard:technology_notice_edit' notice.pk %}"
-                                class="btn btn-sm btn-outline-secondary" title="Edit">
-                                <i class="bi bi-pencil"></i>
-                            </a>
-                            <form action="{% url 'dashboard:technology_notice_delete' notice.pk %}" method="post"
-                                class="d-inline" onsubmit="return confirm('Delete this technology notice?');">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </form>
-                            {% endif %}
                         </div>
                     </td>
                 </tr>

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import (
-    SiteSettings, HomePageStats, HomePageContent, ResearchNotice, 
-    TechnologyNotice, Tutorial, CarouselImage, ImpactStory, 
+    SiteSettings, HomePageStats, HomePageContent, RTNotice, 
+    Tutorial, CarouselImage, ImpactStory, 
     ResearchHighlight, PolicyImpact
 )
 from .admin_base import BaseAdmin
@@ -52,17 +52,10 @@ class HomePageContentAdmin(BaseAdmin):
     list_filter = ['is_active']
 
 
-@admin.register(ResearchNotice)
-class ResearchNoticeAdmin(BaseAdmin):
-    list_display = ['title', 'event_date', 'is_active']
-    list_filter = ['is_active', 'event_date']
-    search_fields = ['title', 'description']
-
-
-@admin.register(TechnologyNotice)
-class TechnologyNoticeAdmin(BaseAdmin):
-    list_display = ['title', 'event_date', 'is_active']
-    list_filter = ['is_active', 'event_date']
+@admin.register(RTNotice)
+class RTNoticeAdmin(BaseAdmin):
+    list_display = ['notice_type', 'title', 'event_date', 'is_active']
+    list_filter = ['notice_type', 'is_active', 'event_date']
     search_fields = ['title', 'description']
 
 

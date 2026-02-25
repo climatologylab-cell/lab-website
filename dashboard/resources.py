@@ -5,7 +5,7 @@ from publications.models import Publication
 from team.models import TeamMember
 from workshops.models import Workshop
 from core.models import (
-    Tutorial, ResearchNotice, TechnologyNotice, 
+    Tutorial, RTNotice, 
     CarouselImage, ImpactStory, ResearchHighlight, PolicyImpact
 )
 
@@ -47,14 +47,8 @@ class ImpactStoryResource(resources.ModelResource):
         import_id_fields = ('title',)
         skip_unchanged = True
 
-class ResearchNoticeResource(resources.ModelResource):
+class RTNoticeResource(resources.ModelResource):
     class Meta:
-        model = ResearchNotice
-        import_id_fields = ('title',)
-        skip_unchanged = True
-
-class TechnologyNoticeResource(resources.ModelResource):
-    class Meta:
-        model = TechnologyNotice
+        model = RTNotice
         import_id_fields = ('title',)
         skip_unchanged = True

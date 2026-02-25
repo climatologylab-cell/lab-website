@@ -41,16 +41,10 @@ urlpatterns = [
     path('tutorials/delete/<int:pk>/', views.tutorial_delete, name='tutorial_delete'),
     
     # Research & Technology Unified CRUD
-    
-    # Research Notices CRUD
-    path('research/add/', views.research_notice_create, name='research_notice_create'),
-    path('research/edit/<int:pk>/', views.research_notice_edit, name='research_notice_edit'),
-    path('research/delete/<int:pk>/', views.research_notice_delete, name='research_notice_delete'),
-    
-    # Technology Notices CRUD
-    path('technology/add/', views.technology_notice_create, name='technology_notice_create'),
-    path('technology/edit/<int:pk>/', views.technology_notice_edit, name='technology_notice_edit'),
-    path('technology/delete/<int:pk>/', views.technology_notice_delete, name='technology_notice_delete'),
+    path('rt/', views.rt_list, name='rt_list'),
+    path('rt/add/', views.rt_notice_create, name='rt_notice_create'),
+    path('rt/edit/<int:pk>/', views.rt_notice_edit, name='rt_notice_edit'),
+    path('rt/delete/<int:pk>/', views.rt_notice_delete, name='rt_notice_delete'),
 
     # Site Settings/Stats
     path('stats/edit/', views.edit_homepage_stats, name='edit_stats'),
