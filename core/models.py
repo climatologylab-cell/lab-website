@@ -57,6 +57,7 @@ class ResearchNotice(models.Model):
     event_date = models.DateField()
     posted_date = models.DateTimeField(auto_now_add=True)
     link = models.URLField(blank=True)
+    image = models.ImageField(upload_to='research_tech/', blank=True, null=True, help_text="Image for the notice card")
     is_active = models.BooleanField(default=True)
     
     class Meta:
@@ -75,6 +76,7 @@ class TechnologyNotice(models.Model):
     event_date = models.DateField()
     posted_date = models.DateTimeField(auto_now_add=True)
     link = models.URLField(blank=True)
+    image = models.ImageField(upload_to='research_tech/', blank=True, null=True, help_text="Image for the notice card")
     is_active = models.BooleanField(default=True)
     
     class Meta:

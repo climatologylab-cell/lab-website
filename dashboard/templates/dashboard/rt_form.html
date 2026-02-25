@@ -57,6 +57,8 @@
                 <div class="col-md-6">{{ form.link|as_crispy_field }}</div>
             </div>
 
+            {{ form.image|as_crispy_field }}
+
             <div class="form-check form-switch mt-3">
                 {{ form.is_active }}
                 <label class="form-check-label" for="{{ form.is_active.id_for_label }}">Show on Website</label>

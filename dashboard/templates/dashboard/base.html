@@ -177,6 +177,9 @@
                 class="nav-link {% if 'tutorials' in request.path %}active{% endif %}">
                 <i class="bi bi-book"></i> Tutorials
             </a>
+            <a href="{% url 'dashboard:rt_list' %}" class="nav-link {% if 'rt' in request.path %}active{% endif %}">
+                <i class="bi bi-gear-wide-connected"></i> Research & Tech
+            </a>
             <div class="px-3 mt-4 mb-2 small text-uppercase opacity-50 fw-700"
                 style="font-size: 0.65rem; letter-spacing: 1px;">Website Settings</div>
             <a href="{% url 'dashboard:carousel_list' %}"
