@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: climatology-lab
+    runtime: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn config.wsgi --bind 0.0.0.0:$PORT"
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: PYTHON_VERSION
+        value: "3.10.15"
+      - key: ALLOWED_HOSTS
+        value: ".onrender.com"

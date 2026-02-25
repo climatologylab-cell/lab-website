@@ -34,10 +34,7 @@ ALLOWED_HOSTS = [h.strip() for h in os.getenv('ALLOWED_HOSTS', '*').split(',') i
 
 # CSRF Trusted Origins - Required for Django 4.0+ when behind a proxy/different domain
 CSRF_TRUSTED_ORIGINS = [
-    o.strip() for o in os.getenv(
-        'CSRF_TRUSTED_ORIGINS',
-        'https://web-production-d3100.up.railway.app'
-    ).split(',') if o.strip()
+    o.strip() for o in os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',') if o.strip()
 ]
 
 

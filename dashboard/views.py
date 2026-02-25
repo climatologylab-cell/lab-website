@@ -714,15 +714,18 @@ def otp_request_view(request):
             request.session['reset_otp_verified'] = False
 
             # Send OTP via email
-            send_mail(
-                subject='Climatology Lab - Password Reset OTP',
-                message=f'Your OTP for password reset is: {otp}\n\nThis code expires in 10 minutes.\n\nIf you did not request this, please ignore this email.',
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[email],
-                fail_silently=False,
-            )
-            messages.info(request, f'A 6-digit OTP has been sent to {email}.')
-            return redirect('dashboard:otp_verify')
+            try:
+                send_mail(
+                    subject='Climatology Lab - Password Reset OTP',
+                    message=f'Your OTP for password reset is: {otp}\n\nThis code expires in 10 minutes.\n\nIf you did not request this, please ignore this email.',
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[email],
+                    fail_silently=False,
+                )
+                messages.info(request, f'A 6-digit OTP has been sent to {email}.')
+                return redirect('dashboard:otp_verify')
+            except OSError as e:
+                messages.error(request, 'Unable to send email at this time. The mail server is unreachable. Please contact the administrator.')
     else:
         form = OTPRequestForm()
     return render(request, 'dashboard/password_reset_form.html', {'form': form})
