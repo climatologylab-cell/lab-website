@@ -107,7 +107,7 @@ class TutorialForm(forms.ModelForm):
 class ResearchNoticeForm(forms.ModelForm):
     class Meta:
         model = ResearchNotice
-        fields = ['title', 'description', 'event_date', 'link', 'is_active']
+        fields = ['title', 'description', 'event_date', 'link', 'image', 'is_active']
         labels = {
             'title': 'Research Focus/Area',
             'description': 'Brief about this Research',
@@ -122,7 +122,7 @@ class ResearchNoticeForm(forms.ModelForm):
 class TechnologyNoticeForm(forms.ModelForm):
     class Meta:
         model = TechnologyNotice
-        fields = ['title', 'description', 'event_date', 'link', 'is_active']
+        fields = ['title', 'description', 'event_date', 'link', 'image', 'is_active']
         labels = {
             'title': 'Technology Used',
             'description': 'Description of Technology usage',
