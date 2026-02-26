@@ -150,27 +150,42 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
-# Cloudinary configuration (used in production when env vars are set)
-CLOUDINARY_STORAGE = {
-    "CLOUD_NAME": os.getenv("CLOUDINARY_CLOUD_NAME", ""),
-    "API_KEY": os.getenv("CLOUDINARY_API_KEY", ""),
-    "API_SECRET": os.getenv("CLOUDINARY_API_SECRET", ""),
-}
+# ---------------------------------------------------------------------------
+# Cloudinary — two ways to configure (CLOUDINARY_URL takes priority):
+#
+#   Option A (recommended — copy from Cloudinary dashboard):
+#     CLOUDINARY_URL = cloudinary://API_KEY:API_SECRET@CLOUD_NAME
+#
+#   Option B (individual vars):
+#     CLOUDINARY_CLOUD_NAME / CLOUDINARY_API_KEY / CLOUDINARY_API_SECRET
+# ---------------------------------------------------------------------------
+_cloudinary_url = os.getenv("CLOUDINARY_URL", "")
 
-# Determine whether we actually have credentials for Cloudinary.
-# If only the cloud name is provided the storage backend will still be
-# chosen, which leads to a hard crash when it attempts an upload with
-# missing key/secret (the 500 you saw on Render).  Check all three and
-# fall back to filesystem storage if any piece is missing.
-cloud_name = CLOUDINARY_STORAGE["CLOUD_NAME"]
-cloud_key = CLOUDINARY_STORAGE["API_KEY"]
-cloud_secret = CLOUDINARY_STORAGE["API_SECRET"]
+if _cloudinary_url and _cloudinary_url.startswith("cloudinary://"):
+    # Parse the URL: cloudinary://API_KEY:API_SECRET@CLOUD_NAME
+    _url_body = _cloudinary_url[len("cloudinary://"):]          # API_KEY:API_SECRET@CLOUD_NAME
+    _at_idx = _url_body.rfind("@")
+    cloud_name = _url_body[_at_idx + 1:] if _at_idx != -1 else ""
+    _user_info = _url_body[:_at_idx] if _at_idx != -1 else ""
+    _colon_idx = _user_info.find(":")
+    cloud_key = _user_info[:_colon_idx] if _colon_idx != -1 else _user_info
+    cloud_secret = _user_info[_colon_idx + 1:] if _colon_idx != -1 else ""
+else:
+    # Fall back to individual env vars
+    cloud_name = os.getenv("CLOUDINARY_CLOUD_NAME", "")
+    cloud_key = os.getenv("CLOUDINARY_API_KEY", "")
+    cloud_secret = os.getenv("CLOUDINARY_API_SECRET", "")
+
+# Populate CLOUDINARY_STORAGE so django-cloudinary-storage picks it up
+CLOUDINARY_STORAGE = {
+    "CLOUD_NAME": cloud_name,
+    "API_KEY": cloud_key,
+    "API_SECRET": cloud_secret,
+}
 
 use_cloudinary = bool(cloud_name and cloud_key and cloud_secret)
 
-# Django 4.2+ STORAGES dict (replaces STATICFILES_STORAGE + DEFAULT_FILE_STORAGE)
 if use_cloudinary:
-    # Production: Cloudinary for media, Whitenoise for static
     STORAGES = {
         "default": {
             "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
@@ -179,14 +194,13 @@ if use_cloudinary:
             "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
         },
     }
-    # Explicitly configure cloudinary package so uploads work correctly.
-    # django-cloudinary-storage should do this in AppConfig.ready(), but an
-    # explicit call here guarantees it regardless of app-loading order.
+    # Explicitly configure the cloudinary package (guarantees correct credentials
+    # regardless of app-loading order with django-cloudinary-storage).
     import cloudinary
     cloudinary.config(
         cloud_name=cloud_name,
         api_key=cloud_key,
-        api_secret=cloud_secret,
+        api_secret=cloud_secret.strip(),   # strip any accidental whitespace
         secure=True,
     )
 else:
