@@ -738,3 +738,48 @@ def otp_set_password_view(request):
         form = OTPSetPasswordForm()
 
     return render(request, 'dashboard/password_reset_confirm.html', {'form': form})
+
+
+# --- CLOUDINARY DIAGNOSTIC ---
+
+@staff_member_required(login_url='/accounts/login/')
+def cloudinary_test(request):
+    """Diagnostic page to verify Cloudinary credentials without needing Shell access."""
+    import cloudinary
+    import cloudinary.api
+    from django.conf import settings
+
+    cfg = settings.CLOUDINARY_STORAGE
+    cloud_name = cfg.get('CLOUD_NAME', '')
+    api_key = cfg.get('API_KEY', '')
+    api_secret = cfg.get('API_SECRET', '')
+
+    secret_display = f"{api_secret[:4]}...{api_secret[-4:]} (length={len(api_secret)})" if len(api_secret) > 8 else f"(length={len(api_secret)}) — TOO SHORT!"
+
+    status = 'unknown'
+    error_msg = ''
+    try:
+        result = cloudinary.api.ping()
+        status = 'ok'
+    except Exception as e:
+        status = 'error'
+        error_msg = str(e)
+
+    from django.http import HttpResponse
+    color = '#2ecc71' if status == 'ok' else '#e74c3c'
+    html = f"""
+    <html><head><title>Cloudinary Test</title></head>
+    <body style="font-family:monospace;padding:30px;background:#1a1a2e;color:#eee;">
+    <h2>🔍 Cloudinary Diagnostics</h2>
+    <table style="border-collapse:collapse;">
+      <tr><td style="padding:8px;color:#aaa;">CLOUD_NAME</td><td style="padding:8px;">{cloud_name or '(empty)'}</td></tr>
+      <tr><td style="padding:8px;color:#aaa;">API_KEY</td><td style="padding:8px;">{api_key or '(empty)'}</td></tr>
+      <tr><td style="padding:8px;color:#aaa;">API_SECRET</td><td style="padding:8px;">{secret_display}</td></tr>
+      <tr><td style="padding:8px;color:#aaa;">use_cloudinary</td><td style="padding:8px;">{'True' if (cloud_name and api_key and api_secret) else 'False — missing credentials!'}</td></tr>
+    </table>
+    <h3 style="color:{color};">Connection: {'✅ SUCCESS' if status == 'ok' else '❌ FAILED'}</h3>
+    {f'<pre style="color:#e74c3c;background:#2a2a2a;padding:15px;border-radius:6px;">{error_msg}</pre>' if error_msg else ''}
+    <br><a href="/dashboard/" style="color:#3498db;">← Back to Dashboard</a>
+    </body></html>
+    """
+    return HttpResponse(html)

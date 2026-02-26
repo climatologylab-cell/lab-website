@@ -7,8 +7,10 @@ app_name = 'dashboard'
 
 urlpatterns = [
     path('', views.dashboard_home, name='home'),
-    path('rt/', views.rt_list, name='rt_list'),
-    
+
+    # Cloudinary diagnostic (staff only)
+    path('cloudinary-test/', views.cloudinary_test, name='cloudinary_test'),
+
     # Projects CRUD
     path('projects/', views.projects_list, name='projects_list'),
     path('projects/add/', views.project_create, name='project_create'),
