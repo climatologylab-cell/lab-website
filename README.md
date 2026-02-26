@@ -210,7 +210,7 @@ For production:
 
 Created for the Climatology Lab, IIT Roorkee.
 
-Designed by Anush Rana, Created by Abhishek Saini.
+Developed by Chanchal Suthar.
 
 ## Support
 
