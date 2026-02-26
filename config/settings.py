@@ -159,10 +159,13 @@ MEDIA_ROOT = BASE_DIR / "media"
 #     CLOUDINARY_CLOUD_NAME / CLOUDINARY_API_KEY / CLOUDINARY_API_SECRET
 # ---------------------------------------------------------------------------
 _cloudinary_url = os.getenv("CLOUDINARY_URL", "")
+# Sanitize: remove surrounding quotes and literal \n that users sometimes
+# accidentally include when setting the value in Render's dashboard.
+_cloudinary_url = _cloudinary_url.strip().strip('"').strip("'").replace("\\n", "").strip()
 
 if _cloudinary_url and _cloudinary_url.startswith("cloudinary://"):
     # Parse the URL: cloudinary://API_KEY:API_SECRET@CLOUD_NAME
-    _url_body = _cloudinary_url[len("cloudinary://"):]          # API_KEY:API_SECRET@CLOUD_NAME
+    _url_body = _cloudinary_url[len("cloudinary://"):]
     _at_idx = _url_body.rfind("@")
     cloud_name = _url_body[_at_idx + 1:] if _at_idx != -1 else ""
     _user_info = _url_body[:_at_idx] if _at_idx != -1 else ""
@@ -175,14 +178,12 @@ else:
     cloud_key = os.getenv("CLOUDINARY_API_KEY", "").strip()
     cloud_secret = os.getenv("CLOUDINARY_API_SECRET", "").strip()
 
-# IMPORTANT: strip any accidental whitespace from all values before storing.
-# django-cloudinary-storage reads CLOUDINARY_STORAGE in AppConfig.ready() —
-# whatever is in this dict is what gets used for signatures.
+# Strip any remaining whitespace from all values
 cloud_name = cloud_name.strip()
 cloud_key = cloud_key.strip()
 cloud_secret = cloud_secret.strip()
 
-# Populate CLOUDINARY_STORAGE (kept for any legacy references)
+# Populate CLOUDINARY_STORAGE (kept for legacy references)
 CLOUDINARY_STORAGE = {
     "CLOUD_NAME": cloud_name,
     "API_KEY": cloud_key,
@@ -192,9 +193,6 @@ CLOUDINARY_STORAGE = {
 use_cloudinary = bool(cloud_name and cloud_key and cloud_secret)
 
 if use_cloudinary:
-    # Use our custom storage backend that calls cloudinary SDK directly.
-    # The cloudinary SDK reads CLOUDINARY_URL from the environment automatically —
-    # no manual cloudinary.config() call needed.
     STORAGES = {
         "default": {
             "BACKEND": "core.storage.CloudinaryMediaStorage",
@@ -203,6 +201,16 @@ if use_cloudinary:
             "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
         },
     }
+    # Explicitly configure the cloudinary SDK with our cleaned values.
+    # This prevents the SDK from falling back to auto-reading CLOUDINARY_URL
+    # from the environment (which may contain quotes or \n characters).
+    import cloudinary
+    cloudinary.config(
+        cloud_name=cloud_name,
+        api_key=cloud_key,
+        api_secret=cloud_secret,
+        secure=True,
+    )
 else:
     # Development or mis‑configured deployment: local disk for media, Whitenoise for static
     if cloud_name and not (cloud_key and cloud_secret):
