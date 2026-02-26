@@ -179,6 +179,16 @@ if use_cloudinary:
             "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
         },
     }
+    # Explicitly configure cloudinary package so uploads work correctly.
+    # django-cloudinary-storage should do this in AppConfig.ready(), but an
+    # explicit call here guarantees it regardless of app-loading order.
+    import cloudinary
+    cloudinary.config(
+        cloud_name=cloud_name,
+        api_key=cloud_key,
+        api_secret=cloud_secret,
+        secure=True,
+    )
 else:
     # Development or mis‑configured deployment: local disk for media, Whitenoise for static
     if cloud_name and not (cloud_key and cloud_secret):

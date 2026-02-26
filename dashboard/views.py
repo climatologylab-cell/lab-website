@@ -230,9 +230,12 @@ def team_create(request):
     if request.method == 'POST':
         form = TeamMemberForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            messages.success(request, 'Team member added successfully!')
-            return redirect('dashboard:team_list')
+            try:
+                form.save()
+                messages.success(request, 'Team member added successfully!')
+                return redirect('dashboard:team_list')
+            except Exception as e:
+                messages.error(request, f'Upload failed: {e}. Check your Cloudinary credentials in the environment settings.')
     else:
         form = TeamMemberForm()
     return render(request, 'dashboard/team_form.html', {'form': form, 'title': 'Add New Member', 'photo_url': None})
@@ -244,9 +247,12 @@ def team_edit(request, pk):
     if request.method == 'POST':
         form = TeamMemberForm(request.POST, request.FILES, instance=member)
         if form.is_valid():
-            form.save()
-            messages.success(request, 'Team member updated successfully!')
-            return redirect('dashboard:team_list')
+            try:
+                form.save()
+                messages.success(request, 'Team member updated successfully!')
+                return redirect('dashboard:team_list')
+            except Exception as e:
+                messages.error(request, f'Upload failed: {e}. Check your Cloudinary credentials in the environment settings.')
     else:
         form = TeamMemberForm(instance=member)
     # Safely get the photo URL — old local-storage paths raise ValueError when Cloudinary is active
