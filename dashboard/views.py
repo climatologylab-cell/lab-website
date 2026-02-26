@@ -87,18 +87,6 @@ def dashboard_home(request):
     }
     return render(request, 'dashboard/home.html', context)
 
-@staff_member_required(login_url='/accounts/login/')
-def rt_list(request):
-    query = request.GET.get('q', '').strip()
-    notices = RTNotice.objects.all().order_by('-event_date')
-    
-    if query:
-        notices = notices.filter(Q(title__icontains=query) | Q(description__icontains=query))
-    
-    return render(request, 'dashboard/rt_list.html', {
-        'notices': notices,
-        'query': query
-    })
 
 # --- PROJECTS CRUD ---
 
@@ -124,7 +112,7 @@ def project_create(request):
             return redirect('dashboard:projects_list')
     else:
         form = ProjectForm()
-    return render(request, 'dashboard/project_form.html', {'form': form, 'title': 'Add New Project'})
+    return render(request, 'dashboard/project_form.html', {'form': form, 'title': 'Add New Project', 'image_url': None})
 
 @staff_member_required(login_url='/accounts/login/')
 @permission_required('projects.change_researchproject', raise_exception=True)
@@ -138,7 +126,13 @@ def project_edit(request, pk):
             return redirect('dashboard:projects_list')
     else:
         form = ProjectForm(instance=project)
-    return render(request, 'dashboard/project_form.html', {'form': form, 'title': 'Edit Project'})
+    image_url = None
+    if project.image and project.image.name:
+        try:
+            image_url = project.image.url
+        except Exception:
+            image_url = None
+    return render(request, 'dashboard/project_form.html', {'form': form, 'title': 'Edit Project', 'image_url': image_url})
 
 @staff_member_required(login_url='/accounts/login/')
 @permission_required('projects.delete_researchproject', raise_exception=True)
@@ -241,7 +235,7 @@ def team_create(request):
             return redirect('dashboard:team_list')
     else:
         form = TeamMemberForm()
-    return render(request, 'dashboard/team_form.html', {'form': form, 'title': 'Add New Member'})
+    return render(request, 'dashboard/team_form.html', {'form': form, 'title': 'Add New Member', 'photo_url': None})
 
 @staff_member_required(login_url='/accounts/login/')
 @permission_required('team.change_teammember', raise_exception=True)
@@ -255,7 +249,14 @@ def team_edit(request, pk):
             return redirect('dashboard:team_list')
     else:
         form = TeamMemberForm(instance=member)
-    return render(request, 'dashboard/team_form.html', {'form': form, 'title': 'Edit Member'})
+    # Safely get the photo URL — old local-storage paths raise ValueError when Cloudinary is active
+    photo_url = None
+    if member.photo and member.photo.name:
+        try:
+            photo_url = member.photo.url
+        except (ValueError, AttributeError, Exception):
+            photo_url = None
+    return render(request, 'dashboard/team_form.html', {'form': form, 'title': 'Edit Member', 'photo_url': photo_url})
 
 @staff_member_required(login_url='/accounts/login/')
 @permission_required('team.delete_teammember', raise_exception=True)
@@ -469,7 +470,7 @@ def carousel_create(request):
             return redirect('dashboard:carousel_list')
     else:
         form = CarouselImageForm()
-    return render(request, 'dashboard/carousel_form.html', {'form': form, 'title': 'Add Carousel Image'})
+    return render(request, 'dashboard/carousel_form.html', {'form': form, 'title': 'Add Carousel Image', 'image_url': None})
 
 @staff_member_required(login_url='/accounts/login/')
 @permission_required('core.change_carouselimage', raise_exception=True)
@@ -483,7 +484,13 @@ def carousel_edit(request, pk):
             return redirect('dashboard:carousel_list')
     else:
         form = CarouselImageForm(instance=image)
-    return render(request, 'dashboard/carousel_form.html', {'form': form, 'title': 'Edit Carousel Image'})
+    image_url = None
+    if image.image and image.image.name:
+        try:
+            image_url = image.image.url
+        except Exception:
+            image_url = None
+    return render(request, 'dashboard/carousel_form.html', {'form': form, 'title': 'Edit Carousel Image', 'image_url': image_url})
 
 @staff_member_required(login_url='/accounts/login/')
 @permission_required('core.delete_carouselimage', raise_exception=True)
