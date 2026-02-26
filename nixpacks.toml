@@ -1,5 +1,0 @@
-[phases.setup]
-nixPkgs = ["python310"]
-
-[start]
-cmd = "python manage.py collectstatic --noinput && python manage.py migrate --noinput && gunicorn config.wsgi --bind 0.0.0.0:${PORT:-8000}"

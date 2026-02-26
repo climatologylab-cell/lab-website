@@ -183,8 +183,21 @@ For production:
 3. Set up proper database (PostgreSQL recommended)
 4. Configure email backend for contact form
 5. Collect static files: `python manage.py collectstatic`
-6. Use a production server (Gunicorn, uWSGI)
-7. Set up HTTPS
+6. **Configure media storage** – the default filesystem is
+   ephemeral on most hosting platforms (Render, Heroku, etc.).
+   You must set Cloudinary (or another external storage) before any
+   images are uploaded:
+   * Add the following environment variables to your service:
+     `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`,
+     `CLOUDINARY_API_SECRET` (or a single `CLOUDINARY_URL`).
+   * If only the cloud name is provided the app will fall back to
+     local storage and the admin will raise a 500 when you attempt to
+     save images.  The code now warns at startup if the configuration
+     is incomplete.
+   * On Render use the dashboard’s **Environment** tab to add these
+     values, then redeploy.
+7. Use a production server (Gunicorn, uWSGI)
+8. Set up HTTPS
 
 ## Technologies
 

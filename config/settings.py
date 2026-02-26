@@ -19,84 +19,84 @@ from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Load environment variables
-load_dotenv(BASE_DIR / '.env')
+load_dotenv(BASE_DIR / ".env")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-fallback-key')
+SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-fallback-key")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', 'True') == 'True'
+DEBUG = os.getenv("DEBUG", "True") == "True"
 
-ALLOWED_HOSTS = [h.strip() for h in os.getenv('ALLOWED_HOSTS', '*').split(',') if h.strip()]
+ALLOWED_HOSTS = [
+    h.strip() for h in os.getenv("ALLOWED_HOSTS", "*").split(",") if h.strip()
+]
 
 # CSRF Trusted Origins - Required for Django 4.0+ when behind a proxy/different domain
 CSRF_TRUSTED_ORIGINS = [
-    o.strip() for o in os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',') if o.strip()
+    o.strip() for o in os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",") if o.strip()
 ]
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
     # Third party apps
-    'import_export',
-    'simple_history',
-    'crispy_forms',
-    'crispy_bootstrap5',
-    'cloudinary',
-    'cloudinary_storage',
-
+    "import_export",
+    "simple_history",
+    "crispy_forms",
+    "crispy_bootstrap5",
+    "cloudinary",
+    "cloudinary_storage",
     # Custom apps
-    'core',
-    'team',
-    'projects',
-    'publications',
-    'workshops',
-    'contact',
-    'dashboard',
+    "core",
+    "team",
+    "projects",
+    "publications",
+    "workshops",
+    "contact",
+    "dashboard",
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'simple_history.middleware.HistoryRequestMiddleware',
-    'core.middleware.session_security.DashboardSecurityMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "simple_history.middleware.HistoryRequestMiddleware",
+    "core.middleware.session_security.DashboardSecurityMiddleware",
 ]
 
-ROOT_URLCONF = 'config.urls'
+ROOT_URLCONF = "config.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [BASE_DIR / "templates"],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'config.wsgi.application'
+WSGI_APPLICATION = "config.wsgi.application"
 
 
 # Database
@@ -104,9 +104,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Uses PostgreSQL on Railway (via DATABASE_URL), SQLite locally
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default=f'sqlite:///{BASE_DIR / "db.sqlite3"}'
-    )
+    "default": dj_database_url.config(default=f'sqlite:///{BASE_DIR / "db.sqlite3"}')
 }
 
 
@@ -115,16 +113,16 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
@@ -132,9 +130,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
@@ -144,23 +142,34 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_URL = "static/"
+STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Media files
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 # Cloudinary configuration (used in production when env vars are set)
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME', ''),
-    'API_KEY': os.getenv('CLOUDINARY_API_KEY', ''),
-    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET', ''),
+    "CLOUD_NAME": os.getenv("CLOUDINARY_CLOUD_NAME", ""),
+    "API_KEY": os.getenv("CLOUDINARY_API_KEY", ""),
+    "API_SECRET": os.getenv("CLOUDINARY_API_SECRET", ""),
 }
 
+# Determine whether we actually have credentials for Cloudinary.
+# If only the cloud name is provided the storage backend will still be
+# chosen, which leads to a hard crash when it attempts an upload with
+# missing key/secret (the 500 you saw on Render).  Check all three and
+# fall back to filesystem storage if any piece is missing.
+cloud_name = CLOUDINARY_STORAGE["CLOUD_NAME"]
+cloud_key = CLOUDINARY_STORAGE["API_KEY"]
+cloud_secret = CLOUDINARY_STORAGE["API_SECRET"]
+
+use_cloudinary = bool(cloud_name and cloud_key and cloud_secret)
+
 # Django 4.2+ STORAGES dict (replaces STATICFILES_STORAGE + DEFAULT_FILE_STORAGE)
-if os.getenv('CLOUDINARY_CLOUD_NAME'):
+if use_cloudinary:
     # Production: Cloudinary for media, Whitenoise for static
     STORAGES = {
         "default": {
@@ -171,7 +180,18 @@ if os.getenv('CLOUDINARY_CLOUD_NAME'):
         },
     }
 else:
-    # Development: local disk for media, Whitenoise for static
+    # Development or mis‑configured deployment: local disk for media, Whitenoise for static
+    if cloud_name and not (cloud_key and cloud_secret):
+        # warn developers/admins when the cloud name was set but other
+        # credentials are missing; prevents silent failure
+        import warnings
+
+        warnings.warn(
+            "CLOUDINARY_CLOUD_NAME is set but API_KEY/API_SECRET are missing; "
+            "falling back to FileSystemStorage.",
+            RuntimeWarning,
+        )
+
     STORAGES = {
         "default": {
             "BACKEND": "django.core.files.storage.FileSystemStorage",
@@ -184,7 +204,7 @@ else:
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Django Import Export Settings
 IMPORT_EXPORT_USE_TRANSACTIONS = True
@@ -200,21 +220,23 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 # Emails will send via Gmail but FROM field shows official lab email.
 
 # Email Backend (SMTP enabled for real delivery)
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 # Gmail SMTP Configuration (Works from anywhere)
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 
 # Gmail Credentials
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
 
 # Sender and Admin Emails (Official lab email)
-DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'Climatology Lab <climatologylab@ar.iitr.ac.in>')
-ADMIN_EMAIL = os.getenv('ADMIN_EMAIL', 'climatologylab@ar.iitr.ac.in')
+DEFAULT_FROM_EMAIL = os.getenv(
+    "DEFAULT_FROM_EMAIL", "Climatology Lab <climatologylab@ar.iitr.ac.in>"
+)
+ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "climatologylab@ar.iitr.ac.in")
 
 # Email Timeout
 EMAIL_TIMEOUT = 30
@@ -222,12 +244,12 @@ EMAIL_TIMEOUT = 30
 # ============================================
 # AUTHENTICATION CONFIGURATION
 # ============================================
-LOGIN_URL = '/accounts/login/'
-LOGIN_REDIRECT_URL = 'dashboard:home'
-LOGOUT_REDIRECT_URL = 'core:home'
+LOGIN_URL = "/accounts/login/"
+LOGIN_REDIRECT_URL = "dashboard:home"
+LOGOUT_REDIRECT_URL = "core:home"
 
 # Session Security Settings
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Logout when browser window closes
-SESSION_COOKIE_AGE = 3600               # 1-hour global session
-SESSION_TIMEOUT_DASHBOARD = 60          # 1-minute dashboard inactivity timeout
-SESSION_SAVE_EVERY_REQUEST = True       # Reset the timers on every page load/click
+SESSION_COOKIE_AGE = 3600  # 1-hour global session
+SESSION_TIMEOUT_DASHBOARD = 60  # 1-minute dashboard inactivity timeout
+SESSION_SAVE_EVERY_REQUEST = True  # Reset the timers on every page load/click
