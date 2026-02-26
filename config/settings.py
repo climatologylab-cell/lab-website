@@ -55,7 +55,6 @@ INSTALLED_APPS = [
     "crispy_forms",
     "crispy_bootstrap5",
     "cloudinary",
-    "cloudinary_storage",
     # Custom apps
     "core",
     "team",
@@ -183,7 +182,7 @@ cloud_name = cloud_name.strip()
 cloud_key = cloud_key.strip()
 cloud_secret = cloud_secret.strip()
 
-# Populate CLOUDINARY_STORAGE so django-cloudinary-storage picks it up
+# Populate CLOUDINARY_STORAGE (kept for any legacy references)
 CLOUDINARY_STORAGE = {
     "CLOUD_NAME": cloud_name,
     "API_KEY": cloud_key,
@@ -193,22 +192,17 @@ CLOUDINARY_STORAGE = {
 use_cloudinary = bool(cloud_name and cloud_key and cloud_secret)
 
 if use_cloudinary:
+    # Use our custom storage backend that calls cloudinary SDK directly.
+    # The cloudinary SDK reads CLOUDINARY_URL from the environment automatically —
+    # no manual cloudinary.config() call needed.
     STORAGES = {
         "default": {
-            "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+            "BACKEND": "core.storage.CloudinaryMediaStorage",
         },
         "staticfiles": {
             "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
         },
     }
-    # Explicitly configure the cloudinary package with the same clean values.
-    import cloudinary
-    cloudinary.config(
-        cloud_name=cloud_name,
-        api_key=cloud_key,
-        api_secret=cloud_secret,
-        secure=True,
-    )
 else:
     # Development or mis‑configured deployment: local disk for media, Whitenoise for static
     if cloud_name and not (cloud_key and cloud_secret):
