@@ -172,9 +172,16 @@ if _cloudinary_url and _cloudinary_url.startswith("cloudinary://"):
     cloud_secret = _user_info[_colon_idx + 1:] if _colon_idx != -1 else ""
 else:
     # Fall back to individual env vars
-    cloud_name = os.getenv("CLOUDINARY_CLOUD_NAME", "")
-    cloud_key = os.getenv("CLOUDINARY_API_KEY", "")
-    cloud_secret = os.getenv("CLOUDINARY_API_SECRET", "")
+    cloud_name = os.getenv("CLOUDINARY_CLOUD_NAME", "").strip()
+    cloud_key = os.getenv("CLOUDINARY_API_KEY", "").strip()
+    cloud_secret = os.getenv("CLOUDINARY_API_SECRET", "").strip()
+
+# IMPORTANT: strip any accidental whitespace from all values before storing.
+# django-cloudinary-storage reads CLOUDINARY_STORAGE in AppConfig.ready() —
+# whatever is in this dict is what gets used for signatures.
+cloud_name = cloud_name.strip()
+cloud_key = cloud_key.strip()
+cloud_secret = cloud_secret.strip()
 
 # Populate CLOUDINARY_STORAGE so django-cloudinary-storage picks it up
 CLOUDINARY_STORAGE = {
@@ -194,13 +201,12 @@ if use_cloudinary:
             "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
         },
     }
-    # Explicitly configure the cloudinary package (guarantees correct credentials
-    # regardless of app-loading order with django-cloudinary-storage).
+    # Explicitly configure the cloudinary package with the same clean values.
     import cloudinary
     cloudinary.config(
         cloud_name=cloud_name,
         api_key=cloud_key,
-        api_secret=cloud_secret.strip(),   # strip any accidental whitespace
+        api_secret=cloud_secret,
         secure=True,
     )
 else:
