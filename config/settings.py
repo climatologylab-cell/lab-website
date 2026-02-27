@@ -163,6 +163,16 @@ AWS_S3_SECURE_URLS = True
 AWS_QUERYSTRING_AUTH = False  # Set to True if the bucket is private
 AWS_S3_SIGNATURE_VERSION = "s3v4"
 
+# Generate Supabase public URL domain
+if AWS_S3_ENDPOINT_URL:
+    import urllib.parse
+    _parsed = urllib.parse.urlparse(AWS_S3_ENDPOINT_URL)
+    _project_id = _parsed.netloc.split('.')[0]
+    AWS_S3_CUSTOM_DOMAIN = f"{_project_id}.supabase.co/storage/v1/object/public"
+else:
+    AWS_S3_CUSTOM_DOMAIN = None
+
+
 use_supabase = bool(
     AWS_S3_ENDPOINT_URL
     and AWS_S3_ACCESS_KEY_ID
