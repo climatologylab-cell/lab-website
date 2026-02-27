@@ -162,10 +162,14 @@ AWS_STORAGE_BUCKET_NAME = os.getenv("SUPABASE_BUCKET", "media").strip()
 
 # AWS settings for django-storages
 AWS_S3_SECURE_URLS = True
-AWS_QUERYSTRING_AUTH = False  # Set to True if the bucket is private
+AWS_QUERYSTRING_AUTH = False
 AWS_S3_SIGNATURE_VERSION = "s3v4"
-AWS_S3_ADDRESSING_STYLE = "path" # CRITICAL for Supabase S3
+AWS_S3_ADDRESSING_STYLE = "path"
 AWS_S3_CHECKSUM_MODE = "DISABLED"
+
+# CRITICAL: Disable internal AWS metadata checks (prevents 1-minute hangs on Render)
+os.environ["AWS_EC2_METADATA_DISABLED"] = "true"
+
 
 # Generate Supabase public URL domain
 if AWS_S3_ENDPOINT_URL:
