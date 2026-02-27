@@ -171,7 +171,7 @@ AWS_S3_CHECKSUM_MODE = "DISABLED"
 if AWS_S3_ENDPOINT_URL:
     _parsed = urllib.parse.urlparse(AWS_S3_ENDPOINT_URL)
     _project_id = _parsed.netloc.split('.')[0]
-    AWS_S3_CUSTOM_DOMAIN = f"{_project_id}.supabase.co/storage/v1/object/public"
+    AWS_S3_CUSTOM_DOMAIN = f"{_project_id}.supabase.co/storage/v1/object/public/{AWS_STORAGE_BUCKET_NAME}"
 else:
     AWS_S3_CUSTOM_DOMAIN = None
 
