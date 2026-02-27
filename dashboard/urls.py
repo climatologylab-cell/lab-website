@@ -8,8 +8,8 @@ app_name = 'dashboard'
 urlpatterns = [
     path('', views.dashboard_home, name='home'),
 
-    # Cloudinary diagnostic (staff only)
-    path('cloudinary-test/', views.cloudinary_test, name='cloudinary_test'),
+    # Supabase diagnostic (staff only)
+    path('supabase-diagnostic/', views.supabase_test, name='supabase_test'),
 
     # Projects CRUD
     path('projects/', views.projects_list, name='projects_list'),
