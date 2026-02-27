@@ -21,6 +21,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Load environment variables
 load_dotenv(BASE_DIR / ".env")
 
+# --- Sanitize CLOUDINARY_URL BEFORE the cloudinary SDK imports it ---
+# The SDK reads os.environ["CLOUDINARY_URL"] at module import time (before
+# Django settings finish), so we must clean it here — not later in the file.
+_raw_cld_url = os.environ.get("CLOUDINARY_URL", "")
+_clean_cld_url = _raw_cld_url.strip().strip('"').strip("'").replace("\\n", "").strip()
+if _clean_cld_url.startswith("cloudinary://"):
+    os.environ["CLOUDINARY_URL"] = _clean_cld_url   # put the clean value back
+else:
+    os.environ.pop("CLOUDINARY_URL", None)           # remove bad value so SDK won't crash
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
