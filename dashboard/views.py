@@ -740,26 +740,35 @@ def otp_set_password_view(request):
     return render(request, 'dashboard/password_reset_confirm.html', {'form': form})
 
 
-# --- CLOUDINARY DIAGNOSTIC ---
+# --- SUPABASE DIAGNOSTIC ---
 
 @staff_member_required(login_url='/accounts/login/')
-def cloudinary_test(request):
-    """Diagnostic page to verify Cloudinary credentials without needing Shell access."""
-    import cloudinary
-    import cloudinary.api
+def supabase_test(request):
+    """Diagnostic page to verify Supabase credentials."""
+    import boto3
     from django.conf import settings
+    from botocore.config import Config
 
-    cfg = settings.CLOUDINARY_STORAGE
-    cloud_name = cfg.get('CLOUD_NAME', '')
-    api_key = cfg.get('API_KEY', '')
-    api_secret = cfg.get('API_SECRET', '')
+    endpoint = settings.AWS_S3_ENDPOINT_URL
+    region = settings.AWS_S3_REGION_NAME
+    access_key = settings.AWS_S3_ACCESS_KEY_ID
+    secret_key = settings.AWS_S3_SECRET_ACCESS_KEY
+    bucket = settings.AWS_STORAGE_BUCKET_NAME
 
-    secret_display = f"{api_secret[:4]}...{api_secret[-4:]} (length={len(api_secret)})" if len(api_secret) > 8 else f"(length={len(api_secret)}) — TOO SHORT!"
+    secret_display = f"{secret_key[:4]}...{secret_key[-4:]} (length={len(secret_key)})" if len(secret_key) > 8 else f"(length={len(secret_key)}) — TOO SHORT!"
 
     status = 'unknown'
     error_msg = ''
     try:
-        result = cloudinary.api.ping()
+        s3 = boto3.client(
+            's3',
+            endpoint_url=endpoint,
+            region_name=region,
+            aws_access_key_id=access_key,
+            aws_secret_access_key=secret_key,
+            config=Config(signature_version='s3v4')
+        )
+        s3.head_bucket(Bucket=bucket)
         status = 'ok'
     except Exception as e:
         status = 'error'
@@ -768,14 +777,16 @@ def cloudinary_test(request):
     from django.http import HttpResponse
     color = '#2ecc71' if status == 'ok' else '#e74c3c'
     html = f"""
-    <html><head><title>Cloudinary Test</title></head>
+    <html><head><title>Supabase Test</title></head>
     <body style="font-family:monospace;padding:30px;background:#1a1a2e;color:#eee;">
-    <h2>🔍 Cloudinary Diagnostics</h2>
+    <h2>🔍 Supabase Storage Diagnostics</h2>
     <table style="border-collapse:collapse;">
-      <tr><td style="padding:8px;color:#aaa;">CLOUD_NAME</td><td style="padding:8px;">{cloud_name or '(empty)'}</td></tr>
-      <tr><td style="padding:8px;color:#aaa;">API_KEY</td><td style="padding:8px;">{api_key or '(empty)'}</td></tr>
-      <tr><td style="padding:8px;color:#aaa;">API_SECRET</td><td style="padding:8px;">{secret_display}</td></tr>
-      <tr><td style="padding:8px;color:#aaa;">use_cloudinary</td><td style="padding:8px;">{'True' if (cloud_name and api_key and api_secret) else 'False — missing credentials!'}</td></tr>
+      <tr><td style="padding:8px;color:#aaa;">ENDPOINT</td><td style="padding:8px;">{endpoint or '(empty)'}</td></tr>
+      <tr><td style="padding:8px;color:#aaa;">REGION</td><td style="padding:8px;">{region or '(empty)'}</td></tr>
+      <tr><td style="padding:8px;color:#aaa;">ACCESS_KEY</td><td style="padding:8px;">{access_key or '(empty)'}</td></tr>
+      <tr><td style="padding:8px;color:#aaa;">SECRET_KEY</td><td style="padding:8px;">{secret_display}</td></tr>
+      <tr><td style="padding:8px;color:#aaa;">BUCKET</td><td style="padding:8px;">{bucket or '(empty)'}</td></tr>
+      <tr><td style="padding:8px;color:#aaa;">use_supabase</td><td style="padding:8px;">{'True' if (endpoint and access_key and secret_key) else 'False — missing credentials!'}</td></tr>
     </table>
     <h3 style="color:{color};">Connection: {'✅ SUCCESS' if status == 'ok' else '❌ FAILED'}</h3>
     {f'<pre style="color:#e74c3c;background:#2a2a2a;padding:15px;border-radius:6px;">{error_msg}</pre>' if error_msg else ''}

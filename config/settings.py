@@ -21,16 +21,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Load environment variables
 load_dotenv(BASE_DIR / ".env")
 
-# --- Sanitize CLOUDINARY_URL BEFORE the cloudinary SDK imports it ---
-# The SDK reads os.environ["CLOUDINARY_URL"] at module import time (before
-# Django settings finish), so we must clean it here — not later in the file.
-_raw_cld_url = os.environ.get("CLOUDINARY_URL", "")
-_clean_cld_url = _raw_cld_url.strip().strip('"').strip("'").replace("\\n", "").strip()
-if _clean_cld_url.startswith("cloudinary://"):
-    os.environ["CLOUDINARY_URL"] = _clean_cld_url   # put the clean value back
-else:
-    os.environ.pop("CLOUDINARY_URL", None)           # remove bad value so SDK won't crash
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
@@ -64,7 +54,7 @@ INSTALLED_APPS = [
     "simple_history",
     "crispy_forms",
     "crispy_bootstrap5",
-    "cloudinary",
+    "storages",
     # Custom apps
     "core",
     "team",
@@ -160,80 +150,36 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 # ---------------------------------------------------------------------------
-# Cloudinary — two ways to configure (CLOUDINARY_URL takes priority):
-#
-#   Option A (recommended — copy from Cloudinary dashboard):
-#     CLOUDINARY_URL = cloudinary://API_KEY:API_SECRET@CLOUD_NAME
-#
-#   Option B (individual vars):
-#     CLOUDINARY_CLOUD_NAME / CLOUDINARY_API_KEY / CLOUDINARY_API_SECRET
+# Supabase Storage (S3-compatible)
 # ---------------------------------------------------------------------------
-_cloudinary_url = os.getenv("CLOUDINARY_URL", "")
-# Sanitize: remove surrounding quotes and literal \n that users sometimes
-# accidentally include when setting the value in Render's dashboard.
-_cloudinary_url = _cloudinary_url.strip().strip('"').strip("'").replace("\\n", "").strip()
+AWS_S3_ENDPOINT_URL = os.getenv("SUPABASE_S3_ENDPOINT", "").strip()
+AWS_S3_REGION_NAME = os.getenv("SUPABASE_S3_REGION", "").strip()
+AWS_S3_ACCESS_KEY_ID = os.getenv("SUPABASE_S3_ACCESS_KEY", "").strip()
+AWS_S3_SECRET_ACCESS_KEY = os.getenv("SUPABASE_S3_SECRET_KEY", "").strip()
+AWS_STORAGE_BUCKET_NAME = os.getenv("SUPABASE_BUCKET", "media").strip()
 
-if _cloudinary_url and _cloudinary_url.startswith("cloudinary://"):
-    # Parse the URL: cloudinary://API_KEY:API_SECRET@CLOUD_NAME
-    _url_body = _cloudinary_url[len("cloudinary://"):]
-    _at_idx = _url_body.rfind("@")
-    cloud_name = _url_body[_at_idx + 1:] if _at_idx != -1 else ""
-    _user_info = _url_body[:_at_idx] if _at_idx != -1 else ""
-    _colon_idx = _user_info.find(":")
-    cloud_key = _user_info[:_colon_idx] if _colon_idx != -1 else _user_info
-    cloud_secret = _user_info[_colon_idx + 1:] if _colon_idx != -1 else ""
-else:
-    # Fall back to individual env vars
-    cloud_name = os.getenv("CLOUDINARY_CLOUD_NAME", "").strip()
-    cloud_key = os.getenv("CLOUDINARY_API_KEY", "").strip()
-    cloud_secret = os.getenv("CLOUDINARY_API_SECRET", "").strip()
+# AWS settings for django-storages
+AWS_S3_SECURE_URLS = True
+AWS_QUERYSTRING_AUTH = False  # Set to True if the bucket is private
+AWS_S3_SIGNATURE_VERSION = "s3v4"
 
-# Strip any remaining whitespace from all values
-cloud_name = cloud_name.strip()
-cloud_key = cloud_key.strip()
-cloud_secret = cloud_secret.strip()
+use_supabase = bool(
+    AWS_S3_ENDPOINT_URL
+    and AWS_S3_ACCESS_KEY_ID
+    and AWS_S3_SECRET_ACCESS_KEY
+)
 
-# Populate CLOUDINARY_STORAGE (kept for legacy references)
-CLOUDINARY_STORAGE = {
-    "CLOUD_NAME": cloud_name,
-    "API_KEY": cloud_key,
-    "API_SECRET": cloud_secret,
-}
-
-use_cloudinary = bool(cloud_name and cloud_key and cloud_secret)
-
-if use_cloudinary:
+if use_supabase:
     STORAGES = {
         "default": {
-            "BACKEND": "core.storage.CloudinaryMediaStorage",
+            "BACKEND": "core.storage.SupabaseMediaStorage",
         },
         "staticfiles": {
             "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
         },
     }
-    # Explicitly configure the cloudinary SDK with our cleaned values.
-    # This prevents the SDK from falling back to auto-reading CLOUDINARY_URL
-    # from the environment (which may contain quotes or \n characters).
-    import cloudinary
-    cloudinary.config(
-        cloud_name=cloud_name,
-        api_key=cloud_key,
-        api_secret=cloud_secret,
-        secure=True,
-    )
 else:
     # Development or mis‑configured deployment: local disk for media, Whitenoise for static
-    if cloud_name and not (cloud_key and cloud_secret):
-        # warn developers/admins when the cloud name was set but other
-        # credentials are missing; prevents silent failure
-        import warnings
-
-        warnings.warn(
-            "CLOUDINARY_CLOUD_NAME is set but API_KEY/API_SECRET are missing; "
-            "falling back to FileSystemStorage.",
-            RuntimeWarning,
-        )
-
     STORAGES = {
         "default": {
             "BACKEND": "django.core.files.storage.FileSystemStorage",
