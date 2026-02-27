@@ -11,9 +11,11 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 import os
+import urllib.parse
 from pathlib import Path
 import dj_database_url
 from dotenv import load_dotenv
+from botocore.config import Config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -161,17 +163,14 @@ AWS_STORAGE_BUCKET_NAME = os.getenv("SUPABASE_BUCKET", "media").strip()
 # AWS settings for django-storages
 AWS_S3_SECURE_URLS = True
 AWS_QUERYSTRING_AUTH = False  # Set to True if the bucket is private
-AWS_S3_SIGNATURE_VERSION = None  # Supabase public URLs don't need signing
+AWS_S3_SIGNATURE_VERSION = "s3v4"
 AWS_S3_ADDRESSING_STYLE = "path" # CRITICAL for Supabase S3
-AWS_S3_CHECKSUM_MODE = "DISABLED" # Speeds up uploads
+AWS_S3_CHECKSUM_MODE = "DISABLED"
 
 # Generate Supabase public URL domain
 if AWS_S3_ENDPOINT_URL:
-    import urllib.parse
     _parsed = urllib.parse.urlparse(AWS_S3_ENDPOINT_URL)
-    # netloc is like 'xxx.storage.supabase.co'
     _project_id = _parsed.netloc.split('.')[0]
-    # For Supabase public URLs, we want: [project].supabase.co/storage/v1/object/public
     AWS_S3_CUSTOM_DOMAIN = f"{_project_id}.supabase.co/storage/v1/object/public"
 else:
     AWS_S3_CUSTOM_DOMAIN = None
