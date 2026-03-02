@@ -20,3 +20,4 @@ tablib==3.9.0
 typing_extensions==4.15.0
 tzdata==2025.3
 whitenoise
+resend>=2.23.0
