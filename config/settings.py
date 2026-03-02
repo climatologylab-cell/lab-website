@@ -229,7 +229,7 @@ RESEND_API_KEY = os.getenv("RESEND_API_KEY", "")
 # Sender and Admin Emails
 # Note: In Resend, your DEFAULT_FROM_EMAIL domain must be verified in the Resend dashboard.
 DEFAULT_FROM_EMAIL = os.getenv(
-    "DEFAULT_FROM_EMAIL", "Climatology Lab <climatologylab@ar.iitr.ac.in>"
+    "DEFAULT_FROM_EMAIL", "Climatology Lab <noreply-climatologylab@iitr.ac.in>"
 )
 ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "climatologylab@ar.iitr.ac.in")
 
