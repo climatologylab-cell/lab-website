@@ -13,12 +13,14 @@
                     value="{{ query|default:'' }}">
                 <button class="btn btn-sm btn-outline-primary" type="submit">Search</button>
             </form>
-            <a href="{% url 'dashboard:import_data' 'team' %}" class="btn btn-outline-primary btn-sm">
-                <i class="bi bi-cloud-arrow-up me-1"></i> Import
+            <a href="{% url 'dashboard:import_data' 'team' %}"
+                class="btn btn-outline-primary btn-sm d-flex align-items-center gap-2">
+                <i class="bi bi-cloud-arrow-up"></i> Import
             </a>
             <div class="dropdown">
-                <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                    <i class="bi bi-cloud-arrow-down me-1"></i> Export
+                <button class="btn btn-outline-primary btn-sm dropdown-toggle d-flex align-items-center gap-2"
+                    type="button" data-bs-toggle="dropdown">
+                    <i class="bi bi-cloud-arrow-down"></i> Export
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end shadow border-0">
                     <li><a class="dropdown-item" href="{% url 'dashboard:export_data' 'team' %}?format=csv"><i
@@ -26,22 +28,14 @@
                     <li><a class="dropdown-item" href="{% url 'dashboard:export_data' 'team' %}?format=xlsx"><i
                                 class="bi bi-file-earmark-excel me-2"></i>Excel</a></li>
                 </ul>
-                <button type="submit" form="bulkDeleteForm"
-                    class="btn btn-danger btn-sm d-flex align-items-center gap-2"
-                    onclick="return confirm('Are you sure you want to delete the selected members?');">
-                    <i class="bi bi-trash"></i> Delete Selected
-                </button>
-                <a href="{% url 'dashboard:team_create' %}" </div>
-                    <button type="submit" form="bulkDeleteForm"
-                        class="btn btn-danger btn-sm d-flex align-items-center gap-2"
-                        onclick="return confirm('Are you sure you want to delete the selected members?');">
-                        <i class="bi bi-trash"></i> Delete Selected
-                    </button>
-                    <a href="{% url 'dashboard:team_create' %}"
-                        class="btn btn-primary btn-sm d-flex align-items-center gap-1">
-                        <i class="bi bi-person-plus"></i> Add Member
-                    </a>
             </div>
+            <button type="submit" form="bulkDeleteForm" class="btn btn-danger btn-sm d-flex align-items-center gap-2"
+                onclick="return confirm('Are you sure you want to delete the selected members?');">
+                <i class="bi bi-trash"></i> Delete Selected
+            </button>
+            <a href="{% url 'dashboard:team_create' %}" class="btn btn-primary btn-sm d-flex align-items-center gap-2">
+                <i class="bi bi-person-plus"></i> Add Member
+            </a>
         </div>
 
         <form id="bulkDeleteForm" action="{% url 'dashboard:bulk_delete' %}" method="post">
