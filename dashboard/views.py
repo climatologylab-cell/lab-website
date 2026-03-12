@@ -764,21 +764,26 @@ def otp_set_password_view(request):
         messages.error(request, 'Session expired. Please start over.')
         return redirect('dashboard:password_reset')
 
-    try:
-        user = User.objects.get(email=email)
-    except User.DoesNotExist:
+    # Fix: Get the first user if there are multiple accounts with the identical email address
+    user = User.objects.filter(email=email).first()
+    
+    if not user:
         messages.error(request, 'No account found with this email.')
         return redirect('dashboard:password_reset')
 
     if request.method == 'POST':
         form = OTPSetPasswordForm(request.POST)
         if form.is_valid():
-            user.set_password(form.cleaned_data['new_password1'])
-            user.save()
+            # Apply to all users with this email
+            users = User.objects.filter(email=email)
+            for u in users:
+                u.set_password(form.cleaned_data['new_password1'])
+                u.save()
+            
             # Clear session
             for key in ['reset_otp', 'reset_otp_email', 'reset_otp_time', 'reset_otp_verified']:
                 request.session.pop(key, None)
-            messages.success(request, 'Password reset successful! Please login with your new password.')
+            messages.success(request, 'Password reset successful for all associated accounts! Please login with your new password.')
             return redirect('dashboard:password_reset_complete')
     else:
         form = OTPSetPasswordForm()
