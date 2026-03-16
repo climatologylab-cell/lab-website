@@ -239,6 +239,13 @@
         scroll-behavior: smooth;
     }
 
+    /* Disable scroll-snap on mobile for better usability with overflowing content */
+    @media (max-width: 1024px) {
+        html {
+            scroll-snap-type: none;
+        }
+    }
+
     /* Header - Remove snap align to prevent conflict */
     /* === PIXEL-PERFECT HERO SECTION === */
     .hero-pixel-perfect {
@@ -279,6 +286,21 @@
         justify-content: center;
         /* Center content vertically */
         box-sizing: border-box;
+    }
+
+    @media (max-width: 1024px) {
+
+        .hero-pixel-perfect,
+        .split-showcase,
+        .board-section,
+        footer {
+            height: auto !important;
+            min-height: auto !important;
+            scroll-snap-align: none;
+            scroll-margin-top: 0;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
     }
 
     /* Footer Snaps & Occupies Full Viewport */
@@ -466,7 +488,7 @@
         opacity: 0.5;
         z-index: 5;
         /* Adjusted translation and rotation to prevent overlap */
-        transform: translateX(-70%) scale(0.85) rotateY(15deg);
+        transform: translateX(-85%) scale(0.85) rotateY(15deg);
         pointer-events: none;
     }
 
@@ -474,8 +496,18 @@
     .c-card.next {
         opacity: 0.5;
         z-index: 5;
-        transform: translateX(70%) scale(0.85) rotateY(-15deg);
+        transform: translateX(85%) scale(0.85) rotateY(-15deg);
         pointer-events: none;
+    }
+
+    @media (max-width: 768px) {
+        .c-card.prev {
+            transform: translateX(-105%) scale(0.8) rotateY(10deg);
+        }
+
+        .c-card.next {
+            transform: translateX(105%) scale(0.8) rotateY(-10deg);
+        }
     }
 
     /* Hidden cards */
@@ -647,6 +679,13 @@
         margin-right: auto;
     }
 
+    @media (max-width: 768px) {
+        .intro-text-main {
+            font-size: 20px;
+            padding: 0 10px;
+        }
+    }
+
     .btn-line {
         color: white;
         text-decoration: none;
@@ -796,6 +835,19 @@
             grid-template-columns: repeat(2, 1fr);
             /* 2x2 on tablet */
             gap: 15px;
+        }
+
+        .stat-card {
+            min-height: 140px;
+            padding: 15px 10px;
+        }
+
+        .stat-number {
+            font-size: 32px;
+        }
+
+        .stat-number::after {
+            font-size: 20px;
         }
     }
 
