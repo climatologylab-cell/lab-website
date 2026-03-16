@@ -23,7 +23,7 @@
 
                 <!-- Sort Dropdown -->
                 <select name="sort" id="sortFilter" class="filter-dropdown" onchange="this.form.submit()">
-                    <option value="latest" {% if sort_by=='latest' or not sort_by %}selected{% endif %}>Latest
+                    <option value="latest" {% if sort_by=="latest" or not sort_by %}selected{% endif %}>Latest
                     </option>
                     <option value="oldest" {% if sort_by=='oldest' %}selected{% endif %}>Oldest</option>
                     <option value="az" {% if sort_by=='az' %}selected{% endif %}>A-Z</option>
