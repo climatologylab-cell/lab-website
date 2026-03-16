@@ -60,9 +60,9 @@
     --font-weight-black: 800;
 
     /* Fluid Typography (Responsive Scaling) */
-    --font-size-h1: clamp(40px, 8vw, 72px);
-    --font-size-h2: clamp(32px, 6vw, 48px);
-    --font-size-h3: clamp(24px, 4vw, 32px);
+    --font-size-h1: clamp(32px, 8vw, 72px);
+    --font-size-h2: clamp(26px, 6vw, 48px);
+    --font-size-h3: clamp(20px, 4vw, 32px);
     --font-size-body: clamp(14px, 1.5vw, 16px);
 }
 
@@ -433,13 +433,17 @@ button {
 
 @media (max-width: 480px) {
     :root {
-        --spacing-lg: 30px;
-        --spacing-xl: 40px;
-        --spacing-2xl: 50px;
+        --spacing-lg: 25px;
+        --spacing-xl: 35px;
+        --spacing-2xl: 45px;
+    }
+
+    .container {
+        padding: 0 16px;
     }
 
     .card-content {
-        padding: var(--spacing-md);
+        padding: 20px;
     }
 }
 
