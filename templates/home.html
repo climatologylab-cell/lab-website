@@ -36,26 +36,9 @@
                     </div>
                     {% empty %}
                     <!-- Fallback if no images uploaded -->
-                    <div class="c-card" data-index="0">
-                        <div class="c-card-inner">
-                            <div class="c-card-image">
-                                <img src="{% static 'images/hero1.jpg' %}" alt="Research">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="c-card" data-index="1">
-                        <div class="c-card-inner">
-                            <div class="c-card-image">
-                                <img src="{% static 'images/hero2.jpg' %}" alt="Field Work">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="c-card" data-index="2">
-                        <div class="c-card-inner">
-                            <div class="c-card-image">
-                                <img src="{% static 'images/hero3.jpg' %}" alt="Analysis">
-                            </div>
-                        </div>
+                    <div class="empty-carousel-state">
+                        <i class="bi bi-images text-muted d-block mb-2" style="font-size: 2rem;"></i>
+                        <p class="text-muted small">Gallery Coming Soon</p>
                     </div>
                     {% endfor %}
                 </div>
@@ -362,13 +345,15 @@
 
 
     .mega-text span {
+        font-family: 'Inter', sans-serif;
         font-size: 90px;
-        /* Reduced font size */
         font-weight: 800;
         line-height: 0.95;
         letter-spacing: -3px;
         text-transform: uppercase;
         white-space: nowrap;
+        display: block;
+        /* Ensure they stay stacked */
     }
 
     .color-red {
@@ -406,6 +391,15 @@
         align-items: center;
         justify-content: center;
         perspective: 1000px;
+    }
+
+    .empty-carousel-state {
+        text-align: center;
+        padding: 40px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px dashed rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        width: 280px;
     }
 
     .carousel-3d-container {
@@ -817,12 +811,13 @@
 
     .board-title {
         font-size: 36px;
-        font-weight: 800;
+        font-weight: 600;
         /* Match Research Projects title color */
         color: #1E3A5F;
         text-align: center;
         margin-bottom: 30px;
-        letter-spacing: -1px;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
     }
 
     /* Style for the container of the link */
@@ -1188,6 +1183,7 @@
         let slideInterval;
 
         function updateCards() {
+            if (totalCards === 0) return;
             cards.forEach((card, index) => {
                 // Reset classes
                 card.classList.remove('active', 'prev', 'next', 'hidden');
@@ -1203,9 +1199,9 @@
 
                 if (diff === 0) {
                     card.classList.add('active');
-                } else if (diff === 1) {
+                } else if (diff === 1 && totalCards > 1) {
                     card.classList.add('next');
-                } else if (diff === totalCards - 1) {
+                } else if (diff === totalCards - 1 && totalCards > 1) {
                     card.classList.add('prev');
                 } else {
                     card.classList.add('hidden');
@@ -1214,11 +1210,13 @@
         }
 
         function nextSlide() {
+            if (totalCards <= 1) return;
             currentIndex = (currentIndex + 1) % totalCards;
             updateCards();
         }
 
         function prevSlide() {
+            if (totalCards <= 1) return;
             currentIndex = (currentIndex - 1 + totalCards) % totalCards;
             updateCards();
         }
@@ -1251,7 +1249,9 @@
 
         // Auto slide
         function startTimer() {
-            slideInterval = setInterval(nextSlide, 2000);
+            if (totalCards > 1) {
+                slideInterval = setInterval(nextSlide, 3500); // 3.5 seconds
+            }
         }
 
         function stopTimer() {

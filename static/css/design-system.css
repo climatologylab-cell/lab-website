@@ -53,7 +53,7 @@
     --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 
     /* Typography */
-    --font-family: 'Helvetica Neue', Arial, sans-serif;
+    --font-family: 'Inter', sans-serif;
     --font-weight-normal: 400;
     --font-weight-medium: 600;
     --font-weight-bold: 700;
@@ -333,12 +333,12 @@ button {
 
 .section-title {
     font-size: clamp(28px, 5vw, 40px);
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-medium);
     color: var(--color-navy);
     text-align: center;
     margin-bottom: var(--spacing-xl);
     text-transform: uppercase;
-    letter-spacing: 1.5px;
+    letter-spacing: 0.3px;
 }
 
 /* === ANIMATIONS === */

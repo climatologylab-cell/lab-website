@@ -23,11 +23,11 @@
 
                 <!-- Sort Dropdown -->
                 <select name="sort" id="sortFilter" class="filter-dropdown" onchange="this.form.submit()">
-                    <option value="latest" {% if sort_by == 'latest' or not sort_by %}selected{% endif %}>Latest
+                    <option value="latest" {% if sort_by=='latest' or not sort_by %}selected{% endif %}>Latest
                     </option>
-                    <option value="oldest" {% if sort_by == 'oldest' %}selected{% endif %}>Oldest</option>
-                    <option value="az" {% if sort_by == 'az' %}selected{% endif %}>A-Z</option>
-                    <option value="za" {% if sort_by == 'za' %}selected{% endif %}>Z-A</option>
+                    <option value="oldest" {% if sort_by=='oldest' %}selected{% endif %}>Oldest</option>
+                    <option value="az" {% if sort_by=='az' %}selected{% endif %}>A-Z</option>
+                    <option value="za" {% if sort_by=='za' %}selected{% endif %}>Z-A</option>
                 </select>
 
                 <!-- Hidden Submit Button (for search) -->
@@ -57,12 +57,15 @@
         /* Fixed 30% width */
         margin: 0;
         font-size: 28px;
-        font-weight: 800;
+        font-weight: 600;
         color: #1E3A5F;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         line-height: 1.2;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        font-family: 'Inter', sans-serif;
     }
 
     /* Search Bar Form (70%) */
