@@ -58,6 +58,12 @@
     --font-weight-medium: 600;
     --font-weight-bold: 700;
     --font-weight-black: 800;
+
+    /* Fluid Typography (Responsive Scaling) */
+    --font-size-h1: clamp(40px, 8vw, 72px);
+    --font-size-h2: clamp(32px, 6vw, 48px);
+    --font-size-h3: clamp(24px, 4vw, 32px);
+    --font-size-body: clamp(14px, 1.5vw, 16px);
 }
 
 /* === GLOBAL RESETS === */
@@ -434,6 +440,23 @@ button {
 
     .card-content {
         padding: var(--spacing-md);
+    }
+}
+
+/* === ENHANCED BIG SCREEN SUPPORT === */
+@media (min-width: 1600px) {
+    .container-wide {
+        max-width: 1500px;
+    }
+
+    .hero-title {
+        font-size: 84px;
+    }
+}
+
+@media (min-width: 2000px) {
+    .container-wide {
+        max-width: 1800px;
     }
 }
 
