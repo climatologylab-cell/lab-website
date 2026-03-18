@@ -15,7 +15,7 @@
         <div class="projects-grid">
             {% for project in projects %}
             <!-- Card Wrapper: Clickable -->
-            <a href="{{ project.external_link|default:'#' }}" class="project-card-link" {% if project.external_link %}target="_blank"{% else %}onclick="return false;" style="cursor: default;"{% endif %}>
+            <a href="{% url 'core:project_detail' project.pk %}" class="project-card-link">
 
                 <div class="project-grid-card">
                     <!-- Card Image -->

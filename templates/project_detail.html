@@ -1,0 +1,378 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ project.title }} - Climatology Lab{% endblock %}
+
+{% block content %}
+<!-- Project Hero Section -->
+<section class="project-detail-hero">
+    <div class="container">
+        <div class="hero-content">
+            <nav class="breadcrumb">
+                <a href="{% url 'core:home' %}">Home</a>
+                <span class="separator">/</span>
+                {% if project.project_type == 'research' %}
+                <a href="{% url 'core:research_projects' %}">Research Projects</a>
+                {% else %}
+                <a href="{% url 'core:consultancy_projects' %}">Consultancy Projects</a>
+                {% endif %}
+                <span class="separator">/</span>
+                <span class="current">Detail</span>
+            </nav>
+            <h1 class="project-detail-title">{{ project.title }}</h1>
+            <div class="project-tags">
+                <span class="status-badge status-{{ project.status|lower }}">
+                    {{ project.get_status_display }}
+                </span>
+                <span class="type-tag">
+                    {{ project.get_project_type_display }}
+                </span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Project Content Section -->
+<section class="project-detail-content">
+    <div class="container">
+        <div class="detail-grid">
+            <!-- Left Column: Main Info -->
+            <div class="detail-main">
+
+                <div class="content-block">
+                    <h2 class="block-title">Project Overview</h2>
+                    <div class="rich-text-content">
+                        {{ project.description|linebreaks }}
+                    </div>
+                </div>
+
+                {% if project.external_link %}
+                <div class="external-link-block">
+                    <a href="{{ project.external_link }}" target="_blank" class="btn-premium">
+                        Visit External Project Website
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                        </svg>
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Right Column: Sidebar Meta -->
+            <aside class="detail-sidebar">
+                <div class="sidebar-card">
+                    <h3 class="sidebar-title">Project Details</h3>
+
+                    <div class="meta-list">
+                        {% if project.funding_agency %}
+                        <div class="meta-item">
+                            <span class="meta-label">Funding Agency</span>
+                            <span class="meta-value">{{ project.funding_agency }}</span>
+                        </div>
+                        {% endif %}
+
+                        {% if project.grant_amount %}
+                        <div class="meta-item">
+                            <span class="meta-label">Grant Amount</span>
+                            <span class="meta-value">{{ project.grant_amount }}</span>
+                        </div>
+                        {% endif %}
+
+                        {% if project.start_date or project.end_date %}
+                        <div class="meta-item">
+                            <span class="meta-label">Timeline</span>
+                            <span class="meta-value">
+                                {% if project.start_date %}
+                                {{ project.start_date|date:"M Y" }}
+                                {% else %}
+                                Present
+                                {% endif %}
+                                &mdash;
+                                {% if project.end_date %}
+                                {{ project.end_date|date:"M Y" }}
+                                {% else %}
+                                Ongoing
+                                {% endif %}
+                            </span>
+                        </div>
+                        {% endif %}
+
+                        {% if project.role %}
+                        <div class="meta-item">
+                            <span class="meta-label">Your Role</span>
+                            <span class="meta-value">{{ project.get_role_display }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if project.collaborators %}
+                <div class="sidebar-card">
+                    <h3 class="sidebar-title">Collaborators</h3>
+                    <div class="rich-text-content smaller">
+                        {{ project.collaborators|linebreaks }}
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if project.partner_institutions %}
+                <div class="sidebar-card">
+                    <h3 class="sidebar-title">Partner Institutions</h3>
+                    <div class="rich-text-content smaller">
+                        {{ project.partner_institutions|linebreaks }}
+                    </div>
+                </div>
+                {% endif %}
+            </aside>
+        </div>
+    </div>
+</section>
+
+<style>
+    /* === HERO SECTION === */
+    .project-detail-hero {
+        background: #fafafa;
+        padding: 60px 0 40px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+        font-size: 14px;
+        color: #666;
+    }
+
+    .breadcrumb a {
+        color: #4A90E2;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .breadcrumb a:hover {
+        color: #0D3B66;
+    }
+
+    .breadcrumb .separator {
+        color: #ccc;
+    }
+
+    .project-detail-title {
+        font-size: clamp(28px, 5vw, 42px);
+        font-weight: 800;
+        color: #0D3B66;
+        line-height: 1.2;
+        margin-bottom: 25px;
+        text-transform: uppercase;
+        letter-spacing: -0.5px;
+    }
+
+    .project-tags {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .status-badge {
+        padding: 6px 16px;
+        border-radius: 30px;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        background: white;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .status-ongoing {
+        color: #2ECC71;
+        border: 1px solid #2ECC71;
+    }
+
+    .status-completed {
+        color: #4A90E2;
+        border: 1px solid #4A90E2;
+    }
+
+    .status-planned {
+        color: #f4d210;
+        border: 1px solid #f4d210;
+    }
+
+    .type-tag {
+        padding: 6px 16px;
+        border-radius: 30px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #666;
+        background: #eee;
+        text-transform: uppercase;
+    }
+
+    /* === CONTENT SECTION === */
+    .project-detail-content {
+        padding: 60px 0 100px;
+        background: white;
+    }
+
+    .detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 350px;
+        gap: 60px;
+    }
+
+    /* Main Column */
+    .detail-image-wrapper {
+        width: 100%;
+        border-radius: 16px;
+        overflow: hidden;
+        margin-bottom: 40px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .detail-full-image {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    .content-block {
+        margin-bottom: 50px;
+    }
+
+    .block-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: #0D3B66;
+        margin-bottom: 20px;
+        position: relative;
+        padding-bottom: 10px;
+    }
+
+    .block-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background: #4A90E2;
+    }
+
+    .rich-text-content {
+        font-size: 16px;
+        line-height: 1.8;
+        color: #444;
+    }
+
+    .rich-text-content p {
+        margin-bottom: 20px;
+    }
+
+    .btn-premium {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        background: linear-gradient(135deg, #4A90E2 0%, #0D3B66 100%);
+        color: white;
+        padding: 16px 32px;
+        border-radius: 50px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(13, 59, 102, 0.2);
+    }
+
+    .btn-premium:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(13, 59, 102, 0.3);
+        color: white;
+    }
+
+    /* Sidebar Column */
+    .sidebar-card {
+        background: #f8f9fa;
+        border-radius: 16px;
+        padding: 30px;
+        margin-bottom: 30px;
+        border: 1px solid #eee;
+    }
+
+    .sidebar-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #0D3B66;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .meta-list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .meta-item {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .meta-label {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #999;
+        letter-spacing: 1px;
+    }
+
+    .meta-value {
+        font-size: 15px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .rich-text-content.smaller {
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 1024px) {
+        .detail-grid {
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
+
+        .detail-sidebar {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .sidebar-card {
+            margin-bottom: 0;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .detail-sidebar {
+            grid-template-columns: 1fr;
+        }
+
+        .project-detail-hero {
+            padding: 40px 0 30px;
+        }
+
+        .project-detail-title {
+            font-size: 24px;
+        }
+    }
+</style>
+{% endblock %}

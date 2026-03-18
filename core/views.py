@@ -157,16 +157,15 @@ def consultancy_projects_view(request):
 
 
 def project_detail(request, pk):
-    """Project detail view - Redirects to external link if available"""
+    """Project detail view showing all database fields"""
     from projects.models import ResearchProject
-    from django.shortcuts import redirect
-    project = get_object_or_404(ResearchProject, pk=pk)
+    project = get_object_or_404(ResearchProject, pk=pk, is_active=True)
     
-    if project.external_link:
-        return redirect(project.external_link)
-    
-    # Fallback if no external link
-    return redirect('core:research_projects')
+    context = {
+        'project': project,
+        'page_title': project.title,
+    }
+    return render(request, 'project_detail.html', context)
 
 
 def team_view(request):

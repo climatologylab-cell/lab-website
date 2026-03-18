@@ -345,7 +345,7 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         /* 50/50 split */
-        gap: 20px;
+        gap: 60px;
         align-items: center;
     }
 
@@ -353,7 +353,8 @@
     .hero-text-block {
         display: flex;
         align-items: center;
-        padding-left: 20px;
+        padding-left: 40px;
+        padding-right: 20px;
         z-index: 5;
         position: relative;
     }
@@ -368,7 +369,7 @@
 
     .mega-text span {
         font-family: 'Inter', sans-serif;
-        font-size: var(--font-size-h1);
+        font-size: clamp(50px, 10vw, 106px);
         font-weight: 800;
         line-height: 1;
         letter-spacing: -1.5px;
@@ -934,20 +935,9 @@
     .carousel-track {
         display: flex;
         gap: 30px;
-        animation: autoScroll 20s linear infinite;
         will-change: transform;
     }
 
-    /* Auto-scroll animation */
-    @keyframes autoScroll {
-        0% {
-            transform: translateX(0);
-        }
-
-        100% {
-            transform: translateX(-50%);
-        }
-    }
 
     /* Pause on hover */
     .carousel-wrapper:hover .carousel-track {
@@ -1154,12 +1144,13 @@
 
     @media (max-width: 768px) {
         .carousel-card {
-            flex: 0 0 100%;
-            min-width: 100%;
+            flex: 0 0 calc(100% - 60px);
+            /* Show partial next card */
+            min-width: calc(100% - 60px);
         }
 
         .carousel-wrapper {
-            padding: 0 50px;
+            padding: 0 45px;
         }
 
         .carousel-arrow {
@@ -1179,19 +1170,19 @@
     /* === RESPONSIVE === */
     @media (max-width: 1400px) {
         .mega-text span {
-            font-size: 76px;
+            font-size: clamp(48px, 9vw, 98px);
         }
     }
 
     @media (max-width: 1200px) {
         .hero-grid {
             padding: 0 50px;
-            gap: 40px;
+            gap: 60px;
             grid-template-columns: 1fr 1fr;
         }
 
         .mega-text span {
-            font-size: 66px;
+            font-size: clamp(44px, 8vw, 90px);
         }
     }
 
@@ -1199,7 +1190,7 @@
         .hero-grid {
             grid-template-columns: 1fr;
             grid-template-rows: auto 1fr;
-            gap: 20px;
+            gap: 40px;
             padding: 0 40px;
             text-align: center;
         }
@@ -1214,7 +1205,7 @@
         }
 
         .mega-text span {
-            font-size: 62px;
+            font-size: clamp(40px, 7vw, 82px);
         }
 
         .hero-carousel-block {
@@ -1230,7 +1221,7 @@
 
     @media (max-width: 768px) {
         .mega-text span {
-            font-size: 50px;
+            font-size: clamp(36px, 6vw, 74px);
             letter-spacing: -2px;
         }
 
@@ -1246,7 +1237,7 @@
         }
 
         .mega-text span {
-            font-size: 38px;
+            font-size: clamp(32px, 5vw, 66px);
         }
 
         .carousel-3d-wrapper {
@@ -1399,8 +1390,6 @@
             if (!wrapper || !track) return;
 
             const cards = [...track.querySelectorAll('.carousel-card')];
-
-            // Only initialize if there are cards
             if (cards.length === 0) return;
 
             // Duplicate cards for infinite loop
@@ -1409,84 +1398,97 @@
                 track.appendChild(clone);
             });
 
-            // Calculate animation duration (3.5s per card for faster movement)
-            const duration = Math.max(cards.length * 3.5, 20); // Minimum 20s
-            track.style.animationDuration = `${duration}s`;
+            const cardWidth = cards[0].offsetWidth + 30; // card width + gap
+            const totalWidth = cardWidth * cards.length;
+            let currentX = 0;
+            let isPaused = false;
+            let rafId = null;
 
-            // Arrow navigation - pause, shift, resume approach
+            function animate() {
+                if (!isPaused) {
+                    currentX -= 0.8; // Speed of auto-scroll
+                    if (Math.abs(currentX) >= totalWidth) {
+                        currentX = 0;
+                    }
+                    track.style.transform = `translateX(${currentX}px)`;
+                }
+                rafId = requestAnimationFrame(animate);
+            }
+
+            // Start animation
+            animate();
+
+            // Pause on hover
+            wrapper.addEventListener('mouseenter', () => isPaused = true);
+            wrapper.addEventListener('mouseleave', () => isPaused = false);
+
+            // Arrow navigation
             const prevBtn = wrapper.querySelector('.carousel-prev');
             const nextBtn = wrapper.querySelector('.carousel-next');
 
             if (prevBtn && nextBtn) {
-                const cardWidth = cards[0].offsetWidth + 30; // card width + gap
-                let isAnimating = false;
-
-                prevBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    if (isAnimating) return;
-
-                    isAnimating = true;
-
-                    // Pause the auto-scroll animation
-                    track.style.animationPlayState = 'paused';
-
-                    // Get current computed transform value
-                    const computedStyle = window.getComputedStyle(track);
-                    const matrix = new WebKitCSSMatrix(computedStyle.transform);
-                    const currentX = matrix.m41;
-
-                    // Set the current position explicitly
-                    track.style.animation = 'none';
-                    track.style.transform = `translateX(${currentX}px)`;
-
-                    // Wait a frame then animate to new position
-                    requestAnimationFrame(() => {
-                        track.style.transition = 'transform 0.5s ease';
-                        track.style.transform = `translateX(${currentX + cardWidth}px)`;
-
-                        // After transition, restore animation
-                        setTimeout(() => {
-                            track.style.transition = '';
-                            track.style.transform = '';
-                            track.style.animation = '';
-                            track.style.animationPlayState = 'running';
-                            isAnimating = false;
-                        }, 500);
-                    });
-                });
+                let isMoving = false;
 
                 nextBtn.addEventListener('click', (e) => {
                     e.preventDefault();
-                    if (isAnimating) return;
+                    if (isMoving) return;
+                    isMoving = true;
+                    isPaused = true;
 
-                    isAnimating = true;
+                    // Calculate nearest alignment
+                    const targetX = Math.round((currentX - cardWidth) / cardWidth) * cardWidth;
 
-                    // Pause the auto-scroll animation
-                    track.style.animationPlayState = 'paused';
+                    track.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                    currentX = targetX;
 
-                    // Get current computed transform value
-                    const computedStyle = window.getComputedStyle(track);
-                    const matrix = new WebKitCSSMatrix(computedStyle.transform);
-                    const currentX = matrix.m41;
+                    // Handle wrap-around
+                    if (Math.abs(currentX) >= totalWidth) {
+                        currentX = 0;
+                        track.style.transform = `translateX(${currentX}px)`;
+                    } else {
+                        track.style.transform = `translateX(${currentX}px)`;
+                    }
 
-                    // Set the current position explicitly
-                    track.style.animation = 'none';
-                    track.style.transform = `translateX(${currentX}px)`;
+                    setTimeout(() => {
+                        track.style.transition = 'none';
+                        isMoving = false;
+                        isPaused = false;
+                    }, 500);
+                });
 
-                    // Wait a frame then animate to new position
-                    requestAnimationFrame(() => {
-                        track.style.transition = 'transform 0.5s ease';
-                        track.style.transform = `translateX(${currentX - cardWidth}px)`;
+                prevBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (isMoving) return;
+                    isMoving = true;
+                    isPaused = true;
 
-                        // After transition, restore animation
-                        setTimeout(() => {
-                            track.style.transition = '';
-                            track.style.transform = '';
-                            track.style.animation = '';
-                            track.style.animationPlayState = 'running';
-                            isAnimating = false;
-                        }, 500);
-                    });
+                    // Calculate nearest alignment
+                    let targetX = Math.round((currentX + cardWidth) / cardWidth) * cardWidth;
+
+                    track.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+
+                    if (targetX > 0) {
+                        // Secret jump to end for seamless back-scroll
+                        track.style.transition = 'none';
+                        currentX = -totalWidth;
+                        track.style.transform = `translateX(${currentX}px)`;
+                        targetX = currentX + cardWidth;
+
+                        requestAnimationFrame(() => {
+                            track.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                            currentX = targetX;
+                            track.style.transform = `translateX(${currentX}px)`;
+                        });
+                    } else {
+                        currentX = targetX;
+                        track.style.transform = `translateX(${currentX}px)`;
+                    }
+
+                    setTimeout(() => {
+                        track.style.transition = 'none';
+                        isMoving = false;
+                        isPaused = false;
+                    }, 500);
                 });
             }
         }
