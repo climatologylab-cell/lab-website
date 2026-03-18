@@ -10,6 +10,15 @@
         background-color: #ffffff !important;
     }
 
+    /* === PAGE WRAPPER FOR ONE-SCREEN VIEW === */
+    .project-page-wrapper {
+        min-height: calc(100vh - 85px);
+        /* Adjusted for header height */
+        display: flex;
+        flex-direction: column;
+        background: #ffffff;
+    }
+
     /* === MINIMALIST HERO SECTION === */
     .project-detail-hero {
         background: #ffffff;
@@ -119,6 +128,8 @@
     .project-detail-body {
         padding: 15px 0 30px;
         background: #ffffff;
+        flex-grow: 1;
+        /* Ensures body takes up remaining space to push footer */
     }
 
     .detail-grid {
@@ -298,157 +309,159 @@
 {% endblock %}
 
 {% block content %}
-<!-- Minimalist White Hero -->
-<section class="project-detail-hero">
-    <div class="container">
-        <div class="hero-content">
-            <nav class="breadcrumb">
-                <a href="{% url 'core:home' %}">Home</a>
-                <span class="separator">/</span>
-                {% if project.project_type == 'research' %}
-                <a href="{% url 'core:research_projects' %}">Research Projects</a>
-                {% else %}
-                <a href="{% url 'core:consultancy_projects' %}">Consultancy Projects</a>
-                {% endif %}
-                <span class="separator">/</span>
-                <span class="current">Project Detail</span>
-            </nav>
+<div class="project-page-wrapper">
+    <!-- Minimalist White Hero -->
+    <section class="project-detail-hero">
+        <div class="container">
+            <div class="hero-content">
+                <nav class="breadcrumb">
+                    <a href="{% url 'core:home' %}">Home</a>
+                    <span class="separator">/</span>
+                    {% if project.project_type == 'research' %}
+                    <a href="{% url 'core:research_projects' %}">Research Projects</a>
+                    {% else %}
+                    <a href="{% url 'core:consultancy_projects' %}">Consultancy Projects</a>
+                    {% endif %}
+                    <span class="separator">/</span>
+                    <span class="current">Project Detail</span>
+                </nav>
 
-            <h1 class="project-detail-title">{{ project.title }}</h1>
+                <h1 class="project-detail-title">{{ project.title }}</h1>
 
-            <!-- Subtle Quick Specs Bar -->
-            <div class="quick-specs-bar">
-                <div class="spec-item status-{{ project.status|lower }}">
-                    <span class="spec-label">Current Status</span>
-                    <span class="spec-value">
-                        <span class="spec-status">{{ project.get_status_display }}</span>
-                    </span>
-                </div>
-                <div class="spec-item">
-                    <span class="spec-label">Project Category</span>
-                    <span class="spec-value">{{ project.get_project_type_display }}</span>
-                </div>
-                {% if project.grant_amount %}
-                <div class="spec-item">
-                    <span class="spec-label">Funding Grant</span>
-                    <span class="spec-value">{{ project.grant_amount }}</span>
-                </div>
-                {% endif %}
-                <div class="spec-item">
-                    <span class="spec-label">Project Timeline</span>
-                    <span class="spec-value">
-                        {% if project.start_date %}{{ project.start_date|date:"Y" }}{% else %}?{% endif %}
-                        &mdash;
-                        {% if project.end_date %}{{ project.end_date|date:"Y" }}{% else %}Present{% endif %}
-                    </span>
+                <!-- Subtle Quick Specs Bar -->
+                <div class="quick-specs-bar">
+                    <div class="spec-item status-{{ project.status|lower }}">
+                        <span class="spec-label">Current Status</span>
+                        <span class="spec-value">
+                            <span class="spec-status">{{ project.get_status_display }}</span>
+                        </span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">Project Category</span>
+                        <span class="spec-value">{{ project.get_project_type_display }}</span>
+                    </div>
+                    {% if project.grant_amount %}
+                    <div class="spec-item">
+                        <span class="spec-label">Funding Grant</span>
+                        <span class="spec-value">{{ project.grant_amount }}</span>
+                    </div>
+                    {% endif %}
+                    <div class="spec-item">
+                        <span class="spec-label">Project Timeline</span>
+                        <span class="spec-value">
+                            {% if project.start_date %}{{ project.start_date|date:"Y" }}{% else %}?{% endif %}
+                            &mdash;
+                            {% if project.end_date %}{{ project.end_date|date:"Y" }}{% else %}Present{% endif %}
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<!-- Main Body Section -->
-<section class="project-detail-body">
-    <div class="container">
-        <div class="detail-grid">
+    <!-- Main Body Section -->
+    <section class="project-detail-body">
+        <div class="container">
+            <div class="detail-grid">
 
-            <!-- Left Column: Narrative Content -->
-            <article class="main-narrative">
-                <span class="section-label">Case Overview</span>
-                <div class="description-text">
-                    {{ project.description|linebreaks }}
-                </div>
-
-                {% if project.external_link %}
-                <div class="cta-wrapper">
-                    <a href="{{ project.external_link }}" target="_blank" class="btn-minimal">
-                        View Project Website
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                            <polyline points="15 3 21 3 21 9"></polyline>
-                            <line x1="10" y1="14" x2="21" y2="3"></line>
-                        </svg>
-                    </a>
-                </div>
-                {% endif %}
-            </article>
-
-            <!-- Right Column: Metadata Sidebar -->
-            <aside class="detail-sidebar">
-
-                <!-- Information Block -->
-                <div class="sidebar-block">
-                    <div class="block-header">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <rect x="3" y="4" width="18" height="16" rx="2" ry="2"></rect>
-                            <line x1="16" y1="2" x2="16" y2="6"></line>
-                            <line x1="8" y1="2" x2="8" y2="6"></line>
-                            <line x1="3" y1="10" x2="21" y2="10"></line>
-                        </svg>
-                        Project Details
+                <!-- Left Column: Narrative Content -->
+                <article class="main-narrative">
+                    <span class="section-label">Case Overview</span>
+                    <div class="description-text">
+                        {{ project.description|linebreaks }}
                     </div>
-                    <div class="meta-data-list">
-                        {% if project.funding_agency %}
-                        <div class="meta-row">
-                            <span class="meta-label">Funding Agency</span>
-                            <span class="meta-value">{{ project.funding_agency }}</span>
+
+                    {% if project.external_link %}
+                    <div class="cta-wrapper">
+                        <a href="{{ project.external_link }}" target="_blank" class="btn-minimal">
+                            View Project Website
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                <polyline points="15 3 21 3 21 9"></polyline>
+                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                            </svg>
+                        </a>
+                    </div>
+                    {% endif %}
+                </article>
+
+                <!-- Right Column: Metadata Sidebar -->
+                <aside class="detail-sidebar">
+
+                    <!-- Information Block -->
+                    <div class="sidebar-block">
+                        <div class="block-header">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <rect x="3" y="4" width="18" height="16" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            Project Details
                         </div>
-                        {% endif %}
+                        <div class="meta-data-list">
+                            {% if project.funding_agency %}
+                            <div class="meta-row">
+                                <span class="meta-label">Funding Agency</span>
+                                <span class="meta-value">{{ project.funding_agency }}</span>
+                            </div>
+                            {% endif %}
 
-                        {% if project.role %}
-                        <div class="meta-row">
-                            <span class="meta-label">Investigator Role</span>
-                            <span class="meta-value">{{ project.get_role_display }}</span>
+                            {% if project.role %}
+                            <div class="meta-row">
+                                <span class="meta-label">Investigator Role</span>
+                                <span class="meta-value">{{ project.get_role_display }}</span>
+                            </div>
+                            {% endif %}
+
+                            <div class="meta-row">
+                                <span class="meta-label">Serial Identification</span>
+                                <span class="meta-value">CL-IITR-{{ project.pk|stringformat:"04d" }}</span>
+                            </div>
                         </div>
-                        {% endif %}
+                    </div>
 
-                        <div class="meta-row">
-                            <span class="meta-label">Serial Identification</span>
-                            <span class="meta-value">CL-IITR-{{ project.pk|stringformat:"04d" }}</span>
+                    <!-- Team Block -->
+                    {% if project.collaborators %}
+                    <div class="sidebar-block">
+                        <div class="block-header">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                            Collaborators
+                        </div>
+                        <div class="meta-text">
+                            {{ project.collaborators|linebreaks }}
                         </div>
                     </div>
-                </div>
+                    {% endif %}
 
-                <!-- Team Block -->
-                {% if project.collaborators %}
-                <div class="sidebar-block">
-                    <div class="block-header">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="9" cy="7" r="4"></circle>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                        </svg>
-                        Collaborators
+                    <!-- Affiliations Block -->
+                    {% if project.partner_institutions %}
+                    <div class="sidebar-block">
+                        <div class="block-header">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z">
+                                </path>
+                            </svg>
+                            Partner Institutions
+                        </div>
+                        <div class="meta-text">
+                            {{ project.partner_institutions|linebreaks }}
+                        </div>
                     </div>
-                    <div class="meta-text">
-                        {{ project.collaborators|linebreaks }}
-                    </div>
-                </div>
-                {% endif %}
+                    {% endif %}
 
-                <!-- Affiliations Block -->
-                {% if project.partner_institutions %}
-                <div class="sidebar-block">
-                    <div class="block-header">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z">
-                            </path>
-                        </svg>
-                        Partner Institutions
-                    </div>
-                    <div class="meta-text">
-                        {{ project.partner_institutions|linebreaks }}
-                    </div>
-                </div>
-                {% endif %}
-
-            </aside>
+                </aside>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
+</div>
 {% endblock %}
