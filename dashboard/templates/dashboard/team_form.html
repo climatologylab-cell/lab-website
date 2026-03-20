@@ -38,6 +38,12 @@
                 </div>
 
                 <div class="row mt-3">
+                    <div class="col-12">
+                        {{ form.bio|as_crispy_field }}
+                    </div>
+                </div>
+
+                <div class="row mt-3">
                     <div class="col-md-6">{{ form.linkedin_url|as_crispy_field }}</div>
                     <div class="col-md-6">{{ form.google_scholar_url|as_crispy_field }}</div>
                 </div>

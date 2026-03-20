@@ -74,8 +74,11 @@ class TeamMemberForm(forms.ModelForm):
         model = TeamMember
         fields = [
             'name', 'role', 'photo', 'email', 
-            'linkedin_url', 'google_scholar_url', 'order', 'is_active'
+            'bio', 'linkedin_url', 'google_scholar_url', 'order', 'is_active'
         ]
+        widgets = {
+            'bio': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Enter biography...'}),
+        }
 
 class WorkshopForm(forms.ModelForm):
     class Meta:
