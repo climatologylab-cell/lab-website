@@ -8,7 +8,9 @@
 
 
 <!-- Search & Filter Bar -->
-{% include 'includes/search_filter_bar.html' with search_placeholder="Search publications..." page_title=page_title %}
+{% with placeholder="Search "|add:page_title|add:"..." %}
+{% include 'includes/search_filter_bar.html' with search_placeholder=placeholder page_title=page_title %}
+{% endwith %}
 
 
 <!-- Publications Grid -->

@@ -25,7 +25,8 @@ def publication_list(request, category=None, scope=None):
             Q(title__icontains=search_query) |
             Q(abstract__icontains=search_query) |
             Q(authors__icontains=search_query) |
-            Q(journal__icontains=search_query)
+            Q(journal__icontains=search_query) |
+            Q(citation__icontains=search_query)
         )
     
     # Sort functionality
@@ -48,7 +49,7 @@ def publication_list(request, category=None, scope=None):
         'book': 'Book Chapters',
         'thesis': 'Theses',
         'report': 'Technical Reports',
-        'guideline': 'Guidelines',
+        'guideline': 'Books',
         'other': 'Other Documents',
     }
     
@@ -68,6 +69,10 @@ def publication_list(request, category=None, scope=None):
         'current_scope': scope,
         'search_query': search_query,
         'sort_by': sort_by,
+        'is_sort_latest': sort_by == 'latest' or not sort_by,
+        'is_sort_oldest': sort_by == 'oldest',
+        'is_sort_az': sort_by == 'az',
+        'is_sort_za': sort_by == 'za',
     }
     return render(request, 'publication_list.html', context)
 

@@ -249,7 +249,7 @@
                         <a href="#" class="dropdown-trigger {% if '/publications/' in request.path %}active{% endif %}"
                             id="pubDropdownTrigger" aria-haspopup="true" aria-expanded="false">PUBLICATIONS</a>
                         <div class="dropdown-menu" id="pubDropdownMenu">
-                            <a href="{% url 'publications:journals' %}" class="dropdown-item">JOURNALS</a>
+                            <a href="{% url 'publications:journals' %}" class="dropdown-item">JOURNAL ARTICLES</a>
 
                             <!-- Nested Conference Submenu -->
                             <div class="dropdown-submenu-wrapper" id="confSubmenuWrapper">
@@ -265,8 +265,8 @@
                                 </div>
                             </div>
 
-                            <a href="{% url 'publications:books' %}" class="dropdown-item">BOOKS</a>
-                            <a href="{% url 'publications:guidelines' %}" class="dropdown-item">GUIDELINES</a>
+                            <a href="{% url 'publications:books' %}" class="dropdown-item">BOOK CHAPTERS</a>
+                            <a href="{% url 'publications:guidelines' %}" class="dropdown-item">BOOKS</a>
                             <a href="{% url 'publications:others' %}" class="dropdown-item">OTHER DOCUMENTS</a>
                         </div>
                     </div>

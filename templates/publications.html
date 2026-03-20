@@ -21,7 +21,7 @@
                     <circle cx="11" cy="11" r="8" />
                     <path d="m21 21-4.35-4.35" />
                 </svg>
-                <input type="text" id="searchInput" placeholder="Search publications..." onkeyup="filterPublications()">
+                <input type="text" id="searchInput" placeholder="Search Books..." onkeyup="filterPublications()">
             </div>
 
             <select id="yearFilter" onchange="filterPublications()" class="filter-dropdown">
@@ -51,7 +51,7 @@
         <div class="projects-grid" id="publicationsGrid">
             {% for pub in publications %}
             <div class="project-card" data-category="{{ pub.category|lower }}" data-title="{{ pub.title|lower }}"
-                data-year="{{ pub.publication_date|date:'Y' }}">
+                data-authors="{{ pub.authors|lower }}" data-year="{{ pub.publication_date|date:'Y' }}">
 
                 <!-- Icon/Image Area -->
                 <div class="project-image publication-icon-wrapper">
@@ -451,10 +451,11 @@
 
         cards.forEach(card => {
             const title = card.getAttribute('data-title');
+            const authors = card.getAttribute('data-authors') || '';
             const year = card.getAttribute('data-year');
             const category = card.getAttribute('data-category');
 
-            const matchesSearch = title.includes(searchValue);
+            const matchesSearch = title.includes(searchValue) || authors.includes(searchValue);
             const matchesYear = yearValue === 'all' || year === yearValue;
             const matchesCategory = categoryValue === 'all' || category === categoryValue;
 

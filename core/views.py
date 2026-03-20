@@ -109,6 +109,10 @@ def research_projects_view(request):
         'page_title': 'Research Projects',
         'search_query': search_query,
         'sort_by': sort_by,
+        'is_sort_latest': sort_by == 'latest' or not sort_by,
+        'is_sort_oldest': sort_by == 'oldest',
+        'is_sort_az': sort_by == 'az',
+        'is_sort_za': sort_by == 'za',
     }
     return render(request, 'projects.html', context)
 
@@ -150,6 +154,10 @@ def consultancy_projects_view(request):
         'page_title': 'Consultancy Projects',
         'search_query': search_query,
         'sort_by': sort_by,
+        'is_sort_latest': sort_by == 'latest' or not sort_by,
+        'is_sort_oldest': sort_by == 'oldest',
+        'is_sort_az': sort_by == 'az',
+        'is_sort_za': sort_by == 'za',
     }
     return render(request, 'projects.html', context)
 
@@ -272,6 +280,10 @@ def workshops_view(request):
         'page_title': 'Workshops',
         'search_query': search_query,
         'sort_by': sort_by,
+        'is_sort_latest': sort_by == 'latest' or not sort_by,
+        'is_sort_oldest': sort_by == 'oldest',
+        'is_sort_az': sort_by == 'az',
+        'is_sort_za': sort_by == 'za',
     }
     return render(request, 'workshops.html', context)
 
@@ -352,6 +364,10 @@ def tutorials_view(request):
         'page_title': 'Tutorials',
         'search_query': search_query,
         'sort_by': sort_by,
+        'is_sort_latest': sort_by == 'latest' or not sort_by,
+        'is_sort_oldest': sort_by == 'oldest',
+        'is_sort_az': sort_by == 'az',
+        'is_sort_za': sort_by == 'za',
     }
     return render(request, 'tutorials.html', context)
 
@@ -386,6 +402,10 @@ def research_technology_view(request):
         'notices': notices,
         'search_query': search_query,
         'sort_by': sort_by,
+        'is_sort_latest': sort_by == 'latest' or not sort_by,
+        'is_sort_oldest': sort_by == 'oldest',
+        'is_sort_az': sort_by == 'az',
+        'is_sort_za': sort_by == 'za',
         'page_title': 'Research & Technology',
         'search_placeholder': 'Search research & technology...',
     }

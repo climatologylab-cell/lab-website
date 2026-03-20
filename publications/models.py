@@ -10,7 +10,7 @@ class Publication(models.Model):
         ('book', 'Book Chapter'),
         ('thesis', 'Thesis'),
         ('report', 'Technical Report'),
-        ('guideline', 'Guideline'),
+        ('guideline', 'Book'),
         ('other', 'Other Document'),
     ]
 
@@ -181,8 +181,8 @@ class Book(Publication):
 class Guideline(Publication):
     class Meta:
         proxy = True
-        verbose_name = "Guideline"
-        verbose_name_plural = "Guidelines"
+        verbose_name = "Book"
+        verbose_name_plural = "Books"
 
 
 class OtherDocument(Publication):

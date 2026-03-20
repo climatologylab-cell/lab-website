@@ -16,18 +16,17 @@
                         <circle cx="11" cy="11" r="8" />
                         <path d="m21 21-4.35-4.35" />
                     </svg>
-                    <input type="text" name="search" id="searchInput"
-                        placeholder="{{ search_placeholder|default:'Search...' }}" value="{{ search_query|default:'' }}"
-                        autocomplete="off">
+                    <input type="text" name="search" id="masterSearchInput"
+                        placeholder="{{ search_placeholder|default:'Search publications...' }}"
+                        value="{{ search_query|default:'' }}" autocomplete="off">
                 </div>
 
                 <!-- Sort Dropdown -->
                 <select name="sort" id="sortFilter" class="filter-dropdown" onchange="this.form.submit()">
-                    <option value="latest" {% if sort_by == 'latest' or not sort_by %}selected{% endif %}>Latest
-                    </option>
-                    <option value="oldest" {% if sort_by == 'oldest' %}selected{% endif %}>Oldest</option>
-                    <option value="az" {% if sort_by == 'az' %}selected{% endif %}>A-Z</option>
-                    <option value="za" {% if sort_by == 'za' %}selected{% endif %}>Z-A</option>
+                    <option value="latest" {% if is_sort_latest %}selected{% endif %}>Latest</option>
+                    <option value="oldest" {% if is_sort_oldest %}selected{% endif %}>Oldest</option>
+                    <option value="az" {% if is_sort_az %}selected{% endif %}>A-Z</option>
+                    <option value="za" {% if is_sort_za %}selected{% endif %}>Z-A</option>
                 </select>
 
                 <!-- Hidden Submit Button (for search) -->
@@ -177,7 +176,7 @@
 
 <script>
     // Auto-submit search on Enter key
-    document.getElementById("searchInput").addEventListener("keypress", function (e) {
+    document.getElementById("masterSearchInput").addEventListener("keypress", function (e) {
         if (e.key === "Enter") {
             e.preventDefault();
             this.form.submit();
@@ -186,7 +185,7 @@
 
     // Optional: Auto-submit after typing (debounced)
     let searchTimeout;
-    document.getElementById("searchInput").addEventListener("input", function () {
+    document.getElementById("masterSearchInput").addEventListener("input", function () {
         clearTimeout(searchTimeout);
         searchTimeout = setTimeout(() => {
             this.form.submit();
