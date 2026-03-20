@@ -16,7 +16,7 @@ def main():
     from waitress import serve
 
     host = os.getenv("HOST", "0.0.0.0")
-    port = int(os.getenv("PORT", "80"))
+    port = int(os.getenv("PORT", "8080"))
     threads = int(os.getenv("WAITRESS_THREADS", "4"))
 
     print(f"Starting Waitress server on {host}:{port} with {threads} threads...")

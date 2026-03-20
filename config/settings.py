@@ -38,8 +38,12 @@ ALLOWED_HOSTS = [
 
 # CSRF Trusted Origins - Required for Django 4.0+ when behind a proxy/different domain
 CSRF_TRUSTED_ORIGINS = [
-    o.strip() for o in os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",") if o.strip()
+    o.strip() for o in os.getenv("CSRF_TRUSTED_ORIGINS", "https://climatologylab.iitr.ac.in").split(",") if o.strip()
 ]
+
+# Security settings for SSL (added by Antigravity)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# SECURE_SSL_REDIRECT = True  # Enable this later after Nginx is verified
 
 
 # Application definition
