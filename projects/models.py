@@ -56,11 +56,13 @@ class ResearchProject(models.Model):
     funding_agency = models.CharField(
         max_length=300, 
         blank=True, 
+        null=True,
         verbose_name="Funding Agency / Scheme"
     )
     grant_amount = models.CharField(
         max_length=100, 
         blank=True, 
+        null=True,
         verbose_name="Grant / Outlay Amount", 
         help_text="e.g., ₹6.75 L, USD 10,300"
     )
@@ -75,6 +77,7 @@ class ResearchProject(models.Model):
     )
     external_link = models.URLField(
         blank=True,
+        null=True,
         verbose_name="External Project URL",
         help_text="Optional: Direct link to project website (overrides detail page)"
     )
@@ -84,16 +87,19 @@ class ResearchProject(models.Model):
         max_length=20, 
         choices=ROLE_CHOICES, 
         blank=True,
+        null=True,
         verbose_name="Your Role",
         help_text="Your role in this project"
     )
     collaborators = models.TextField(
         blank=True, 
+        null=True,
         verbose_name="PI / Collaborators", 
         help_text="Names of principal investigators and collaborators"
     )
     partner_institutions = models.TextField(
         blank=True, 
+        null=True,
         verbose_name="Partner Institutions", 
         help_text="Collaborating organizations (e.g., GMDA, TARU, World Bank)"
     )
