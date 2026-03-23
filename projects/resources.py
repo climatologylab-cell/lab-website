@@ -1,5 +1,5 @@
 from import_export import resources, fields
-from import_export.widgets import DateWidget
+from import_export.widgets import DateWidget, ChoiceWidget
 from .models import ResearchProject
 
 class ResearchProjectResource(resources.ModelResource):
@@ -12,11 +12,35 @@ class ResearchProjectResource(resources.ModelResource):
     grant_amount = fields.Field(attribute='grant_amount', column_name='GRANT AMOUNT')
     collaborators = fields.Field(attribute='collaborators', column_name='OTHER OFFICERS / COLLABORATORS')
     partner_institutions = fields.Field(attribute='partner_institutions', column_name='PARTNER INSTITUTIONS')
-    start_date = fields.Field(attribute='start_date', column_name='START DATE', widget=DateWidget(format='%d %b %Y'))
-    end_date = fields.Field(attribute='end_date', column_name='END DATE', widget=DateWidget(format='%d %b %Y'))
-    status = fields.Field(attribute='status', column_name='STATUS')
-    role = fields.Field(attribute='role', column_name='ROLE')
-    project_type = fields.Field(attribute='project_type', column_name='PROJECT TYPE')
+    
+    # Support MM/DD/YYYY format as seen in the CSV screenshot
+    start_date = fields.Field(
+        attribute='start_date', 
+        column_name='START DATE', 
+        widget=DateWidget(format='%m/%d/%Y')
+    )
+    end_date = fields.Field(
+        attribute='end_date', 
+        column_name='END DATE', 
+        widget=DateWidget(format='%m/%d/%Y')
+    )
+    
+    # Use ChoiceWidget to map human-readable labels (e.g., "Completed") to database keys (e.g., "completed")
+    status = fields.Field(
+        attribute='status', 
+        column_name='STATUS', 
+        widget=ChoiceWidget(choices=ResearchProject.STATUS_CHOICES)
+    )
+    project_type = fields.Field(
+        attribute='project_type', 
+        column_name='PROJECT TYPE', 
+        widget=ChoiceWidget(choices=ResearchProject.PROJECT_TYPE_CHOICES)
+    )
+    role = fields.Field(
+        attribute='role', 
+        column_name='ROLE', 
+        widget=ChoiceWidget(choices=ResearchProject.ROLE_CHOICES)
+    )
 
     class Meta:
         model = ResearchProject
