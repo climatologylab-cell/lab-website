@@ -387,21 +387,23 @@
         transform: translateY(-2px);
     }
 
-    /* FACULTY SECTION - 3D FLIP CARD DESIGN */
+    /* FACULTY SECTION - FLAGGSHIP CENTRIC DESIGN (NO SCROLL) */
     .faculty-flip-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-        gap: 60px 40px;
-        max-width: 1400px;
-        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 80px;
+        width: 100%;
+        margin-top: 50px;
     }
 
     .faculty-flip-card {
         background-color: transparent;
-        width: 100%;
-        height: 450px;
-        perspective: 1500px;
-        /* Essential for 3D effect */
+        width: 1000px;
+        /* flagship width */
+        height: 550px;
+        /* Tall enough to fit long bios at once */
+        perspective: 2000px;
         cursor: pointer;
     }
 
@@ -410,10 +412,10 @@
         width: 100%;
         height: 100%;
         text-align: center;
-        transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        transition: transform 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         transform-style: preserve-3d;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-        border-radius: 24px;
+        border-radius: 40px;
+        box-shadow: 0 20px 80px rgba(0, 0, 0, 0.1);
     }
 
     .faculty-flip-card:hover .flip-card-inner {
@@ -425,102 +427,83 @@
         position: absolute;
         width: 100%;
         height: 100%;
-        -webkit-backface-visibility: hidden;
-        /* Prevent flickering */
         backface-visibility: hidden;
-        border-radius: 24px;
+        border-radius: 40px;
         overflow: hidden;
         background: white;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
         border: 1px solid rgba(0, 0, 0, 0.03);
     }
 
-    /* Front side matches the standard 'Circle + Plate' UI */
+    /* Standardized Front Facade */
     .flip-card-front {
-        padding: 40px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         justify-content: center;
+        background: #fff;
     }
 
-    /* Back side contains the 'Introductory Part' */
+    /* Flagship Back Content (Visible at once) */
     .flip-card-back {
-        background: white;
-        color: #333;
         transform: rotateY(180deg);
-        padding: 35px 25px;
+        background: #fff;
+        display: flex;
+        padding: 60px 80px;
+        align-items: center;
         text-align: left;
-        box-shadow: inset 0 0 100px rgba(74, 144, 226, 0.05);
     }
 
     .back-content-scroll {
         width: 100%;
         height: 100%;
-        overflow-y: auto;
-        padding-right: 5px;
-    }
-
-    /* Scrollbar Styling for back content */
-    .back-content-scroll::-webkit-scrollbar {
-        width: 4px;
-    }
-
-    .back-content-scroll::-webkit-scrollbar-thumb {
-        background: #4A90E2;
-        border-radius: 10px;
+        /* No scroll needed now due to size, but keeping as safeguard */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
 
     .back-name {
-        font-size: 22px;
+        font-size: 32px;
         font-weight: 800;
         color: #0D3B66;
-        margin-bottom: 5px;
-        line-height: 1.2;
+        margin-bottom: 8px;
     }
 
     .back-role {
-        font-size: 13px;
+        font-size: 16px;
         color: #4A90E2;
         font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
-        opacity: 0.9;
-    }
-
-    .back-divider {
-        height: 3px;
-        width: 40px;
-        background: #4A90E2;
-        margin: 15px 0;
-        border-radius: 2px;
+        letter-spacing: 1px;
+        margin-bottom: 20px;
     }
 
     .back-bio {
-        font-size: 14px;
+        font-size: 15px;
         color: #555;
-        line-height: 1.7;
-        margin-bottom: 20px;
+        line-height: 1.8;
         text-align: justify;
+        margin-bottom: 30px;
     }
 
     .back-contact {
         display: flex;
-        gap: 12px;
-        margin-top: auto;
-        padding-top: 15px;
+        gap: 15px;
+        padding-top: 25px;
         border-top: 1px solid #f0f0f0;
+        margin-top: auto;
     }
 
     .back-contact-icon {
-        width: 34px;
-        height: 34px;
+        width: 44px;
+        height: 44px;
         display: flex;
         align-items: center;
         justify-content: center;
         background: #f8f9fa;
         color: #0D3B66;
         border-radius: 50%;
-        transition: all 0.3s ease;
+        transition: 0.3s;
     }
 
     .back-contact-icon:hover {
@@ -529,48 +512,65 @@
         transform: translateY(-3px);
     }
 
-    /* Responsive Overrides */
-    @media (max-width: 1023px) {
-        .faculty-card-horizontal {
-            flex-direction: column;
-        }
-
-        .faculty-image-container {
-            flex: none;
-            width: 100%;
-            padding: 40px 20px;
-        }
-
-        .faculty-content-container {
-            padding: 30px;
-            text-align: center;
-        }
-
-        .faculty-footer {
-            justify-content: center;
-        }
-
-        .faculty-bio-text {
-            text-align: center;
-        }
+    /* SHARED BASE DESIGN (Used for front side and non-faculty scholars) */
+    .people-grid-standard {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 60px 40px;
+        max-width: 1400px;
+        margin: 0 auto;
     }
 
-    @media (max-width: 767px) {
-        .faculty-profile-photo-wrapper {
-            width: 200px;
-            height: 200px;
+    /* Flagship responsive overrides */
+    @media (max-width: 1023px) {
+        .faculty-flip-card {
+            width: 100%;
+            height: auto;
+            min-height: 600px;
         }
 
-        .faculty-name {
+        .flip-card-back {
+            padding: 30px;
+        }
+
+        .back-name {
             font-size: 24px;
         }
-
-        .category-heading {
-            font-size: 20px;
-        }
     }
 
-    /* Responsive Design */
+    .faculty-content-container {
+        padding: 30px;
+        text-align: center;
+    }
+
+    .faculty-footer {
+        justify-content: center;
+    }
+
+    .faculty-bio-text {
+        text-align: center;
+    }
+
+    /* Category Headings */
+    .category-heading {
+        font-size: 24px;
+        font-weight: 700;
+        color: #0d3b66;
+        margin-bottom: 30px;
+        position: relative;
+        padding-bottom: 10px;
+        border-bottom: 3px solid #4A90E2;
+        display: inline-block;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .team-group {
+        margin-bottom: 80px;
+        width: 100%;
+    }
+
+    /* Responsive Grid Logic */
     @media (min-width: 1400px) {
         .people-grid {
             grid-template-columns: repeat(4, 1fr);
@@ -623,6 +623,17 @@
         .people-tab {
             padding: 10px 20px;
             font-size: 13px;
+        }
+
+        .people-grid-standard {
+            grid-template-columns: 1fr;
+            gap: 50px;
+            padding: 0 15px;
+        }
+
+        .member-photo-wrapper {
+            width: 200px;
+            height: 200px;
         }
     }
 
