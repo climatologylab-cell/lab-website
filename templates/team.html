@@ -458,13 +458,13 @@
         }
 
         .faculty-card-container:hover .faculty-card-main {
-            /* Instead of sliding the whole thing left away from screen, 
-               we just reposition internally */
-            transform: translateX(-300px);
+            transform: translateX(0);
+            /* Keep it stable */
         }
 
         .faculty-card-container:hover .faculty-photo-wrapper {
-            transform: scale(1.1);
+            transform: translate(-425px, 0) scale(1.1);
+            /* Exactly on the edge of the 850px card */
             box-shadow: 0 15px 45px rgba(0, 0, 0, 0.2);
         }
 
@@ -472,11 +472,11 @@
             width: 850px;
             opacity: 1;
             visibility: visible;
-            transform: translate(-100px, -50%) scale(1);
-            /* Overlaps nicely */
-            padding-left: 180px;
-            /* Increased to ensure text clears the circle */
-            padding-right: 50px;
+            transform: translate(-50%, -50%) scale(1);
+            /* Center the card */
+            padding-left: 130px;
+            /* Radius is 110px, so 130px gives breathing room */
+            padding-right: 60px;
         }
 
         .faculty-card-container:hover .faculty-default-plate {
