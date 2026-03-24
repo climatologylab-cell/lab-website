@@ -21,68 +21,54 @@
         <!-- Faculty Section -->
         <div class="team-group faculty-group" id="faculty-group" data-category="faculty">
             <h2 class="category-heading">Faculty</h2>
-            <div class="faculty-flow-container">
+            <div class="faculty-flip-grid">
                 {% for member in faculty_members %}
-                <div class="faculty-expand-row" data-category="faculty">
-                    <div class="faculty-photo-anchor">
-                        <div class="member-photo-wrapper">
-                            {% if member.photo %}
-                            <img src="{{ member.photo.url }}" alt="{{ member.name }}" class="member-photo">
-                            {% else %}
-                            <div class="member-photo-placeholder">
-                                {{ member.name|first|upper }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <!-- Minimal name plate visible when NOT hovered -->
-                        <div class="member-info-plate">
-                            <h3 class="member-name-text">{{ member.name|upper }}</h3>
-                            <p class="member-role-text">{{ member.role }}</p>
-                            <div class="member-contact-links">
-                                <a href="mailto:{{ member.email }}" class="member-contact-icon">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="2">
-                                        <path
-                                            d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                                        <polyline points="22,6 12,13 2,6" />
-                                    </svg>
-                                </a>
-                                {% if member.linkedin_url %}
-                                <a href="{{ member.linkedin_url }}" target="_blank" class="member-contact-icon">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                                        <path
-                                            d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                                    </svg>
-                                </a>
+                <div class="faculty-flip-card" data-category="faculty">
+                    <div class="flip-card-inner">
+                        <!-- FRONT SIDE (Normal UI) -->
+                        <div class="flip-card-front">
+                            <div class="member-photo-wrapper">
+                                {% if member.photo %}
+                                <img src="{{ member.photo.url }}" alt="{{ member.name }}" class="member-photo">
+                                {% else %}
+                                <div class="member-photo-placeholder">
+                                    {{ member.name|first|upper }}
+                                </div>
                                 {% endif %}
                             </div>
+                            <div class="member-info-plate">
+                                <h3 class="member-name-text">{{ member.name|upper }}</h3>
+                                <p class="member-role-text">{{ member.role }}</p>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="faculty-bio-flow-card">
-                        <div class="faculty-full-content">
-                            <h3 class="full-name">{{ member.name }}</h3>
-                            <p class="full-role">{{ member.role }}</p>
-                            <p class="full-bio">{{ member.bio|default:"Information coming soon..." }}</p>
+                        <!-- BACK SIDE (Introductory Part) -->
+                        <div class="flip-card-back">
+                            <div class="back-content-scroll">
+                                <h3 class="back-name">{{ member.name }}</h3>
+                                <p class="back-role">{{ member.role }}</p>
+                                <div class="back-divider"></div>
+                                <p class="back-bio">{{ member.bio|default:"Information coming soon..." }}</p>
 
-                            <div class="full-contact">
-                                <a href="mailto:{{ member.email }}" class="full-contact-icon">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="2">
-                                        <path
-                                            d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                                        <polyline points="22,6 12,13 2,6" />
-                                    </svg>
-                                </a>
-                                {% if member.linkedin_url %}
-                                <a href="{{ member.linkedin_url }}" target="_blank" class="full-contact-icon">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                                        <path
-                                            d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                                    </svg>
-                                </a>
-                                {% endif %}
+                                <div class="back-contact">
+                                    <a href="mailto:{{ member.email }}" class="back-contact-icon" title="Email">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2">
+                                            <path
+                                                d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                            <polyline points="22,6 12,13 2,6" />
+                                        </svg>
+                                    </a>
+                                    {% if member.linkedin_url %}
+                                    <a href="{{ member.linkedin_url }}" target="_blank" class="back-contact-icon"
+                                        title="LinkedIn">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                            <path
+                                                d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                                        </svg>
+                                    </a>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -401,104 +387,133 @@
         transform: translateY(-2px);
     }
 
-    /* FACULTY SECTION - FLOW REVEAL */
-    .faculty-flow-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 40px;
+    /* FACULTY SECTION - 3D FLIP CARD DESIGN */
+    .faculty-flip-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 60px 40px;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .faculty-flip-card {
+        background-color: transparent;
         width: 100%;
-        margin-top: 30px;
+        height: 450px;
+        perspective: 1500px;
+        /* Essential for 3D effect */
+        cursor: pointer;
     }
 
-    .faculty-expand-row {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        min-height: 250px;
-        transition: all 0.5s ease;
-    }
-
-    .faculty-photo-anchor {
-        flex-shrink: 0;
-        z-index: 20;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 250px;
-        transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
-    }
-
-    /* Faculty Hover Logic */
-    @media (min-width: 1024px) {
-        .faculty-expand-row:hover .faculty-photo-anchor {
-            transform: translateX(-400px);
-        }
-
-        .faculty-expand-row:hover .member-info-plate {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .faculty-expand-row:hover .faculty-bio-flow-card {
-            max-width: 1000px;
-            opacity: 1;
-            visibility: visible;
-        }
-    }
-
-    .faculty-bio-flow-card {
-        max-width: 0;
-        width: 100%;
-        opacity: 0;
-        visibility: hidden;
-        overflow: hidden;
-        background: white;
-        border-radius: 0 40px 40px 0;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
-        transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
-        margin-left: -110px;
-        z-index: 10;
-    }
-
-    .faculty-full-content {
-        padding: 50px 60px 40px 140px;
-        min-width: 800px;
-    }
-
-    .profile-photo {
+    .flip-card-inner {
+        position: relative;
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        text-align: center;
+        transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        transform-style: preserve-3d;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        border-radius: 24px;
     }
 
-    .info-box {
+    .faculty-flip-card:hover .flip-card-inner {
+        transform: rotateY(180deg);
+    }
+
+    .flip-card-front,
+    .flip-card-back {
+        position: absolute;
         width: 100%;
+        height: 100%;
+        -webkit-backface-visibility: hidden;
+        /* Prevent flickering */
+        backface-visibility: hidden;
+        border-radius: 24px;
+        overflow: hidden;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border: 1px solid rgba(0, 0, 0, 0.03);
     }
 
-    .member-name {
-        font-size: 16px;
-        font-weight: 700;
+    /* Front side matches the standard 'Circle + Plate' UI */
+    .flip-card-front {
+        padding: 40px 20px;
+        justify-content: center;
+    }
+
+    /* Back side contains the 'Introductory Part' */
+    .flip-card-back {
+        background: white;
+        color: #333;
+        transform: rotateY(180deg);
+        padding: 35px 25px;
+        text-align: left;
+        box-shadow: inset 0 0 100px rgba(74, 144, 226, 0.05);
+    }
+
+    .back-content-scroll {
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        padding-right: 5px;
+    }
+
+    /* Scrollbar Styling for back content */
+    .back-content-scroll::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .back-content-scroll::-webkit-scrollbar-thumb {
+        background: #4A90E2;
+        border-radius: 10px;
+    }
+
+    .back-name {
+        font-size: 22px;
+        font-weight: 800;
         color: #0D3B66;
         margin-bottom: 5px;
+        line-height: 1.2;
     }
 
-    .member-role {
+    .back-role {
         font-size: 13px;
-        color: #666;
-        margin-bottom: 15px;
+        color: #4A90E2;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        opacity: 0.9;
     }
 
-    .contact-icons {
+    .back-divider {
+        height: 3px;
+        width: 40px;
+        background: #4A90E2;
+        margin: 15px 0;
+        border-radius: 2px;
+    }
+
+    .back-bio {
+        font-size: 14px;
+        color: #555;
+        line-height: 1.7;
+        margin-bottom: 20px;
+        text-align: justify;
+    }
+
+    .back-contact {
         display: flex;
-        justify-content: center;
-        gap: 10px;
+        gap: 12px;
+        margin-top: auto;
+        padding-top: 15px;
+        border-top: 1px solid #f0f0f0;
     }
 
-    .contact-icon {
-        width: 32px;
-        height: 32px;
+    .back-contact-icon {
+        width: 34px;
+        height: 34px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -508,15 +523,10 @@
         transition: all 0.3s ease;
     }
 
-    .contact-icon:hover {
-        background: #4A90E2;
+    .back-contact-icon:hover {
+        background: #0D3B66;
         color: white;
-        transform: translateY(-2px);
-    }
-
-    .contact-icon svg {
-        width: 14px;
-        height: 14px;
+        transform: translateY(-3px);
     }
 
     /* Responsive Overrides */
@@ -664,8 +674,8 @@
                 group.style.animation = 'fadeIn 0.4s ease';
 
                 // Also ensure cards inside are visible
-                const cards = group.querySelectorAll('.member-base-card, .faculty-expand-row');
-                cards.forEach(card => card.style.display = 'flex');
+                const cards = group.querySelectorAll('.member-base-card, .faculty-flip-card');
+                cards.forEach(card => card.style.display = 'block');
             } else {
                 group.style.display = 'none';
             }
