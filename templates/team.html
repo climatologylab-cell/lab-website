@@ -64,8 +64,7 @@
                     <div class="card-right-side">
                         <h3 class="expanded-name">{{ member.name }}</h3>
                         <div class="expanded-role">{{ member.role }}</div>
-                        <p class="expanded-bio">{{ member.bio|default:"Researching the intersection of climate, urban
-                            environments, and human resilience. Part of the Climatology Lab faculty group." }}</p>
+                        <p class="expanded-bio">{{ member.bio|default:"Information coming soon..." }}</p>
 
                         <div class="expanded-footer">
                             <!-- Email moved to left nameplate as requested -->
@@ -453,14 +452,30 @@
 
     .faculty-expand-card .member-photo-wrapper {
         width: 220px !important;
-        /* Matched to rest of team */
         height: 220px !important;
+        min-width: 220px !important;
+        /* Prevent oval squeezing */
+        min-height: 220px !important;
+        aspect-ratio: 1/1;
+        flex-shrink: 0;
+        /* Important for flex stability */
         border: 4px solid white;
         overflow: hidden;
+        border-radius: 50%;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         margin-bottom: 20px;
         transition: 0.5s ease;
         background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .faculty-expand-card .member-photo {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
     }
 
     .faculty-expand-card:hover .member-photo-wrapper {
