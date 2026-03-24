@@ -407,6 +407,16 @@
         cursor: pointer;
     }
 
+    /* SPECIFICALLY MAKE FACULTY PHOTO BIGGER */
+    .faculty-flip-card .member-photo-wrapper {
+        width: 320px;
+        height: 320px;
+    }
+
+    .faculty-flip-card .member-photo-placeholder {
+        font-size: 80px;
+    }
+
     .flip-card-inner {
         position: relative;
         width: 100%;
@@ -526,15 +536,69 @@
         .faculty-flip-card {
             width: 100%;
             height: auto;
-            min-height: 600px;
+            perspective: none;
+            /* Disable 3D for mobile stability */
+        }
+
+        .flip-card-inner {
+            transform: none !important;
+            display: flex;
+            flex-direction: column;
+            box-shadow: none;
+        }
+
+        .flip-card-front,
+        .flip-card-back {
+            position: static;
+            width: 100%;
+            height: auto;
+            transform: none !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .flip-card-front {
+            padding: 40px 20px;
+            margin-bottom: -20px;
+            z-index: 2;
+        }
+
+        .faculty-flip-card .member-photo-wrapper {
+            width: 250px;
+            height: 250px;
         }
 
         .flip-card-back {
-            padding: 30px;
+            padding: 40px 25px 30px;
+            text-align: center;
+            align-items: center;
+            margin-top: -20px;
+            padding-top: 50px;
+            z-index: 1;
+        }
+
+        .back-divider {
+            margin: 15px auto;
         }
 
         .back-name {
-            font-size: 24px;
+            font-size: 26px;
+            text-align: center;
+        }
+
+        .back-role {
+            text-align: center;
+        }
+
+        .back-bio {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .back-contact {
+            justify-content: center;
         }
     }
 
