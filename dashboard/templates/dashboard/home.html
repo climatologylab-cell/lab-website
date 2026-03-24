@@ -147,8 +147,8 @@
                                 <small class="text-muted">Academic peer-reviewed papers</small>
                             </td>
                             <td class="text-center py-3"><span
-                                    class="badge bg-primary-subtle text-primary rounded-pill px-3">{{ journal_count
-                                    }}</span></td>
+                                    class="badge bg-primary-subtle text-primary rounded-pill px-3">{{
+                                    journal_count|default:0 }}</span></td>
                             <td class="text-end py-3">
                                 <a href="{% url 'dashboard:publication_create' %}?category=journal"
                                     class="btn btn-sm btn-light border px-3 me-2" title="Add"><i
@@ -166,8 +166,8 @@
                                 <small class="text-muted">Proceedings and presentations</small>
                             </td>
                             <td class="text-center py-3"><span
-                                    class="badge bg-primary-subtle text-primary rounded-pill px-3">{{ conference_count
-                                    }}</span></td>
+                                    class="badge bg-primary-subtle text-primary rounded-pill px-3">{{
+                                    conference_count|default:0 }}</span></td>
                             <td class="text-end py-3">
                                 <a href="{% url 'dashboard:publication_create' %}?category=conference"
                                     class="btn btn-sm btn-light border px-3 me-2" title="Add"><i
@@ -185,8 +185,8 @@
                                 <small class="text-muted">Authored or edited sections</small>
                             </td>
                             <td class="text-center py-3"><span
-                                    class="badge bg-primary-subtle text-primary rounded-pill px-3">{{ book_count
-                                    }}</span></td>
+                                    class="badge bg-primary-subtle text-primary rounded-pill px-3">{{
+                                    book_count|default:0 }}</span></td>
                             <td class="text-end py-3">
                                 <a href="{% url 'dashboard:publication_create' %}?category=book"
                                     class="btn btn-sm btn-light border px-3 me-2" title="Add"><i
@@ -205,7 +205,7 @@
                             </td>
                             <td class="text-center py-3"><span
                                     class="badge bg-primary-subtle text-primary rounded-pill px-3">{{
-                                    book_guideline_count }}</span></td>
+                                    book_guideline_count|default:0 }}</span></td>
                             <td class="text-end py-3">
                                 <a href="{% url 'dashboard:publication_create' %}?category=guideline"
                                     class="btn btn-sm btn-light border px-3 me-2" title="Add"><i
@@ -223,8 +223,8 @@
                                 <small class="text-muted">Theses, reports, and miscellaneous</small>
                             </td>
                             <td class="text-center py-3"><span
-                                    class="badge bg-primary-subtle text-primary rounded-pill px-3">{{ other_count
-                                    }}</span></td>
+                                    class="badge bg-primary-subtle text-primary rounded-pill px-3">{{
+                                    other_count|default:0 }}</span></td>
                             <td class="text-end py-3">
                                 <a href="{% url 'dashboard:publication_create' %}?category=other"
                                     class="btn btn-sm btn-light border px-3 me-2" title="Add"><i
