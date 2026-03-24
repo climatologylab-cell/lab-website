@@ -23,51 +23,52 @@
             <h2 class="category-heading">Faculty</h2>
             <div class="faculty-section">
                 {% for member in faculty_members %}
-                <div class="person-card faculty-card" data-category="faculty">
-                    <div class="card-inner">
-                        <div class="profile-photo-wrapper">
+                <div class="faculty-card-horizontal" data-category="faculty">
+                    <div class="faculty-image-container">
+                        <div class="faculty-profile-photo-wrapper">
                             {% if member.photo %}
-                            <img src="{{ member.photo.url }}" alt="{{ member.name }}" class="profile-photo">
+                            <img src="{{ member.photo.url }}" alt="{{ member.name }}" class="faculty-photo">
                             {% else %}
-                            <div class="profile-photo-placeholder">
+                            <div class="faculty-photo-placeholder">
                                 {{ member.name|first|upper }}
                             </div>
                             {% endif %}
                         </div>
-
-                        <!-- Bio info (appears on hover for faculty) -->
-                        <div class="bio-container">
-                            <h3 class="bio-heading">{{ member.name }}</h3>
-                            <p class="bio-member-role">{{ member.role }}</p>
-                            <p class="bio-text">{{ member.bio|default:"Information coming soon..." }}</p>
-                        </div>
                     </div>
 
-                    <div class="info-box">
-                        <h3 class="member-name">{{ member.name|upper }}</h3>
-                        <p class="member-role">{{ member.role }}</p>
+                    <div class="faculty-content-container">
+                        <div class="faculty-info">
+                            <h3 class="faculty-name">{{ member.name }}</h3>
+                            <p class="faculty-role">{{ member.role }}</p>
 
-                        <div class="contact-icons">
-                            <a href="mailto:{{ member.email }}" class="contact-icon" title="Email {{ member.name }}"
-                                aria-label="Email {{ member.name }}">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <path
-                                        d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                                    <polyline points="22,6 12,13 2,6" />
-                                </svg>
-                            </a>
+                            <div class="faculty-bio-box">
+                                <p class="faculty-bio-text">{{ member.bio|default:"Information coming soon..." }}</p>
+                            </div>
+                        </div>
 
-                            {% if member.linkedin_url %}
-                            <a href="{{ member.linkedin_url }}" target="_blank" rel="noopener noreferrer"
-                                class="contact-icon" title="LinkedIn Profile"
-                                aria-label="LinkedIn Profile of {{ member.name }}">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                                </svg>
-                            </a>
-                            {% endif %}
+                        <div class="faculty-footer">
+                            <div class="faculty-contact-icons">
+                                <a href="mailto:{{ member.email }}" class="faculty-contact-icon"
+                                    title="Email {{ member.name }}" aria-label="Email {{ member.name }}">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path
+                                            d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                        <polyline points="22,6 12,13 2,6" />
+                                    </svg>
+                                </a>
+
+                                {% if member.linkedin_url %}
+                                <a href="{{ member.linkedin_url }}" target="_blank" rel="noopener noreferrer"
+                                    class="faculty-contact-icon" title="LinkedIn Profile"
+                                    aria-label="LinkedIn Profile of {{ member.name }}">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                        <path
+                                            d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                                    </svg>
+                                </a>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -313,279 +314,294 @@
         position: relative;
     }
 
-    /* Faculty Card Specific - 100% Identical Grid Footprint */
-    .faculty-card {
-        cursor: pointer;
-        z-index: 1;
-        min-height: 400px;
-    }
-
-    .faculty-card:hover {
-        z-index: 1000;
-    }
-
-    .card-inner {
-        position: relative;
-        width: 200px;
-        /* FIXED WIDTH - NEVER EXPANDS */
-        height: 200px;
-        margin: 0 auto 25px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .faculty-card .profile-photo-wrapper {
-        width: 200px;
-        height: 200px;
-        z-index: 20;
-        transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        position: absolute;
-        left: 0;
-        border-radius: 50%;
-        overflow: hidden;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        border: none;
-    }
-
-    .faculty-card .bio-container {
-        position: absolute;
-        left: 100px;
-        /* Start at photo center */
-        top: 50%;
-        width: 0;
-        height: auto;
-        min-height: 220px;
-        background: #FFFFFF;
-        padding: 0;
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        text-align: left;
-        border-radius: 110px 40px 40px 110px;
+    /* Faculty Section - Rewritten for Horizontal Layout */
+    .faculty-section {
         display: flex;
         flex-direction: column;
+        gap: 40px;
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    .faculty-card-horizontal {
+        display: flex;
+        background: white;
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        position: relative;
+        border: 1px solid rgba(0, 0, 0, 0.03);
+    }
+
+    .faculty-card-horizontal:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+    }
+
+    .faculty-image-container {
+        flex: 0 0 350px;
+        background: #fdfdfd;
+        display: flex;
+        align-items: center;
         justify-content: center;
-        z-index: 5;
-        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
-        border: 1px solid rgba(0, 0, 0, 0.05);
-        transform: translateY(-50%) scaleX(0);
-        transform-origin: left;
+        padding: 40px;
+        position: relative;
         overflow: hidden;
     }
 
-    /* Hover Interaction - Floating Reveal (Zero-Shift) */
-    @media (min-width: 1025px) {
-        .faculty-card:hover .card-inner {
-            transform: translateX(-350px);
-            /* Slide whole inner unit left */
-        }
-
-        .faculty-card:hover .profile-photo-wrapper {
-            transform: scale(1.05);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            z-index: 25;
-        }
-
-        .faculty-card:hover .bio-container {
-            width: 850px;
-            /* Floats over the grid */
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(-50%) scaleX(1);
-            padding: 30px 60px 30px 180px;
-            border-radius: 120px 30px 30px 120px;
-        }
-
-        .faculty-card:hover .bio-heading {
-            animation: slideUpFade 0.7s ease forwards 0.2s;
-            opacity: 0;
-        }
-
-        .faculty-card:hover .bio-text {
-            animation: slideUpFade 0.7s ease forwards 0.3s;
-            opacity: 0;
-            display: block !important;
-            column-count: 1 !important;
-            columns: auto !important;
-            column-width: auto !important;
-        }
-
-        /* Decisively hide name plate on hover to resolve ALL overlap issues */
-        .faculty-card:hover .info-box {
-            display: none !important;
-            opacity: 0 !important;
-            visibility: hidden !important;
-            pointer-events: none !important;
-        }
+    .faculty-image-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(74, 144, 226, 0.05), rgba(13, 59, 102, 0.05));
     }
 
-    /* Animations */
-    @keyframes slideUpFade {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    /* Bio Reveal Styles */
-    .bio-member-role {
-        color: #0D3B66;
-        font-weight: 600;
-        margin-bottom: 15px;
-        font-size: 14px;
-        display: block !important;
-        animation: slideUpFade 0.7s ease forwards 0.25s;
-        /* Smooth reveal */
-        opacity: 0;
-    }
-
-    .bio-heading {
-        font-size: 21px;
-        font-weight: 800;
-        color: #0D3B66;
-        margin-bottom: 12px;
-        display: inline-block;
-    }
-
-    .bio-text {
-        font-size: 15px;
-        color: #444;
-        line-height: 1.8;
-        margin: 0;
-        overflow: visible;
-        max-height: none;
-        display: block !important;
-        column-count: 1 !important;
-        columns: auto !important;
-        column-width: auto !important;
-        width: 100% !important;
-        column-gap: 0 !important;
-    }
-
-    /* Remove scrollbars */
-    .bio-text::-webkit-scrollbar {
-        display: none;
-    }
-
-    .bio-container::-webkit-scrollbar {
-        display: none;
-    }
-
-    /* Circular Profile Photo */
-    .profile-photo-wrapper {
-        width: 200px;
-        height: 200px;
-        margin: 0 auto 25px;
+    .faculty-profile-photo-wrapper {
+        width: 250px;
+        height: 250px;
         border-radius: 50%;
         overflow: hidden;
-        background: #fff;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+        border: 6px solid white;
+        z-index: 2;
+        transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+    .faculty-card-horizontal:hover .faculty-profile-photo-wrapper {
+        transform: scale(1.03);
+    }
+
+    .faculty-photo {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .faculty-photo-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #4A90E2 0%, #0D3B66 100%);
+        color: white;
+        font-size: 80px;
+        font-weight: 700;
+    }
+
+    .faculty-content-container {
+        flex: 1;
+        padding: 50px 60px 40px 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .faculty-name {
+        font-size: 28px;
+        font-weight: 800;
+        color: #0D3B66;
+        margin-bottom: 5px;
+        letter-spacing: -0.5px;
+    }
+
+    .faculty-role {
+        font-size: 16px;
+        color: #4A90E2;
+        font-weight: 600;
+        margin-bottom: 25px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .faculty-bio-box {
+        margin-bottom: 30px;
         position: relative;
     }
 
-    .person-card:not(.faculty-card):hover .profile-photo-wrapper {
+    .faculty-bio-text {
+        font-size: 15px;
+        color: #555;
+        line-height: 1.8;
+        margin: 0;
+        text-align: justify;
+    }
+
+    .faculty-footer {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        padding-top: 20px;
+        border-top: 1px solid #f0f0f0;
+    }
+
+    .faculty-contact-icons {
+        display: flex;
+        gap: 12px;
+    }
+
+    .faculty-contact-icon {
+        width: 38px;
+        height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8f9fa;
+        color: #0D3B66;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+    }
+
+    .faculty-contact-icon:hover {
+        background: #0D3B66;
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(13, 59, 102, 0.2);
+    }
+
+    .faculty-contact-icon svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    /* PhD and others - keeping grid but improving aesthetics */
+    .people-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 40px;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    /* Standard Person Card Styles (Shared) */
+    .person-card {
+        text-align: center;
+        transition: all 0.4s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: white;
+        padding: 30px 20px;
+        border-radius: 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+        border: 1px solid rgba(0, 0, 0, 0.02);
+    }
+
+    .person-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+    }
+
+    .profile-photo-wrapper {
+        width: 180px;
+        height: 180px;
+        margin-bottom: 20px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 4px solid white;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        transition: all 0.4s ease;
+    }
+
+    .person-card:hover .profile-photo-wrapper {
         transform: scale(1.05);
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
     }
 
     .profile-photo {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        display: block;
     }
 
-    .profile-photo-placeholder {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(135deg, #4A90E2 0%, #0D3B66 100%);
-        color: white;
-        font-size: 72px;
-        font-weight: 700;
-    }
-
-    /* Blue Information Box */
     .info-box {
-        background: linear-gradient(135deg, #4A90E2 0%, #0D3B66 100%);
-        border-radius: 12px;
-        padding: 6px 12px;
-        width: 75%;
-        max-width: 260px;
-        box-shadow: 0 4px 15px rgba(13, 59, 102, 0.2);
-        transition: all 0.3s ease;
-        position: relative;
-        z-index: 3;
+        width: 100%;
     }
 
-    .person-card:hover .info-box {
-        box-shadow: 0 10px 30px rgba(13, 59, 102, 0.4);
-        transform: translateY(-3px);
-    }
-
-    /* Member Name */
     .member-name {
-        font-size: 14px;
+        font-size: 16px;
         font-weight: 700;
-        color: white;
-        margin: 0 0 2px 0;
-        line-height: 1.2;
-        letter-spacing: 0.3px;
+        color: #0D3B66;
+        margin-bottom: 5px;
     }
 
-    /* Member Role */
     .member-role {
-        font-size: 11px;
-        font-weight: 400;
-        font-style: italic;
-        color: rgba(255, 255, 255, 0.95);
-        margin: 0 0 4px 0;
-        line-height: 1.3;
-        min-height: 20px;
+        font-size: 13px;
+        color: #666;
+        margin-bottom: 15px;
     }
 
-    /* Contact Icons */
     .contact-icons {
         display: flex;
         justify-content: center;
-        gap: 6px;
-        padding-top: 4px;
-        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        gap: 10px;
     }
 
     .contact-icon {
-        width: 24px;
-        height: 24px;
+        width: 32px;
+        height: 32px;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: rgba(255, 255, 255, 0.15);
+        background: #f8f9fa;
+        color: #0D3B66;
         border-radius: 50%;
-        color: white;
         transition: all 0.3s ease;
-        backdrop-filter: blur(10px);
     }
 
     .contact-icon:hover {
-        background: white;
-        color: #0D3B66;
-        transform: translateY(-3px) scale(1.1);
-        box-shadow: 0 4px 12px rgba(255, 255, 255, 0.5);
+        background: #4A90E2;
+        color: white;
+        transform: translateY(-2px);
     }
 
     .contact-icon svg {
-        width: 12px;
-        height: 12px;
+        width: 14px;
+        height: 14px;
+    }
+
+    /* Responsive Overrides */
+    @media (max-width: 1023px) {
+        .faculty-card-horizontal {
+            flex-direction: column;
+        }
+
+        .faculty-image-container {
+            flex: none;
+            width: 100%;
+            padding: 40px 20px;
+        }
+
+        .faculty-content-container {
+            padding: 30px;
+            text-align: center;
+        }
+
+        .faculty-footer {
+            justify-content: center;
+        }
+
+        .faculty-bio-text {
+            text-align: center;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .faculty-profile-photo-wrapper {
+            width: 200px;
+            height: 200px;
+        }
+
+        .faculty-name {
+            font-size: 24px;
+        }
+
+        .category-heading {
+            font-size: 20px;
+        }
     }
 
     /* Responsive Design */
@@ -692,9 +708,14 @@
                 group.style.animation = 'fadeIn 0.4s ease';
 
                 // Also ensure cards inside are visible (if they were hidden by a previous specific filter)
-                // This is needed if we ever split cards across groups
-                const cards = group.querySelectorAll('.person-card');
-                cards.forEach(card => card.style.display = 'flex');
+                const cards = group.querySelectorAll('.person-card, .faculty-card-horizontal');
+                cards.forEach(card => {
+                    if (card.classList.contains('faculty-card-horizontal')) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'flex';
+                    }
+                });
             } else {
                 group.style.display = 'none';
             }
