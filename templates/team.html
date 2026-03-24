@@ -427,17 +427,19 @@
         font-size: 50px;
     }
 
-    /* LONG HORIZONTAL NAMEPLATE */
+    /* LONG HORIZONTAL NAMEPLATE (FIT TO TEXT) */
     .faculty-flip-card .member-info-plate {
-        width: 650px;
-        /* Long format */
+        width: fit-content;
+        /* Dynamic width */
+        min-width: 450px;
+        /* Minimum presence */
+        max-width: 850px;
+        /* Prevent card overflow */
         height: auto;
-        padding: 15px 40px;
-        /* Horizontal padding, low vertical */
+        padding: 15px 60px;
+        /* Generous horizontal padding */
         flex-direction: column;
-        /* Stack name/role/icons within the long plate */
         border-radius: 20px;
-        /* Slightly more modern radius for long plate */
     }
 
     .faculty-flip-card .member-name-text {
