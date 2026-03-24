@@ -25,6 +25,7 @@
                 {% for member in faculty_members %}
                 <div class="faculty-expand-card" data-category="faculty">
                     <!-- LEFT SIDE: Profile Column (Visible by default) -->
+                    <!-- LEFT SIDE: Profile Column (Visible by default - Matches other members) -->
                     <div class="card-left-side">
                         <div class="member-photo-wrapper">
                             {% if member.photo %}
@@ -37,9 +38,9 @@
                         </div>
                         <div class="collapsed-nameplate">
                             <h3>{{ member.name|upper }}</h3>
-                            <div class="member-contact-links mt-2">
-                                <a href="mailto:{{ member.email }}" class="member-contact-icon"
-                                    style="opacity: 0.9; color: white; border: 1px solid rgba(255,255,255,0.3); width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%;">
+                            <span class="collapsed-role-text">{{ member.role }}</span>
+                            <div class="member-contact-links">
+                                <a href="mailto:{{ member.email }}" class="member-contact-icon">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                         stroke-width="2">
                                         <path
@@ -47,6 +48,14 @@
                                         <polyline points="22,6 12,13 2,6" />
                                     </svg>
                                 </a>
+                                {% if member.linkedin_url %}
+                                <a href="{{ member.linkedin_url }}" target="_blank" class="member-contact-icon">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                        <path
+                                            d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                                    </svg>
+                                </a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -424,12 +433,13 @@
         box-shadow: 0 30px 80px rgba(0, 0, 0, 0.12);
     }
 
-    /* Branded Left Panel (Matches Blue/Dark Lab Theme) */
+    /* Branded Left Panel (Now matches standard card's white background) */
     .card-left-side {
         min-width: 350px;
         max-width: 350px;
         height: 100%;
-        background: linear-gradient(145deg, #0d3b66, #051b2e);
+        background: white;
+        /* Changed from Blue to match other members */
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -438,35 +448,52 @@
         z-index: 2;
         padding: 30px;
         border-radius: 40px;
-        color: white;
+        color: #333;
     }
 
     .faculty-expand-card .member-photo-wrapper {
-        width: 180px !important;
-        height: 180px !important;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        padding: 8px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        margin-bottom: 25px;
+        width: 220px !important;
+        /* Matched to rest of team */
+        height: 220px !important;
+        border: 4px solid white;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
         transition: 0.5s ease;
+        background: white;
     }
 
     .faculty-expand-card:hover .member-photo-wrapper {
         transform: scale(1.05);
     }
 
-    /* Name Plate on Collapsed View */
+    /* Name Plate on Collapsed View (Now matches member-info-plate) */
     .collapsed-nameplate {
+        background: linear-gradient(135deg, #4A90E2 0%, #0D3B66 100%);
+        padding: 12px 20px;
+        border-radius: 12px;
+        color: white;
+        width: 240px;
+        /* Slightly wider for faculty names */
+        box-shadow: 0 5px 15px rgba(13, 59, 102, 0.2);
         text-align: center;
-        max-width: 80%;
     }
 
     .collapsed-nameplate h3 {
-        font-size: 18px;
+        font-size: 14px;
+        /* Matched to standard card */
         font-weight: 700;
-        margin: 0;
+        margin: 0 0 4px 0;
         text-transform: uppercase;
-        letter-spacing: 1px;
+        letter-spacing: 0.5px;
+    }
+
+    .collapsed-role-text {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.9);
+        margin: 0 0 8px 0;
+        font-style: italic;
+        display: block;
     }
 
     /* Informational Right Panel (Emerges on Hover) */
