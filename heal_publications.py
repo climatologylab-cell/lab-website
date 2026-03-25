@@ -1,32 +1,45 @@
 from publications.models import Publication
-from datetime import datetime
+from datetime import datetime, date
 import re
 
 count = 0
 for p in Publication.objects.all():
-    title = p.title or ""
-    # Regex: Look for a year like 2012 in the middle of a messy title
-    # Pattern: Captures Authors, Year, and Title separately
-    match = re.search(r'^(.*?)\b(20\d{2}|19\d{2})\b[.\s]+(.*)$', title)
+    # If date is already set and not a default "future" date, skip
+    if p.publication_date and p.publication_date.year < 2026:
+        continue
+        
+    found_year = None
     
-    if match:
-        authors_found = match.group(1).strip(',. ')
-        year_found = int(match.group(2))
-        clean_title = match.group(3).strip('.- ')
+    # 1. Search in title
+    title = p.title or ""
+    year_in_title = re.search(r'\b(20\d{2}|19\d{2})\b', title)
+    if year_in_title:
+        found_year = int(year_in_title.group(1))
         
-        # 1. Populate missing year
-        p.publication_date = datetime(year_found, 1, 1).date()
-        
-        # 2. Extract clean title
-        if len(clean_title) > 5:
-            p.title = clean_title
+    # 2. Search in citation if not found or if title match is a part of authors
+    if not found_year:
+        citation = p.citation or ""
+        year_in_citation = re.search(r'\b(20\d{2}|19\d{2})\b', citation)
+        if year_in_citation:
+            found_year = int(year_in_citation.group(1))
             
-        # 3. Clean up authors if they are the default "Unknown" or just a snippet
-        if not p.authors or 'Unknown' in p.authors or len(p.authors) < 10:
-            if len(authors_found) > 5:
-                p.authors = authors_found
-        
+    if found_year:
+        p.publication_date = date(found_year, 1, 1)
         p.save()
         count += 1
 
-print(f"Healed {count} publications from messy title data.")
+    # 3. Fix category if it was imported as 'conference_paper'
+    if p.category == 'conference_paper':
+        p.category = 'conference'
+        p.save()
+        
+    # 4. Handle records where the date might be the 2026 default
+    if p.publication_date and p.publication_date.year >= 2026:
+        # Try to re-extract from citation
+        citation = p.citation or ""
+        year_match = re.search(r'\b(20\d{2}|19\d{2})\b', citation)
+        if year_match:
+            p.publication_date = date(int(year_match.group(1)), 1, 1)
+            p.save()
+
+print(f"Healed {count} publications from messy data.")

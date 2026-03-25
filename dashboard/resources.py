@@ -17,11 +17,7 @@ class ResearchProjectResource(resources.ModelResource):
         import_id_fields = ('title',)
         skip_unchanged = True
 
-class PublicationResource(resources.ModelResource):
-    class Meta:
-        model = Publication
-        import_id_fields = ('title',)
-        skip_unchanged = True
+from publications.resources import PublicationResource
 
 class TeamMemberResource(resources.ModelResource):
     class Meta:
