@@ -1,56 +1,29 @@
 {% extends 'dashboard/base.html' %}
-
 {% block title %}Manage Workshops{% endblock %}
 {% block header_title %}Workshops & Events{% endblock %}
-
 {% block content %}
 <div class="dashboard-card border-0 shadow-sm">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h5 class="fw-700 mb-0">Events & Notices</h5>
+        <h5 class="fw-700 mb-0">Events</h5>
         <div class="d-flex gap-2">
             <form class="d-flex me-2" method="get">
-                <input class="form-control form-control-sm me-2" type="search" name="q" placeholder="Search events..."
-                    value="{{ query|default:'' }}">
+                <input class="form-control form-control-sm me-2" type="search" name="q" placeholder="Search..." value="{{ query|default:'' }}">
                 <button class="btn btn-sm btn-outline-primary" type="submit">Search</button>
             </form>
-            <a href="{% url 'dashboard:import_data' 'workshops' %}" class="btn btn-outline-primary btn-sm">
-                <i class="bi bi-cloud-arrow-up me-1"></i> Import
-            </a>
-            <div class="dropdown">
-                <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                    <i class="bi bi-cloud-arrow-down me-1"></i> Export
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end shadow border-0">
-                    <li><a class="dropdown-item" href="{% url 'dashboard:export_data' 'workshops' %}?format=csv"><i
-                                class="bi bi-filetype-csv me-2"></i>CSV</a></li>
-                    <li><a class="dropdown-item" href="{% url 'dashboard:export_data' 'workshops' %}?format=xlsx"><i
-                                class="bi bi-file-earmark-excel me-2"></i>Excel</a></li>
-                </ul>
-            </div>
-            <button type="submit" form="bulkDeleteForm" class="btn btn-danger btn-sm d-flex align-items-center gap-2"
-                onclick="return confirm('Are you sure you want to delete the selected workshops?');">
-                <i class="bi bi-trash"></i> Delete Selected
-            </button>
-            <a href="{% url 'dashboard:workshop_create' %}"
-                class="btn btn-primary btn-sm d-flex align-items-center gap-1">
-                <i class="bi bi-calendar-plus"></i> Add Workshop
-            </a>
+            <a href="{% url 'dashboard:import_data' 'workshops' %}" class="btn btn-outline-primary btn-sm"><i class="bi bi-cloud-arrow-up"></i> Import</a>
+            <button type="submit" form="bulkDeleteForm" class="btn btn-danger btn-sm" onclick="return confirm('Delete selected?');"><i class="bi bi-trash"></i> Delete Selected</button>
+            <a href="{% url 'dashboard:workshop_create' %}" class="btn btn-primary btn-sm"><i class="bi bi-calendar-plus"></i> Add Event</a>
         </div>
     </div>
-
     <form id="bulkDeleteForm" action="{% url 'dashboard:bulk_delete' %}" method="post">
         {% csrf_token %}
-        <input type="hidden" name="app_label" value="workshops">
-        <input type="hidden" name="model_name" value="Workshop">
-        <input type="hidden" name="next" value="{{ request.get_full_path }}">
-
         <div class="table-responsive">
             <table class="table table-hover align-middle border-top">
                 <thead class="table-light">
                     <tr>
                         <th style="width: 40px;"><input type="checkbox" class="form-check-input" id="selectAll"></th>
                         <th>Title</th>
-                        <th>Event Date</th>
+                        <th>Date</th>
                         <th>Status</th>
                         <th class="text-end">Actions</th>
                     </tr>
@@ -58,68 +31,24 @@
                 <tbody>
                     {% for workshop in workshops %}
                     <tr>
-                        <td><input type="checkbox" class="form-check-input item-checkbox" name="item_ids"
-                                value="{{ workshop.pk }}"></td>
-                        <td>
-                            <div class="fw-600">{{ workshop.title }}</div>
-                            <div class="small text-muted">{{ workshop.description|truncatechars:80 }}</div>
-                        </td>
+                        <td><input type="checkbox" class="form-check-input item-checkbox" name="item_ids" value="{{ workshop.pk }}"></td>
+                        <td><div class="fw-600">{{ workshop.title }}</div><div class="small text-muted">{{ workshop.description|truncatechars:60 }}</div></td>
                         <td>{{ workshop.event_date|date:"b d, Y" }}</td>
-                        <td>
-                            {% if workshop.is_active %}
-                            <span
-                                class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">Active</span>
-                            {% else %}
-                            <span
-                                class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill">Hidden</span>
-                            {% endif %}
-                        </td>
+                        <td>{% if workshop.is_active %}<span class="badge bg-success-subtle text-success rounded-pill">Active</span>{% else %}<span class="badge bg-danger-subtle text-danger rounded-pill">Hidden</span>{% endif %}</td>
                         <td class="text-end">
                             <div class="btn-group">
-                                <a href="{% url 'dashboard:workshop_edit' workshop.pk %}"
-                                    class="btn btn-sm btn-outline-secondary" title="Edit">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
-                                <a href="{% url 'dashboard:workshop_delete' workshop.pk %}"
-                                    class="btn btn-sm btn-outline-danger" title="Delete"
-                                    onclick="event.preventDefault(); if(confirm('Delete this workshop?')) { document.getElementById('delete-form-{{ workshop.pk }}').submit(); }">
-                                    <i class="bi bi-trash"></i>
-                                </a>
+                                <a href="{% url 'dashboard:workshop_edit' workshop.pk %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></a>
+                                <a href="{% url 'dashboard:workshop_delete' workshop.pk %}" class="btn btn-sm btn-outline-danger" onclick="event.preventDefault(); if(confirm('Delete?')) { document.getElementById('delete-form-{{ workshop.pk }}').submit(); }"><i class="bi bi-trash"></i></a>
                             </div>
                         </td>
                     </tr>
                     {% empty %}
-                    <tr>
-                        <td colspan="5" class="text-center py-5">
-                            <p class="text-muted">No workshops found.</p>
-                        </td>
-                    </tr>
+                    <tr><td colspan="5" class="text-center py-5"><p class="text-muted">No workshops found.</p></td></tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
     </form>
-
-    {% for workshop in workshops %}
-    <form id="delete-form-{{ workshop.pk }}" action="{% url 'dashboard:workshop_delete' workshop.pk %}" method="post"
-        class="d-none">
-        {% csrf_token %}
-    </form>
-    {% endfor %}
+    {% for workshop in workshops %}<form id="delete-form-{{ workshop.pk }}" action="{% url 'dashboard:workshop_delete' workshop.pk %}" method="post" class="d-none">{% csrf_token %}</form>{% endfor %}
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const selectAll = document.getElementById('selectAll');
-        const checkboxes = document.querySelectorAll('.item-checkbox');
-
-        if (selectAll) {
-            selectAll.addEventListener('change', function () {
-                checkboxes.forEach(cb => {
-                    cb.checked = selectAll.checked;
-                });
-            });
-        }
-    });
-</script>
 {% endblock %}
