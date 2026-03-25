@@ -118,12 +118,12 @@ def dashboard_home(request):
         'carousel_count': CarouselImage.objects.count(),
         'impact_count': ImpactStory.objects.count(),
         
-        # Category Counts
-        'journal_count': publications.filter(category='journal').count(),
-        'conference_count': publications.filter(category='conference').count(),
-        'book_count': publications.filter(category='book').count(),
-        'book_guideline_count': publications.filter(category='guideline').count(),
-        'other_count': publications.filter(category='other').count(),
+        # Category Counts - Using ultra-short names to prevent template line breaks
+        'j_c': str(publications.filter(category='journal').count()),
+        'c_c': str(publications.filter(category='conference').count()),
+        'b_c': str(publications.filter(category='book').count()),
+        'bg_c': str(publications.filter(category='guideline').count()),
+        'o_c': str(publications.filter(category__in=['other', 'thesis', 'report']).count()),
     }
     return render(request, 'dashboard/home.html', context)
 
@@ -196,7 +196,10 @@ def publications_list(request):
     
     # Category Filtering
     if category and category != 'all':
-        publications = publications.filter(category=category)
+        if category == 'other':
+             publications = publications.filter(category__in=['other', 'thesis', 'report'])
+        else:
+             publications = publications.filter(category=category)
         
     # Search Filtering
     if query:
