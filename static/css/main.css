@@ -635,3 +635,15 @@ a {
     border-left-color: #E74C3C !important;
     border-color: #e0e0e0;
 }
+
+/* =====================================================
+   GLOBAL FIX: Remove excessive min-heights on content 
+   sections. The flex layout on body/main handles
+   filling the remaining viewport space instead.
+   This fixes the white gap on ALL non-home pages.
+   ===================================================== */
+.projects-grid-section,
+.our-people-section,
+.filter-section+section {
+    min-height: unset !important;
+}
