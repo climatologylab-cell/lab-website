@@ -50,3 +50,6 @@ build/
 *.key
 *.pem
 ssl/
+
+# Production Secrets
+.env.production
