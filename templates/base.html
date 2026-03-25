@@ -13,6 +13,28 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
+        /* === BASE LAYOUT RESET & STICKY FOOTER === */
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        main {
+            flex: 1 0 auto;
+            width: 100%;
+        }
+
+        .footer {
+            flex-shrink: 0;
+        }
+
         /* Pill-Shaped Navigation */
         .nav-pill-container {
             flex: 1;
