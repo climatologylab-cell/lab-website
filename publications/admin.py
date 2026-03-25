@@ -81,6 +81,11 @@ class ThesisResource(PublicationResource):
         super().before_import_row(row, **kwargs)
         row['category'] = 'thesis'
 
+class GuidelineResource(PublicationResource):
+    def before_import_row(self, row, **kwargs):
+        super().before_import_row(row, **kwargs)
+        row['category'] = 'guideline'
+
 @admin.register(Publication)
 class PublicationAdmin(BaseAdmin):
     resource_class = PublicationResource
@@ -125,6 +130,7 @@ class BookAdmin(BaseProxyAdmin):
 @admin.register(Guideline)
 class GuidelineAdmin(BaseProxyAdmin):
     category_value = 'guideline'
+    resource_class = GuidelineResource
 
 @admin.register(OtherDocument)
 class OtherDocumentAdmin(BaseProxyAdmin):
