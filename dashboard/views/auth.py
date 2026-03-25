@@ -9,14 +9,14 @@ from django.core.mail import send_mail
 from django.shortcuts import redirect, render
 from django.utils import timezone
 
-from dashboard.forms import PasswordResetForm, OTPVerifyForm, OTPSetPasswordForm
+from dashboard.forms import OTPRequestForm, OTPVerifyForm, OTPSetPasswordForm
 
 User = get_user_model()
 
 def password_reset_request(request):
     """Initial request for password reset (email entry)"""
     if request.method == 'POST':
-        form = PasswordResetForm(request.POST)
+        form = OTPRequestForm(request.POST)
         if form.is_valid():
             email = form.cleaned_data['email']
             # Find all users with this email (if multiple exist)
@@ -41,7 +41,7 @@ def password_reset_request(request):
             else:
                 messages.error(request, 'No account found with this email.')
     else:
-        form = PasswordResetForm()
+        form = OTPRequestForm()
     return render(request, 'dashboard/password_reset.html', {'form': form})
 
 def password_reset_verify(request):
@@ -112,3 +112,10 @@ class DashboardPasswordChangeView(PasswordChangeView):
     def form_valid(self, form):
         messages.success(self.request, "Your password has been changed successfully.")
         return super().form_valid(form)
+
+from django.contrib.auth import logout as auth_logout
+
+def logout_view(request):
+    auth_logout(request)
+    messages.success(request, "You have been logged out.")
+    return redirect('login')

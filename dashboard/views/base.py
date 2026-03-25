@@ -22,7 +22,6 @@ from core.models import (
     RTNotice,
     Tutorial,
 )
-from dashboard.models import ActivityLog
 from projects.models import ResearchProject
 from publications.models import Publication
 from team.models import TeamMember
@@ -49,7 +48,6 @@ def dashboard_home(request):
         'projects': ResearchProject.objects.count(),
         'team_members': TeamMember.objects.count(),
         'workshops': Workshop.objects.count(),
-        'recent_activities': ActivityLog.objects.order_by('-timestamp')[:10],
     }
     return render(request, 'dashboard/home.html', stats)
 
@@ -103,23 +101,7 @@ def import_data(request, model_name):
             result = resource.import_data(dataset, dry_run=False, raise_errors=True)
             messages.success(request, f"Successfully imported {result.total_rows} records.")
             
-            ActivityLog.objects.create(
-                user=request.user,
-                action='Imported',
-                model_name=model_class._meta.verbose_name.title(),
-                object_name=f"Batch import ({result.total_rows} items)"
-            )
-            
         except Exception as e:
             messages.error(request, f"Error importing data: {str(e)}")
             
     return redirect(f'dashboard:{model_name}_list')
-
-@login_required
-def activity_log_view(request):
-    """View system activity logs"""
-    logs_list = ActivityLog.objects.all().order_by('-timestamp')
-    paginator = Paginator(logs_list, 50)
-    page_number = request.GET.get('page')
-    logs = paginator.get_page(page_number)
-    return render(request, 'dashboard/activity_log.html', {'logs': logs})

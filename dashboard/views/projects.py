@@ -5,8 +5,7 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 
 from projects.models import ResearchProject
-from dashboard.models import ActivityLog
-from dashboard.forms import ResearchProjectForm
+from dashboard.forms import ProjectForm
 
 @login_required
 def project_list(request):
@@ -49,20 +48,13 @@ def project_list(request):
 def project_add(request):
     """Add a new project"""
     if request.method == 'POST':
-        form = ResearchProjectForm(request.POST, request.FILES)
+        form = ProjectForm(request.POST, request.FILES)
         if form.is_valid():
             project = form.save()
-            ActivityLog.objects.create(
-                user=request.user,
-                action='Created',
-                model_name='ResearchProject',
-                object_id=project.id,
-                object_name=f"{project.title[:50]}..." if len(project.title)>50 else project.title
-            )
             messages.success(request, f"Project '{project.title}' added successfully.")
             return redirect('dashboard:project_list')
     else:
-        form = ResearchProjectForm()
+        form = ProjectForm()
     return render(request, 'dashboard/projects/project_form.html', {'form': form, 'action': 'Add'})
 
 @login_required
@@ -70,20 +62,13 @@ def project_edit(request, pk):
     """Edit an existing project"""
     project = get_object_or_404(ResearchProject, pk=pk)
     if request.method == 'POST':
-        form = ResearchProjectForm(request.POST, request.FILES, instance=project)
+        form = ProjectForm(request.POST, request.FILES, instance=project)
         if form.is_valid():
             project = form.save()
-            ActivityLog.objects.create(
-                user=request.user,
-                action='Updated',
-                model_name='ResearchProject',
-                object_id=project.id,
-                object_name=f"{project.title[:50]}..." if len(project.title)>50 else project.title
-            )
             messages.success(request, f"Project '{project.title}' updated successfully.")
             return redirect('dashboard:project_list')
     else:
-        form = ResearchProjectForm(instance=project)
+        form = ProjectForm(instance=project)
     return render(request, 'dashboard/projects/project_form.html', {'form': form, 'action': 'Edit', 'project': project})
 
 @login_required
@@ -92,13 +77,6 @@ def project_delete(request, pk):
     project = get_object_or_404(ResearchProject, pk=pk)
     if request.method == 'POST':
         project_title = project.title
-        ActivityLog.objects.create(
-            user=request.user,
-            action='Deleted',
-            model_name='ResearchProject',
-            object_id=project.id,
-            object_name=f"{project_title[:50]}..." if len(project_title)>50 else project_title
-        )
         project.delete()
         messages.success(request, f"Project '{project_title}' deleted successfully.")
         return redirect('dashboard:project_list')

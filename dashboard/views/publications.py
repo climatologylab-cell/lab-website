@@ -5,7 +5,6 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 
 from publications.models import Publication
-from dashboard.models import ActivityLog
 from dashboard.forms import PublicationForm
 
 @login_required
@@ -19,7 +18,8 @@ def publication_list(request):
         publications_list = publications_list.filter(
             Q(title__icontains=search_query) | 
             Q(authors__icontains=search_query) |
-            Q(journal_name__icontains=search_query) |
+            # Check journal_name vs journal in models
+            Q(journal__icontains=search_query) |
             Q(publisher__icontains=search_query)
         )
         
@@ -46,13 +46,6 @@ def publication_add(request):
         form = PublicationForm(request.POST, request.FILES)
         if form.is_valid():
             publication = form.save()
-            ActivityLog.objects.create(
-                user=request.user,
-                action='Created',
-                model_name='Publication',
-                object_id=publication.id,
-                object_name=f"{publication.title[:50]}..." if len(publication.title)>50 else publication.title
-            )
             messages.success(request, f"Publication '{publication.title}' added successfully.")
             return redirect('dashboard:publication_list')
     else:
@@ -67,13 +60,6 @@ def publication_edit(request, pk):
         form = PublicationForm(request.POST, request.FILES, instance=publication)
         if form.is_valid():
             publication = form.save()
-            ActivityLog.objects.create(
-                user=request.user,
-                action='Updated',
-                model_name='Publication',
-                object_id=publication.id,
-                object_name=f"{publication.title[:50]}..." if len(publication.title)>50 else publication.title
-            )
             messages.success(request, f"Publication '{publication.title}' updated successfully.")
             return redirect('dashboard:publication_list')
     else:
@@ -86,13 +72,6 @@ def publication_delete(request, pk):
     publication = get_object_or_404(Publication, pk=pk)
     if request.method == 'POST':
         publication_title = publication.title
-        ActivityLog.objects.create(
-            user=request.user,
-            action='Deleted',
-            model_name='Publication',
-            object_id=publication.id,
-            object_name=f"{publication_title[:50]}..." if len(publication_title)>50 else publication_title
-        )
         publication.delete()
         messages.success(request, f"Publication '{publication_title}' deleted successfully.")
         return redirect('dashboard:publication_list')

@@ -6,7 +6,6 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from workshops.models import Workshop
 from core.models import RTNotice
-from dashboard.models import ActivityLog
 from dashboard.forms import WorkshopForm, RTNoticeForm
 
 @login_required
@@ -39,13 +38,6 @@ def workshop_add(request):
         form = WorkshopForm(request.POST, request.FILES)
         if form.is_valid():
             workshop = form.save()
-            ActivityLog.objects.create(
-                user=request.user,
-                action='Created',
-                model_name='Workshop',
-                object_id=workshop.id,
-                object_name=f"{workshop.title[:50]}..." if len(workshop.title)>50 else workshop.title
-            )
             messages.success(request, f"Workshop '{workshop.title}' added successfully.")
             return redirect('dashboard:workshop_list')
     else:
@@ -60,13 +52,6 @@ def workshop_edit(request, pk):
         form = WorkshopForm(request.POST, request.FILES, instance=workshop)
         if form.is_valid():
             workshop = form.save()
-            ActivityLog.objects.create(
-                user=request.user,
-                action='Updated',
-                model_name='Workshop',
-                object_id=workshop.id,
-                object_name=f"{workshop.title[:50]}..." if len(workshop.title)>50 else workshop.title
-            )
             messages.success(request, f"Workshop '{workshop.title}' updated successfully.")
             return redirect('dashboard:workshop_list')
     else:
@@ -79,13 +64,6 @@ def workshop_delete(request, pk):
     workshop = get_object_or_404(Workshop, pk=pk)
     if request.method == 'POST':
         workshop_title = workshop.title
-        ActivityLog.objects.create(
-            user=request.user,
-            action='Deleted',
-            model_name='Workshop',
-            object_id=workshop.id,
-            object_name=f"{workshop_title[:50]}..." if len(workshop_title)>50 else workshop_title
-        )
         workshop.delete()
         messages.success(request, f"Workshop '{workshop_title}' deleted successfully.")
         return redirect('dashboard:workshop_list')
@@ -117,13 +95,6 @@ def rt_notice_add(request):
         form = RTNoticeForm(request.POST, request.FILES)
         if form.is_valid():
             notice = form.save()
-            ActivityLog.objects.create(
-                user=request.user,
-                action='Created',
-                model_name='RTNotice',
-                object_id=notice.id,
-                object_name=f"{notice.title[:50]}..." if len(notice.title)>50 else notice.title
-            )
             messages.success(request, f"Notice '{notice.title}' added successfully.")
             return redirect('dashboard:rt_notice_list')
     else:
@@ -138,13 +109,6 @@ def rt_notice_edit(request, pk):
         form = RTNoticeForm(request.POST, request.FILES, instance=notice)
         if form.is_valid():
             notice = form.save()
-            ActivityLog.objects.create(
-                user=request.user,
-                action='Updated',
-                model_name='RTNotice',
-                object_id=notice.id,
-                object_name=f"{notice.title[:50]}..." if len(notice.title)>50 else notice.title
-            )
             messages.success(request, f"Notice '{notice.title}' updated successfully.")
             return redirect('dashboard:rt_notice_list')
     else:
@@ -157,13 +121,6 @@ def rt_notice_delete(request, pk):
     notice = get_object_or_404(RTNotice, pk=pk)
     if request.method == 'POST':
         notice_title = notice.title
-        ActivityLog.objects.create(
-            user=request.user,
-            action='Deleted',
-            model_name='RTNotice',
-            object_id=notice.id,
-            object_name=f"{notice_title[:50]}..." if len(notice_title)>50 else notice_title
-        )
         notice.delete()
         messages.success(request, f"Notice '{notice_title}' deleted successfully.")
         return redirect('dashboard:rt_notice_list')

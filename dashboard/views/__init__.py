@@ -1,4 +1,8 @@
-from .base import dashboard_home, export_data, import_data, activity_log_view
+from django.contrib import messages
+from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
+
+from .base import dashboard_home, export_data, import_data
 from .content import (
     homepage_stats_update as edit_homepage_stats,
     carousel_list, 
@@ -59,11 +63,12 @@ from .auth import (
     password_reset_request as otp_request_view, 
     password_reset_verify as otp_verify_view, 
     password_reset_confirm as otp_set_password_view,
-    DashboardPasswordChangeView
+    DashboardPasswordChangeView,
+    logout_view
 )
 from .utils import supabase_test
 
-# Placeholders for potentially missing views
+# Placeholders for potentially missing views in the current schema
 @login_required
 def bulk_delete(request):
     messages.warning(request, "Bulk delete is currently unavailable.")
@@ -72,6 +77,3 @@ def bulk_delete(request):
 @login_required
 def publication_export_csv(request):
     return export_data(request, 'publication')
-from django.contrib import messages
-from django.shortcuts import redirect
-from django.contrib.auth.decorators import login_required

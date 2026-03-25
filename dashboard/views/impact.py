@@ -5,14 +5,13 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 
 from core.models import ImpactStory, ResearchHighlight, PolicyImpact
-from dashboard.models import ActivityLog
 from dashboard.forms import ImpactStoryForm, ResearchHighlightForm, PolicyImpactForm
 
 # --- Impact Story Views ---
 @login_required
 def impact_story_list(request):
     """List Impact Stories"""
-    stories_list = ImpactStory.objects.all().order_by('-id')
+    stories_list = ImpactStory.objects.all().order_by('order', '-created_at')
     paginator = Paginator(stories_list, 20)
     page_number = request.GET.get('page')
     stories = paginator.get_page(page_number)
@@ -25,13 +24,6 @@ def impact_story_add(request):
         form = ImpactStoryForm(request.POST, request.FILES)
         if form.is_valid():
             story = form.save()
-            ActivityLog.objects.create(
-                user=request.user,
-                action='Created',
-                model_name='ImpactStory',
-                object_id=story.id,
-                object_name=f"{story.title[:50]}..." if len(story.title)>50 else story.title
-            )
             messages.success(request, f"Impact Story '{story.title}' added successfully.")
             return redirect('dashboard:impact_story_list')
     else:
@@ -46,13 +38,6 @@ def impact_story_edit(request, pk):
         form = ImpactStoryForm(request.POST, request.FILES, instance=story)
         if form.is_valid():
             story = form.save()
-            ActivityLog.objects.create(
-                user=request.user,
-                action='Updated',
-                model_name='ImpactStory',
-                object_id=story.id,
-                object_name=f"{story.title[:50]}..." if len(story.title)>50 else story.title
-            )
             messages.success(request, f"Impact Story '{story.title}' updated successfully.")
             return redirect('dashboard:impact_story_list')
     else:
@@ -65,13 +50,6 @@ def impact_story_delete(request, pk):
     story = get_object_or_404(ImpactStory, pk=pk)
     if request.method == 'POST':
         title = story.title
-        ActivityLog.objects.create(
-            user=request.user,
-            action='Deleted',
-            model_name='ImpactStory',
-            object_id=story.id,
-            object_name=title
-        )
         story.delete()
         messages.success(request, f"Impact Story '{title}' deleted successfully.")
         return redirect('dashboard:impact_story_list')
@@ -81,7 +59,7 @@ def impact_story_delete(request, pk):
 @login_required
 def research_highlight_list(request):
     """List Research Highlights"""
-    highlights_list = ResearchHighlight.objects.all().order_by('-id')
+    highlights_list = ResearchHighlight.objects.all().order_by('order', 'title')
     paginator = Paginator(highlights_list, 20)
     page_number = request.GET.get('page')
     highlights = paginator.get_page(page_number)
@@ -94,13 +72,6 @@ def research_highlight_add(request):
         form = ResearchHighlightForm(request.POST, request.FILES)
         if form.is_valid():
             highlight = form.save()
-            ActivityLog.objects.create(
-                user=request.user,
-                action='Created',
-                model_name='ResearchHighlight',
-                object_id=highlight.id,
-                object_name=f"{highlight.title[:50]}..." if len(highlight.title)>50 else highlight.title
-            )
             messages.success(request, f"Research Highlight '{highlight.title}' added successfully.")
             return redirect('dashboard:research_highlight_list')
     else:
@@ -115,13 +86,6 @@ def research_highlight_edit(request, pk):
         form = ResearchHighlightForm(request.POST, request.FILES, instance=highlight)
         if form.is_valid():
             highlight = form.save()
-            ActivityLog.objects.create(
-                user=request.user,
-                action='Updated',
-                model_name='ResearchHighlight',
-                object_id=highlight.id,
-                object_name=f"{highlight.title[:50]}..." if len(highlight.title)>50 else highlight.title
-            )
             messages.success(request, f"Research Highlight '{highlight.title}' updated successfully.")
             return redirect('dashboard:research_highlight_list')
     else:
@@ -134,13 +98,6 @@ def research_highlight_delete(request, pk):
     highlight = get_object_or_404(ResearchHighlight, pk=pk)
     if request.method == 'POST':
         title = highlight.title
-        ActivityLog.objects.create(
-            user=request.user,
-            action='Deleted',
-            model_name='ResearchHighlight',
-            object_id=highlight.id,
-            object_name=title
-        )
         highlight.delete()
         messages.success(request, f"Research Highlight '{title}' deleted successfully.")
         return redirect('dashboard:research_highlight_list')
@@ -150,7 +107,7 @@ def research_highlight_delete(request, pk):
 @login_required
 def policy_impact_list(request):
     """List Policy Impacts"""
-    impacts_list = PolicyImpact.objects.all().order_by('-id')
+    impacts_list = PolicyImpact.objects.all().order_by('-year', 'order')
     paginator = Paginator(impacts_list, 20)
     page_number = request.GET.get('page')
     impacts = paginator.get_page(page_number)
@@ -163,13 +120,6 @@ def policy_impact_add(request):
         form = PolicyImpactForm(request.POST, request.FILES)
         if form.is_valid():
             impact = form.save()
-            ActivityLog.objects.create(
-                user=request.user,
-                action='Created',
-                model_name='PolicyImpact',
-                object_id=impact.id,
-                object_name=f"{impact.title[:50]}..." if len(impact.title)>50 else impact.title
-            )
             messages.success(request, f"Policy Impact '{impact.title}' added successfully.")
             return redirect('dashboard:policy_impact_list')
     else:
@@ -184,13 +134,6 @@ def policy_impact_edit(request, pk):
         form = PolicyImpactForm(request.POST, request.FILES, instance=impact)
         if form.is_valid():
             impact = form.save()
-            ActivityLog.objects.create(
-                user=request.user,
-                action='Updated',
-                model_name='PolicyImpact',
-                object_id=impact.id,
-                object_name=f"{impact.title[:50]}..." if len(impact.title)>50 else impact.title
-            )
             messages.success(request, f"Policy Impact '{impact.title}' updated successfully.")
             return redirect('dashboard:policy_impact_list')
     else:
@@ -203,13 +146,6 @@ def policy_impact_delete(request, pk):
     impact = get_object_or_404(PolicyImpact, pk=pk)
     if request.method == 'POST':
         title = impact.title
-        ActivityLog.objects.create(
-            user=request.user,
-            action='Deleted',
-            model_name='PolicyImpact',
-            object_id=impact.id,
-            object_name=title
-        )
         impact.delete()
         messages.success(request, f"Policy Impact '{title}' deleted successfully.")
         return redirect('dashboard:policy_impact_list')
