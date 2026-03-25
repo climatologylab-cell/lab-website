@@ -26,7 +26,8 @@
                     <div class="strip-header">
                         <span class="strip-category">{{ pub.get_category_display }}</span>{% if pub.publication_date
                         %}<span class="strip-divider">•</span><span class="strip-year">{{ pub.publication_date.year
-                            }}</span>{% endif %}
+                            }}</span>
+                        {% endif %}
                     </div>
 
                     <h3 class="strip-title">
@@ -152,13 +153,12 @@
     }
 
     .strip-year {
-        font-weight: 700;
-        color: #1565C0;
-        background: #E3F2FD;
-        padding: 3px 10px;
-        border-radius: 6px;
+        font-weight: 600;
+        color: #333;
+        background: #f0f0f0;
+        padding: 2px 8px;
+        border-radius: 12px;
         font-size: 11px;
-        letter-spacing: 0.5px;
     }
 
     .strip-title {
