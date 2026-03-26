@@ -81,7 +81,6 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "simple_history.middleware.HistoryRequestMiddleware",
-    "core.middleware.session_security.DashboardSecurityMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -246,6 +245,5 @@ LOGOUT_REDIRECT_URL = "core:home"
 
 # Session Security Settings
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Logout when browser window closes
-SESSION_COOKIE_AGE = 3600  # 1-hour global session
-SESSION_TIMEOUT_DASHBOARD = 60  # 1-minute dashboard inactivity timeout
+SESSION_COOKIE_AGE = 86400  # 24-hour global session
 SESSION_SAVE_EVERY_REQUEST = True  # Reset the timers on every page load/click
