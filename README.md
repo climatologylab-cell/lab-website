@@ -1,217 +1,181 @@
 # Climatology Lab Website
 
-A Django-based website for the Climatology Lab at IIT Roorkee, Department of Architecture and Planning.
+A comprehensive, Django-based dynamic website and administrative dashboard built for the **Climatology Lab at IIT Roorkee** (Department of Architecture and Planning). This platform serves as the central hub for the lab's digital presence, showcasing research projects, team profiles, publications, and workshop announcements, while providing a powerful, authenticated dashboard for content management.
 
-## Features
+---
 
-- Homepage with dynamic statistics
-- Notice board for workshops and events
-- Team members management
-- Research projects showcase
-- Publications repository
-- Contact form with submission tracking
-- Fully responsive design
-- Comprehensive admin panel
+## 🚀 Features & Functionalities
 
-## Installation
+- **Public-Facing Website:**
+  - **Dynamic Homepage:** Real-time statistics, laboratory overview, and recent highlights.
+  - **Research Portfolios:** Detailed pages for ongoing and completed projects, including investigator tracking.
+  - **Interactive Team Directory:** Profiles for PIs, Co-PIs, researchers, and alumni.
+  - **Publications Hub:** A comprehensive library of research papers, journal articles, and book chapters.
+  - **Notice Board / Workshops:** Announcements for upcoming events and workshops.
+  - **Contact & Feedback:** Integrated contact form with email routing and submission tracking.
+  - **Responsive Design:** A polished UI built with Bootstrap 5, optimized for mobile and desktop viewing.
+
+- **Administrative Dashboard (`/dashboard/`):**
+  - **Secure Authentication:** OTP-enabled password reset, robust session management (24-hour persistence), and localized role-based access.
+  - **Full CRUD Management:** Create, read, update, and delete entries for all public-facing modules (Projects, Team, Publications, Workshops).
+  - **Data Import/Export:** Bulk import via CSV and export features for Publications and other key metrics.
+  - **Media Management:** Direct integration with AWS S3 / Supabase for secure, scalable image and document hosting.
+
+---
+
+## 🛠 Tech Stack
+
+- **Backend:** Python 3.12+, Django 5.2.10
+- **Frontend:** HTML5, CSS3, JavaScript, Bootstrap 5, Crispy Forms (`crispy-bootstrap5`)
+- **Database:** SQLite (Development) / PostgreSQL (Production ready vi `dj-database-url`)
+- **Web Servers / Tools:** 
+  - Waitress (Windows App Server)
+  - Nginx (Reverse Proxy & SSL termination)
+  - Whitenoise (Static file serving)
+- **Cloud & External Services:**
+  - AWS SES (Simple Email Service) for SMTP
+  - Supabase / AWS S3 (via `django-storages` and `boto3`) for media storage
+- **Libraries:** Pillow (image processing), pandas/tablib (data export), BeautifulSoup4.
+
+---
+
+## ⚙️ Installation & Setup Instructions
 
 ### Prerequisites
-- Python 3.8+
-- pip
+- Python 3.12+ installed
+- Git
+- PowerShell (if deploying on Windows Server)
 
-### Setup
+### Local Development Setup (Step-by-Step)
 
-1. **Clone or navigate to the project directory**
-```bash
-cd "c:\Users\Gourav\OneDrive\Desktop\Internship IITR\Lab"
-```
+1. **Clone the Repository**
+   ```powershell
+   git clone <repository_url>
+   cd "C:\ClimatologyLab" # or your local path
+   ```
 
-2. **Activate virtual environment**
-```bash
-.\venv\Scripts\activate
-```
+2. **Create and Activate Virtual Environment**
+   ```powershell
+   python -m venv venv
+   .\venv\Scripts\Activate.ps1
+   ```
 
-3. **The dependencies are already installed**
-- Django 5.2.10
-- Pillow
+3. **Install Dependencies**
+   ```powershell
+   pip install -r requirements.txt
+   ```
 
-### Database
+4. **Environment Variables Configuration**
+   Duplicate `.env.production` (or create a new `.env` file) in the project root:
+   ```env
+   DEBUG=True
+   SECRET_KEY=your-local-secret-key-development
+   ALLOWED_HOSTS=*
+   ```
 
-The database is already set up and migrated. To reset or create migrations:
+5. **Apply Database Migrations**
+   ```powershell
+   python manage.py makemigrations
+   python manage.py migrate
+   ```
 
-```bash
-python manage.py makemigrations
-python manage.py migrate
-```
+6. **Create an Admin User**
+   ```powershell
+   python manage.py createsuperuser
+   ```
 
-### Admin User
+7. **Run the Development Server**
+   ```powershell
+   python manage.py runserver
+   ```
+   *Access the site at `http://localhost:8000/`*
 
-A superuser has been created:
-- Username: `admin`
-- Email: `admin@climatologylab.com`
+---
 
-Set the password:
-```bash
-python manage.py changepassword admin
-```
+## 📖 Usage Guide
 
-## Running the Application
+- **Public Visitors:** Navigate to the root URL (`/`) to browse lab statistics, publications, and projects. Use the Contact tab to get in touch with the lab.
+- **Lab Administrators:**
+  1. Navigate to `http://localhost:8000/accounts/login/` (or `/dashboard/`).
+  2. Log in using the superuser credentials.
+  3. Use the sidebar to navigate between managing Team Members, Publications, Workshops, and dynamic Homepage Statistics.
+  4. To add publications in bulk, click on "Import" inside the Publications dashboard view.
 
-```bash
-python manage.py runserver
-```
+---
 
-Visit:
-- Homepage: http://localhost:8000/
-- Admin Panel: http://localhost:8000/admin/
+## 📂 Project Structure
 
-## Project Structure
-
-```
+```text
 Lab/
-├── config/              # Project settings
-├── core/                # Main app (homepage, static pages)
-├── team/                # Team members
-├── projects/            # Research projects
-├── publications/        # Publications
-├── workshops/           # Notice board
-├── contact/             # Contact form
-├── templates/           # HTML templates
-├── static/             # CSS, JavaScript, images
-├── media/              # Uploaded files
-└── manage.py
+├── config/              # Central Django settings, core configurations, and root URL routing
+├── core/                # Frontend web application (views for homepage, context processors)
+├── dashboard/           # Comprehensive secure backend dashboard (forms, CRUD views, templates)
+├── team/                # App handling team member models and public team listing
+├── projects/            # App handling research projects and grants
+├── publications/        # App handling publications, citations, and CSV imports
+├── workshops/           # App handling the notice board and workshop registrations
+├── contact/             # Form logic, email dispatching, and admin tracking for queries
+├── templates/           # Global HTML templates (Base layouts, navbars, footers)
+├── static/              # Global CSS, JS, and static frontend assets
+├── media/               # Local storage directory for file/image uploads (Dev only)
+├── .env                 # Environment variables configuration (ignored in git)
+├── manage.py            # Django command-line utility
+└── requirements.txt     # Complete list of Python dependencies
 ```
 
-## Apps
+---
 
-### Core
-- Site settings
-- Homepage statistics (publications, projects, outreach count)
-- Homepage content
+## 🔗 Main Endpoints & Routes
 
-### Workshops
-- Notice board entries
-- Workshop announcements
+While not a headless REST API, the application relies on strict URL routing for navigation and operations:
 
-### Team
-- Team member profiles
-- Photos and bios
-- Research interests
+- **Public Routes:**
+  - `/` - Homepage
+  - `/projects/` - Research Projects Gallery
+  - `/team/` - Team Directory
+  - `/publications/` - Publications Database
+  - `/contact/` - Contact Form
 
-### Projects
-- Research projects
-- Principal investigators
-- Co-investigators
-- Project status tracking
+- **Secure Dashboard Routes (Requires Auth):**
+  - `/dashboard/` - Admin Overview
+  - `/dashboard/projects/` - Portfolio Management
+  - `/dashboard/publications/` - Publications CRUD & Import/Export
+  - `/dashboard/team/` - Team Member Management
+  - `/dashboard/password-reset/` - OTP Password Recovery Utility
+  - `/management-console/` - Default Django Admin (renamed for security constraints)
 
-### Publications
-- Research publications
-- Journal articles
-- Conference papers
-- PDF uploads
+---
 
-### Contact
-- Contact form submissions
-- Admin tracking
+## 🖼 UI Description
 
-## Admin Panel
+- **Frontend Website:** Modern, research-focused aesthetic prioritizing whitespace, crisp typography, and high-quality imagery. Employs a primary blue/white color scheme consistent with IIT Roorkee's branding guidelines. Features responsive grids for publications and card-based layouts for team members.
+- **Admin Dashboard:** A streamlined, functional dark-sidebar interface built on Bootstrap 5. It features tabular data views, modal popups for quick edits, and Crispy Forms for elegant, error-validated data entry.
 
-Access at `/admin/` to manage:
-- Site settings
-- Homepage statistics
-- Workshops and notices
-- Team members
-- Research projects
-- Publications
-- Contact submissions
+---
 
-## Design
+## ⚠️ Known Issues / Limitations
 
-The website preserves the original design exactly:
+- **Media Storage in Production:** The application relies on external S3/Supabase storage in production. If the environment variables (`SUPABASE_S3_ENDPOINT`, etc.) are omitted, image uploads will fall back to local storage which may be ephemeral depending on the hosting provider.
+- **Email Delivery Restrictions:** AWS SES is strictly configured. If the `EMAIL_HOST_USER` is not verified in AWS or sandbox mode is active, the contact form may fail to dispatch emails.
 
-### Colors
-- Primary Blue: #4A90E2
-- Dark Blue: #1E3A5F (footer)
-- Light Blue: #B8D4F1
-- Red: #E74C3C
-- Yellow: #F1C40F
-- Green: #2ECC71 (submit button)
-- Black: #000000
+---
 
-### Layout
-- Responsive grid design
-- Stats section with circular badges
-- Notice board with card layout
-- Two-tone footer with contact form
+## 🔮 Future Improvements
 
-## URLs
+- Fully transition the frontend to a headless REST/GraphQL architecture (e.g., Django Ninja or DRF paired with React/Next.js) for greater interactivity.
+- Implement Elasticsearch or PostgreSQL Full-Text Search for deep querying across the publications database.
+- Add an automated BibTeX parser/importer for dynamic bibliography generation.
 
-| Page | URL |
-|------|-----|
-| Homepage | `/` |
-| Projects | `/projects/` |
-| Team | `/team/` |
-| Publications | `/publications/` |
-| Learn | `/learn/` |
-| Impact | `/impact/` |
-| Contact | `/contact/` |
-| Admin | `/admin/` |
+---
 
-## Development
+## 🧑‍💻 Author Details
 
-### Adding Content
+**Developed By:** Chanchal Suthar  
+**Maintained For:** Climatology Lab, Department of Architecture and Planning, IIT Roorkee  
+**Contact:** climatologylab@ar.iitr.ac.in
 
-Use the admin panel to add:
-1. Homepage statistics
-2. Workshop notices
-3. Team members
-4. Research projects
-5. Publications
+---
 
-### Customization
+## 📄 License
 
-- **Templates**: Edit files in `templates/`
-- **Styling**: Modify `static/css/main.css`
-- **JavaScript**: Edit `static/js/main.js`
-- **Models**: Update `models.py` in each app
-
-### Deployment
-
-For production:
-1. Set `DEBUG = False` in `settings.py`
-2. Configure `ALLOWED_HOSTS`
-3. Set up proper database (PostgreSQL recommended)
-4. Configure email backend for contact form
-5. Collect static files: `python manage.py collectstatic`
-6. **Configure media storage** – the default filesystem is
-   ephemeral on most hosting platforms (Render, Heroku, etc.).
-   You must set Cloudinary (or another external storage) before any
-   images are uploaded:
-   * Add the following environment variables to your service:
-     `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`,
-     `CLOUDINARY_API_SECRET` (or a single `CLOUDINARY_URL`).
-   * If only the cloud name is provided the app will fall back to
-     local storage and the admin will raise a 500 when you attempt to
-     save images.  The code now warns at startup if the configuration
-     is incomplete.
-   * On Render use the dashboard’s **Environment** tab to add these
-     values, then redeploy.
-7. Use a production server (Gunicorn, uWSGI)
-8. Set up HTTPS
-
-## Technologies
-
-- **Backend**: Django 5.2.10
-- **Database**: SQLite (development), PostgreSQL (recommended for production)
-- **Frontend**: HTML5, CSS3, JavaScript
-- **Image Processing**: Pillow
-
-## License
-
-Created for the Climatology Lab, IIT Roorkee.
-
-Developed by Chanchal Suthar.
-
-## Support
-
-For issues or questions, contact the development team.
+Created exclusively for the Climatology Lab, IIT Roorkee. All rights reserved. Do not distribute or replicate without explicit authorization from the principal investigators.
