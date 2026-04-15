@@ -6,6 +6,7 @@ class StaticViewSitemap(sitemaps.Sitemap):
     """Sitemap for high-level static/gallery pages"""
     priority = 1.0
     changefreq = 'weekly'
+    protocol = 'https'
 
     def items(self):
         return [
@@ -27,6 +28,7 @@ class ProjectSitemap(sitemaps.Sitemap):
     """Sitemap for individual Research/Consultancy project pages"""
     changefreq = "monthly"
     priority = 0.8
+    protocol = 'https'
 
     def items(self):
         return ResearchProject.objects.filter(is_active=True)
