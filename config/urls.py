@@ -22,6 +22,13 @@ from django.views.static import serve
 from django.contrib.auth import views as auth_views
 from dashboard import views as dashboard_views
 from django.http import HttpResponse
+from django.contrib.sitemaps.views import sitemap
+from core.sitemaps import StaticViewSitemap, ProjectSitemap
+
+sitemaps = {
+    'static': StaticViewSitemap,
+    'projects': ProjectSitemap,
+}
 
 def google_verification(request):
     return HttpResponse("google-site-verification: googlee5ed8ef3b84d5965.html", content_type="text/html")
@@ -36,6 +43,7 @@ urlpatterns = [
     path('contact/', include('contact.urls')),
     path('publications/', include('publications.urls')),
     path('googlee5ed8ef3b84d5965.html', google_verification),
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
 ]
 
 # Serve media files in all environments
