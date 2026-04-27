@@ -39,7 +39,7 @@ def workshop_add(request):
         if form.is_valid():
             workshop = form.save()
             messages.success(request, f"Workshop '{workshop.title}' added successfully.")
-            return redirect('dashboard:workshop_list')
+            return redirect('dashboard:workshops_list')
     else:
         form = WorkshopForm()
     return render(request, 'dashboard/workshop_form.html', {'form': form, 'action': 'Add', 'title': 'Add Workshop'})
@@ -53,7 +53,7 @@ def workshop_edit(request, pk):
         if form.is_valid():
             workshop = form.save()
             messages.success(request, f"Workshop '{workshop.title}' updated successfully.")
-            return redirect('dashboard:workshop_list')
+            return redirect('dashboard:workshops_list')
     else:
         form = WorkshopForm(instance=workshop)
     return render(request, 'dashboard/workshop_form.html', {'form': form, 'action': 'Edit', 'workshop': workshop, 'title': 'Edit Workshop'})
@@ -96,7 +96,7 @@ def rt_notice_add(request):
         if form.is_valid():
             notice = form.save()
             messages.success(request, f"Notice '{notice.title}' added successfully.")
-            return redirect('dashboard:rt_notice_list')
+            return redirect('dashboard:rt_list')
     else:
         form = RTNoticeForm()
     return render(request, 'dashboard/rt_form.html', {'form': form, 'action': 'Add', 'type': 'RT', 'title': 'Add Research/Tech Notice'})
@@ -110,7 +110,7 @@ def rt_notice_edit(request, pk):
         if form.is_valid():
             notice = form.save()
             messages.success(request, f"Notice '{notice.title}' updated successfully.")
-            return redirect('dashboard:rt_notice_list')
+            return redirect('dashboard:rt_list')
     else:
         form = RTNoticeForm(instance=notice)
     return render(request, 'dashboard/rt_form.html', {'form': form, 'action': 'Edit', 'notice': notice, 'type': 'RT', 'title': 'Edit Research/Tech Notice'})

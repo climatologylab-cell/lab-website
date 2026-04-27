@@ -38,7 +38,7 @@ def tutorial_add(request):
         if form.is_valid():
             tutorial = form.save()
             messages.success(request, f"Tutorial '{tutorial.title}' added successfully.")
-            return redirect('dashboard:tutorial_list')
+            return redirect('dashboard:tutorials_list')
     else:
         form = TutorialForm()
     return render(request, 'dashboard/tutorial_form.html', {'form': form, 'action': 'Add', 'title': 'Add Tutorial'})
@@ -52,7 +52,7 @@ def tutorial_edit(request, pk):
         if form.is_valid():
             tutorial = form.save()
             messages.success(request, f"Tutorial '{tutorial.title}' updated successfully.")
-            return redirect('dashboard:tutorial_list')
+            return redirect('dashboard:tutorials_list')
     else:
         form = TutorialForm(instance=tutorial)
     return render(request, 'dashboard/tutorial_form.html', {'form': form, 'action': 'Edit', 'tutorial': tutorial, 'title': 'Edit Tutorial'})
