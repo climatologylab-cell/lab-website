@@ -49,6 +49,6 @@
             </table>
         </div>
     </form>
-    {% for member in members %}<form id="delete-form-{{ member.pk }}" action="{% url 'dashboard:team_member_delete' member.pk %}" method="post" class="d-none">{% csrf_token %}</form>{% endfor %}
+    {% for member in members %}<form id="delete-form-{{ member.pk }}" action="{% url 'dashboard:team_delete' member.pk %}" method="post" class="d-none">{% csrf_token %}</form>{% endfor %}
 </div>
 {% endblock %}
