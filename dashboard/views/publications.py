@@ -47,7 +47,7 @@ def publication_add(request):
         if form.is_valid():
             publication = form.save()
             messages.success(request, f"Publication '{publication.title}' added successfully.")
-            return redirect('dashboard:publication_list')
+            return redirect('dashboard:publications_list')
     else:
         form = PublicationForm()
     return render(request, 'dashboard/publication_form.html', {'form': form, 'action': 'Add', 'title': 'Add Publication'})
@@ -61,7 +61,7 @@ def publication_edit(request, pk):
         if form.is_valid():
             publication = form.save()
             messages.success(request, f"Publication '{publication.title}' updated successfully.")
-            return redirect('dashboard:publication_list')
+            return redirect('dashboard:publications_list')
     else:
         form = PublicationForm(instance=publication)
     return render(request, 'dashboard/publication_form.html', {'form': form, 'action': 'Edit', 'publication': publication, 'title': 'Edit Publication'})

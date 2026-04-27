@@ -14,7 +14,7 @@
                 <input class="form-control form-control-sm me-2" type="search" name="q" placeholder="Search..." value="{{ query|default:'' }}">
                 <button class="btn btn-sm btn-outline-primary" type="submit">Search</button>
             </form>
-            <a href="{% url 'dashboard:import_data' 'publications' %}" class="btn btn-outline-primary btn-sm"><i class="bi bi-cloud-arrow-up"></i> Import</a>
+            <a href="{% url 'dashboard:import_data' 'publication' %}" class="btn btn-outline-primary btn-sm"><i class="bi bi-cloud-arrow-up"></i> Import</a>
             <div class="btn-group">
                 <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown">Add New</button>
                 <ul class="dropdown-menu dropdown-menu-end shadow border-0">

@@ -10,9 +10,9 @@
                 <input class="form-control form-control-sm me-2" type="search" name="q" placeholder="Search..." value="{{ query|default:'' }}">
                 <button class="btn btn-sm btn-outline-primary" type="submit">Search</button>
             </form>
-            <a href="{% url 'dashboard:import_data' 'team' %}" class="btn btn-outline-primary btn-sm"><i class="bi bi-cloud-arrow-up"></i> Import</a>
+            <a href="{% url 'dashboard:import_data' 'teammember' %}" class="btn btn-outline-primary btn-sm"><i class="bi bi-cloud-arrow-up"></i> Import</a>
             <button type="submit" form="bulkDeleteForm" class="btn btn-danger btn-sm" onclick="return confirm('Delete selected?');"><i class="bi bi-trash"></i> Delete Selected</button>
-            <a href="{% url 'dashboard:team_member_create' %}" class="btn btn-primary btn-sm"><i class="bi bi-person-plus"></i> Add Member</a>
+            <a href="{% url 'dashboard:team_create' %}" class="btn btn-primary btn-sm"><i class="bi bi-person-plus"></i> Add Member</a>
         </div>
     </div>
     <form id="bulkDeleteForm" action="{% url 'dashboard:bulk_delete' %}" method="post">
@@ -37,8 +37,8 @@
                         <td>{% if member.is_active %}<span class="badge bg-success-subtle text-success rounded-pill">Active</span>{% else %}<span class="badge bg-danger-subtle text-danger rounded-pill">Inactive</span>{% endif %}</td>
                         <td class="text-end">
                             <div class="btn-group">
-                                <a href="{% url 'dashboard:team_member_edit' member.pk %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></a>
-                                <a href="{% url 'dashboard:team_member_delete' member.pk %}" class="btn btn-sm btn-outline-danger" onclick="event.preventDefault(); if(confirm('Delete member?')) { document.getElementById('delete-form-{{ member.pk }}').submit(); }"><i class="bi bi-trash"></i></a>
+                                <a href="{% url 'dashboard:team_edit' member.pk %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></a>
+                                <a href="{% url 'dashboard:team_delete' member.pk %}" class="btn btn-sm btn-outline-danger" onclick="event.preventDefault(); if(confirm('Delete member?')) { document.getElementById('delete-form-{{ member.pk }}').submit(); }"><i class="bi bi-trash"></i></a>
                             </div>
                         </td>
                     </tr>

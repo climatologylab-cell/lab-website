@@ -52,7 +52,7 @@ def project_add(request):
         if form.is_valid():
             project = form.save()
             messages.success(request, f"Project '{project.title}' added successfully.")
-            return redirect('dashboard:project_list')
+            return redirect('dashboard:projects_list')
     else:
         form = ProjectForm()
     return render(request, 'dashboard/project_form.html', {'form': form, 'action': 'Add', 'title': 'Add Project', 'type': 'Project'})
@@ -66,7 +66,7 @@ def project_edit(request, pk):
         if form.is_valid():
             project = form.save()
             messages.success(request, f"Project '{project.title}' updated successfully.")
-            return redirect('dashboard:project_list')
+            return redirect('dashboard:projects_list')
     else:
         form = ProjectForm(instance=project)
     return render(request, 'dashboard/project_form.html', {'form': form, 'action': 'Edit', 'project': project, 'title': 'Edit Project', 'type': 'Project'})
