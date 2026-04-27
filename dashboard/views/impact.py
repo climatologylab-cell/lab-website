@@ -25,7 +25,7 @@ def impact_story_add(request):
         if form.is_valid():
             story = form.save()
             messages.success(request, f"Impact Story '{story.title}' added successfully.")
-            return redirect('dashboard:impact_story_list')
+            return redirect('dashboard:impact_list')
     else:
         form = ImpactStoryForm()
     return render(request, 'dashboard/rt_form.html', {'form': form, 'action': 'Add', 'type': 'Impact', 'title': 'Add Impact Story'})
@@ -39,7 +39,7 @@ def impact_story_edit(request, pk):
         if form.is_valid():
             story = form.save()
             messages.success(request, f"Impact Story '{story.title}' updated successfully.")
-            return redirect('dashboard:impact_story_list')
+            return redirect('dashboard:impact_list')
     else:
         form = ImpactStoryForm(instance=story)
     return render(request, 'dashboard/rt_form.html', {'form': form, 'action': 'Edit', 'story': story, 'type': 'Impact', 'title': 'Edit Impact Story'})
@@ -73,7 +73,7 @@ def research_highlight_add(request):
         if form.is_valid():
             highlight = form.save()
             messages.success(request, f"Research Highlight '{highlight.title}' added successfully.")
-            return redirect('dashboard:research_highlight_list')
+            return redirect('dashboard:impact_list')
     else:
         form = ResearchHighlightForm()
     return render(request, 'dashboard/rt_form.html', {'form': form, 'action': 'Add', 'type': 'Impact', 'title': 'Add Research Highlight'})
@@ -87,7 +87,7 @@ def research_highlight_edit(request, pk):
         if form.is_valid():
             highlight = form.save()
             messages.success(request, f"Research Highlight '{highlight.title}' updated successfully.")
-            return redirect('dashboard:research_highlight_list')
+            return redirect('dashboard:impact_list')
     else:
         form = ResearchHighlightForm(instance=highlight)
     return render(request, 'dashboard/rt_form.html', {'form': form, 'action': 'Edit', 'highlight': highlight, 'type': 'Impact', 'title': 'Edit Research Highlight'})
@@ -121,7 +121,7 @@ def policy_impact_add(request):
         if form.is_valid():
             impact = form.save()
             messages.success(request, f"Policy Impact '{impact.title}' added successfully.")
-            return redirect('dashboard:policy_impact_list')
+            return redirect('dashboard:impact_list')
     else:
         form = PolicyImpactForm()
     return render(request, 'dashboard/rt_form.html', {'form': form, 'action': 'Add', 'type': 'Impact', 'title': 'Add Policy Influence'})
@@ -135,7 +135,7 @@ def policy_impact_edit(request, pk):
         if form.is_valid():
             impact = form.save()
             messages.success(request, f"Policy Impact '{impact.title}' updated successfully.")
-            return redirect('dashboard:policy_impact_list')
+            return redirect('dashboard:impact_list')
     else:
         form = PolicyImpactForm(instance=impact)
     return render(request, 'dashboard/rt_form.html', {'form': form, 'action': 'Edit', 'impact': impact, 'type': 'Impact', 'title': 'Edit Policy Influence'})
