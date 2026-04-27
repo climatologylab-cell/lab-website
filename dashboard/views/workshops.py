@@ -21,7 +21,7 @@ def workshop_list(request):
             Q(description__icontains=search_query)
         )
         
-    paginator = Paginator(workshops_list, 20)
+    paginator = Paginator(workshops_list, 1000)  # show all (or large number) workshops
     page_number = request.GET.get('page')
     workshops = paginator.get_page(page_number)
     
