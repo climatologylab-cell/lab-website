@@ -169,9 +169,9 @@ class CarouselImage(models.Model):
 class ImpactStory(models.Model):
     """Success stories for the Impact page"""
     title = models.CharField(max_length=200)
-    category = models.CharField(max_length=100, help_text="e.g. Urban Climate, Vernacular Arch.")
+    category = models.CharField(max_length=100, blank=True, null=True, help_text="e.g. Urban Climate, Vernacular Arch.")
     description = models.TextField()
-    impact_metrics = models.CharField(max_length=200, help_text="e.g. -2°C Temp Reduction, 30% Energy Savings")
+    impact_metrics = models.CharField(max_length=200, blank=True, null=True, help_text="e.g. -2°C Temp Reduction, 30% Energy Savings")
     image = models.ImageField(upload_to='impact/stories/', blank=True, null=True)
     order = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
