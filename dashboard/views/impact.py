@@ -28,7 +28,7 @@ def impact_story_add(request):
             return redirect('dashboard:impact_story_list')
     else:
         form = ImpactStoryForm()
-    return render(request, 'dashboard/rt_form.html', {'form': form, 'action': 'Add'})
+    return render(request, 'dashboard/rt_form.html', {'form': form, 'action': 'Add', 'type': 'Impact', 'title': 'Add Impact Story'})
 
 @login_required
 def impact_story_edit(request, pk):
@@ -42,7 +42,7 @@ def impact_story_edit(request, pk):
             return redirect('dashboard:impact_story_list')
     else:
         form = ImpactStoryForm(instance=story)
-    return render(request, 'dashboard/rt_form.html', {'form': form, 'action': 'Edit', 'story': story})
+    return render(request, 'dashboard/rt_form.html', {'form': form, 'action': 'Edit', 'story': story, 'type': 'Impact', 'title': 'Edit Impact Story'})
 
 @login_required
 def impact_story_delete(request, pk):
@@ -76,7 +76,7 @@ def research_highlight_add(request):
             return redirect('dashboard:research_highlight_list')
     else:
         form = ResearchHighlightForm()
-    return render(request, 'dashboard/rt_form.html', {'form': form, 'action': 'Add'})
+    return render(request, 'dashboard/rt_form.html', {'form': form, 'action': 'Add', 'type': 'Impact', 'title': 'Add Research Highlight'})
 
 @login_required
 def research_highlight_edit(request, pk):
@@ -90,7 +90,7 @@ def research_highlight_edit(request, pk):
             return redirect('dashboard:research_highlight_list')
     else:
         form = ResearchHighlightForm(instance=highlight)
-    return render(request, 'dashboard/rt_form.html', {'form': form, 'action': 'Edit', 'highlight': highlight})
+    return render(request, 'dashboard/rt_form.html', {'form': form, 'action': 'Edit', 'highlight': highlight, 'type': 'Impact', 'title': 'Edit Research Highlight'})
 
 @login_required
 def research_highlight_delete(request, pk):
@@ -124,7 +124,7 @@ def policy_impact_add(request):
             return redirect('dashboard:policy_impact_list')
     else:
         form = PolicyImpactForm()
-    return render(request, 'dashboard/rt_form.html', {'form': form, 'action': 'Add'})
+    return render(request, 'dashboard/rt_form.html', {'form': form, 'action': 'Add', 'type': 'Impact', 'title': 'Add Policy Influence'})
 
 @login_required
 def policy_impact_edit(request, pk):
@@ -138,7 +138,7 @@ def policy_impact_edit(request, pk):
             return redirect('dashboard:policy_impact_list')
     else:
         form = PolicyImpactForm(instance=impact)
-    return render(request, 'dashboard/rt_form.html', {'form': form, 'action': 'Edit', 'impact': impact})
+    return render(request, 'dashboard/rt_form.html', {'form': form, 'action': 'Edit', 'impact': impact, 'type': 'Impact', 'title': 'Edit Policy Influence'})
 
 @login_required
 def policy_impact_delete(request, pk):

@@ -70,7 +70,7 @@ def carousel_add(request):
             return redirect('dashboard:carousel_list')
     else:
         form = CarouselImageForm()
-    return render(request, 'dashboard/carousel_form.html', {'form': form, 'action': 'Add'})
+    return render(request, 'dashboard/carousel_form.html', {'form': form, 'action': 'Add', 'title': 'Add Carousel Image'})
 
 @login_required
 def carousel_edit(request, pk):
@@ -84,7 +84,7 @@ def carousel_edit(request, pk):
             return redirect('dashboard:carousel_list')
     else:
         form = CarouselImageForm(instance=image)
-    return render(request, 'dashboard/carousel_form.html', {'form': form, 'action': 'Edit', 'image': image})
+    return render(request, 'dashboard/carousel_form.html', {'form': form, 'action': 'Edit', 'image': image, 'title': 'Edit Carousel Image'})
 
 @login_required
 def carousel_delete(request, pk):

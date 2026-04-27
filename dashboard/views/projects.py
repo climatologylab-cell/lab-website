@@ -55,7 +55,7 @@ def project_add(request):
             return redirect('dashboard:project_list')
     else:
         form = ProjectForm()
-    return render(request, 'dashboard/project_form.html', {'form': form, 'action': 'Add'})
+    return render(request, 'dashboard/project_form.html', {'form': form, 'action': 'Add', 'title': 'Add Project', 'type': 'Project'})
 
 @login_required
 def project_edit(request, pk):
@@ -69,7 +69,7 @@ def project_edit(request, pk):
             return redirect('dashboard:project_list')
     else:
         form = ProjectForm(instance=project)
-    return render(request, 'dashboard/project_form.html', {'form': form, 'action': 'Edit', 'project': project})
+    return render(request, 'dashboard/project_form.html', {'form': form, 'action': 'Edit', 'project': project, 'title': 'Edit Project', 'type': 'Project'})
 
 @login_required
 def project_delete(request, pk):

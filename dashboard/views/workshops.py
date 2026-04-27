@@ -42,7 +42,7 @@ def workshop_add(request):
             return redirect('dashboard:workshop_list')
     else:
         form = WorkshopForm()
-    return render(request, 'dashboard/workshop_form.html', {'form': form, 'action': 'Add'})
+    return render(request, 'dashboard/workshop_form.html', {'form': form, 'action': 'Add', 'title': 'Add Workshop'})
 
 @login_required
 def workshop_edit(request, pk):
@@ -56,7 +56,7 @@ def workshop_edit(request, pk):
             return redirect('dashboard:workshop_list')
     else:
         form = WorkshopForm(instance=workshop)
-    return render(request, 'dashboard/workshop_form.html', {'form': form, 'action': 'Edit', 'workshop': workshop})
+    return render(request, 'dashboard/workshop_form.html', {'form': form, 'action': 'Edit', 'workshop': workshop, 'title': 'Edit Workshop'})
 
 @login_required
 def workshop_delete(request, pk):
@@ -99,7 +99,7 @@ def rt_notice_add(request):
             return redirect('dashboard:rt_notice_list')
     else:
         form = RTNoticeForm()
-    return render(request, 'dashboard/rt_form.html', {'form': form, 'action': 'Add'})
+    return render(request, 'dashboard/rt_form.html', {'form': form, 'action': 'Add', 'type': 'RT', 'title': 'Add Research/Tech Notice'})
 
 @login_required
 def rt_notice_edit(request, pk):
@@ -113,7 +113,7 @@ def rt_notice_edit(request, pk):
             return redirect('dashboard:rt_notice_list')
     else:
         form = RTNoticeForm(instance=notice)
-    return render(request, 'dashboard/rt_form.html', {'form': form, 'action': 'Edit', 'notice': notice})
+    return render(request, 'dashboard/rt_form.html', {'form': form, 'action': 'Edit', 'notice': notice, 'type': 'RT', 'title': 'Edit Research/Tech Notice'})
 
 @login_required
 def rt_notice_delete(request, pk):

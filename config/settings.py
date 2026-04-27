@@ -237,7 +237,7 @@ AWS_SES_REGION_ENDPOINT = f"email.{AWS_SES_REGION_NAME}.amazonaws.com"
 
 # Sender and Admin Emails
 DEFAULT_FROM_EMAIL = os.getenv(
-    "DEFAULT_FROM_EMAIL", "Climatology Lab <noreply-climatologylab@iitr.ac.in>"
+    "DEFAULT_FROM_EMAIL", "Climatology Lab <climatologylab@ar.iitr.ac.in>"
 )
 ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "climatologylab@ar.iitr.ac.in")
 

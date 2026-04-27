@@ -7,36 +7,37 @@ from .models import ContactSubmission
 import threading
 
 def send_contact_emails_in_background(name, email, phone, query, submission_id):
-    """Sends both admin notification and user auto-reply via Django SES API backend in background."""
+    """Sends admin notification and user auto-reply independently via AWS SES API."""
+
+    # --- Step 1: Always send admin notification ---
     try:
-        from django.core.mail import EmailMessage, get_connection
-
-        connection = get_connection()
-        connection.open()
-
-        # Admin notification email
+        from django.core.mail import EmailMessage
         admin_msg = EmailMessage(
             subject=f'New Contact Form Submission from {name}',
             body=f"New contact form submission received:\n\nName: {name}\nEmail: {email}\nPhone: {phone if phone else 'Not provided'}\n\nMessage/Query:\n{query}\n\n---\nSubmission ID: {submission_id}",
             from_email=settings.DEFAULT_FROM_EMAIL,
             to=[settings.ADMIN_EMAIL],
-            connection=connection,
         )
+        admin_msg.send()
+        print(f"Admin notification sent for submission {submission_id}")
+    except Exception as e:
+        print(f"ERROR sending admin notification: {e}")
 
-        # User auto-reply email
+    # --- Step 2: Send user auto-reply (may fail in SES Sandbox if user email is unverified) ---
+    try:
+        from django.core.mail import EmailMessage
         user_msg = EmailMessage(
             subject='Thank You for Contacting Climatology Lab',
-            body=f"Dear {name},\n\nThank you for connecting with us. We have received your query and will get back to you soon.\n\nYour Query:\n{query}\n\nWe appreciate your interest in the Climatology Lab and will respond as quickly as possible.\n\nBest regards,\nClimatology Lab",
+            body=f"Dear {name},\n\nThank you for connecting with us. We have received your query and will get back to you soon.\n\nYour Query:\n{query}\n\nWe appreciate your interest in the Climatology Lab and will respond as quickly as possible.\n\nBest regards,\nClimatology Lab\nIIT Roorkee\nEmail: climatologylab@ar.iitr.ac.in",
             from_email=settings.DEFAULT_FROM_EMAIL,
             to=[email],
-            connection=connection,
         )
-
-        connection.send_messages([admin_msg, user_msg])
-        connection.close()
-
+        user_msg.send()
+        print(f"User auto-reply sent to {email}")
     except Exception as e:
-        print(f"Error sending contact emails via SMTP: {e}")
+        # In SES Sandbox mode, unverified recipient emails will fail here.
+        # This will be resolved once AWS Production Access is granted.
+        print(f"ERROR sending user auto-reply to {email}: {e}")
 
 def contact_submit(request):
     """Handle contact form submission with email notifications"""

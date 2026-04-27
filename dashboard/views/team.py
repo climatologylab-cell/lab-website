@@ -42,7 +42,7 @@ def team_add(request):
             return redirect('dashboard:team_list')
     else:
         form = TeamMemberForm()
-    return render(request, 'dashboard/team_form.html', {'form': form, 'action': 'Add'})
+    return render(request, 'dashboard/team_form.html', {'form': form, 'action': 'Add', 'title': 'Add Team Member'})
 
 @login_required
 def team_edit(request, pk):
@@ -56,7 +56,7 @@ def team_edit(request, pk):
             return redirect('dashboard:team_list')
     else:
         form = TeamMemberForm(instance=member)
-    return render(request, 'dashboard/team_form.html', {'form': form, 'action': 'Edit', 'member': member})
+    return render(request, 'dashboard/team_form.html', {'form': form, 'action': 'Edit', 'member': member, 'title': 'Edit Team Member'})
 
 @login_required
 def team_delete(request, pk):

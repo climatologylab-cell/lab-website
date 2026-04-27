@@ -41,7 +41,7 @@ def tutorial_add(request):
             return redirect('dashboard:tutorial_list')
     else:
         form = TutorialForm()
-    return render(request, 'dashboard/tutorial_form.html', {'form': form, 'action': 'Add'})
+    return render(request, 'dashboard/tutorial_form.html', {'form': form, 'action': 'Add', 'title': 'Add Tutorial'})
 
 @login_required
 def tutorial_edit(request, pk):
@@ -55,7 +55,7 @@ def tutorial_edit(request, pk):
             return redirect('dashboard:tutorial_list')
     else:
         form = TutorialForm(instance=tutorial)
-    return render(request, 'dashboard/tutorial_form.html', {'form': form, 'action': 'Edit', 'tutorial': tutorial})
+    return render(request, 'dashboard/tutorial_form.html', {'form': form, 'action': 'Edit', 'tutorial': tutorial, 'title': 'Edit Tutorial'})
 
 @login_required
 def tutorial_delete(request, pk):

@@ -50,7 +50,7 @@ def publication_add(request):
             return redirect('dashboard:publication_list')
     else:
         form = PublicationForm()
-    return render(request, 'dashboard/publication_form.html', {'form': form, 'action': 'Add'})
+    return render(request, 'dashboard/publication_form.html', {'form': form, 'action': 'Add', 'title': 'Add Publication'})
 
 @login_required
 def publication_edit(request, pk):
@@ -64,7 +64,7 @@ def publication_edit(request, pk):
             return redirect('dashboard:publication_list')
     else:
         form = PublicationForm(instance=publication)
-    return render(request, 'dashboard/publication_form.html', {'form': form, 'action': 'Edit', 'publication': publication})
+    return render(request, 'dashboard/publication_form.html', {'form': form, 'action': 'Edit', 'publication': publication, 'title': 'Edit Publication'})
 
 @login_required
 def publication_delete(request, pk):
