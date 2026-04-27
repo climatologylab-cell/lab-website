@@ -65,5 +65,5 @@ def tutorial_delete(request, pk):
         tutorial_title = tutorial.title
         tutorial.delete()
         messages.success(request, f"Tutorial '{tutorial_title}' deleted successfully.")
-        return redirect('dashboard:tutorial_list')
-    return render(request, 'dashboard/confirm_delete.html', {'object': tutorial, 'back_url': 'dashboard:tutorial_list'})
+        return redirect('dashboard:tutorials_list')
+    return render(request, 'dashboard/confirm_delete.html', {'object': tutorial, 'back_url': 'dashboard:tutorials_list'})
