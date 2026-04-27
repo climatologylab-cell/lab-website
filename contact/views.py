@@ -28,7 +28,7 @@ def send_contact_emails_in_background(name, email, phone, query, submission_id):
         from django.core.mail import EmailMessage
         user_msg = EmailMessage(
             subject='Thank You for Contacting Climatology Lab',
-            body=f"Dear {name},\n\nThank you for connecting with us. We have received your query and will get back to you soon.\n\nYour Query:\n{query}\n\nWe appreciate your interest in the Climatology Lab and will respond as quickly as possible.\n\nBest regards,\nClimatology Lab\nIIT Roorkee\nEmail: climatologylab@ar.iitr.ac.in",
+            body=f"Dear {name},\n\nThank you for connecting with us. We have received your query and will get back to you soon.\n\nYour Query:\n{query}\n\nWe appreciate your interest in the Climatology Lab and will respond as quickly as possible.\n\nBest regards,\nClimatology Lab\n\n📍\nDepartment of Architecture and Planning,\nIIT Roorkee\nRoorkee (247667)\nUttarakhand, India\n\n📞\n+91 - 1332-286141\n\n📩\nclimatologylab@ar.iitr.ac.in",
             from_email=settings.DEFAULT_FROM_EMAIL,
             to=[email],
         )
